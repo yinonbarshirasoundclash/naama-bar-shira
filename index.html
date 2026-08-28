@@ -169,7 +169,10 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .qacts{display:flex;flex-wrap:wrap;gap:.5rem;margin-block-start:1rem}
 
 .qbars,.qtal{display:grid;gap:.35rem;margin-block-start:1.1rem;max-width:34rem}
-.qbrow,.qtrow{display:grid;grid-template-columns:7.5rem minmax(0,1fr) 3rem;gap:.7rem;align-items:center;font-size:.82rem;color:var(--text-dim)}
+.qbrow,.qtrow{display:grid;grid-template-columns:7.5rem minmax(0,1fr) 2.4rem;gap:.7rem;align-items:center;font-size:.82rem;color:var(--text-dim)}
+.qtn{text-align:end;color:var(--gold-soft)}
+.qtotal{font-family:var(--f-display);color:var(--text);font-size:1.02rem}
+[dir="ltr"] .qtotal{font-family:var(--f-display-lat)}
 .qbrow i,.qtrow i{display:block;block-size:5px;background:var(--line);position:relative}
 .qbrow b,.qtrow b{position:absolute;inset-block:0;inset-inline-start:0;background:var(--gold);display:block}
 .qtrow b{background:var(--gold-soft)}
@@ -1195,7 +1198,8 @@ const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 
 /* ---------- ROUTER ---------- */
 const VIEWS = ["home","author","worlds","books","lore","gallery","quiz","field","reviews","shop","events","speaking","community","rights"];
-function go(v){ view=v; document.getElementById("nav").dataset.open="false"; render(); window.scrollTo({top:0,behavior:"instant"}); }
+function go(v){ view=v; if(v==="quiz") qzLoaded=false; /* re-read the tally on every visit */
+  document.getElementById("nav").dataset.open="false"; render(); window.scrollTo({top:0,behavior:"instant"}); }
 function fitNav(){
   const bar=document.querySelector(".topbar-in"), nav=document.getElementById("nav");
   document.body.removeAttribute("data-nav");     /* measure the row at full size */
@@ -2152,20 +2156,39 @@ function qzCounter(only){
   const he=lang==="he";
   const t=qzTally; if(!t) return "";
   const quizzes = only ? [only] : ["angels","demons"];
+  const shared = !!QUIZ_API;          /* a live tally from everyone, or just this browser */
   const blocks = quizzes.map(q=>{
     const Q=QUIZZES[q], tal=t[q]||{};
     const total=Q.results.reduce((s,r)=>s+(tal[r.k]||0),0);
     if(!total) return "";
+
+    /* say plainly whose results these are - a small sample reads as "only me" otherwise */
+    const head = he
+      ? (shared ? (total===1 ? "אדם אחד סיים את החידון הזה עד עכשיו" : total+" אנשים סיימו את החידון הזה")
+                : (total===1 ? "תוצאה אחת במכשיר הזה" : total+" תוצאות במכשיר הזה"))
+      : (shared ? (total===1 ? "One person has taken this one so far" : total+" people have taken this one")
+                : (total===1 ? "1 result on this device" : total+" results on this device"));
+
+    const early = shared && total<8
+      ? (he ? "עדיין מוקדם. ככל שיסיימו עוד, ההתפלגות תתייצב."
+            : "Early days. The split will settle as more people finish.")
+      : "";
+
     return `<div class="stack g-xs">
       <span class="eyebrow">${esc(q==="angels"?(he?"מי עבר כאן מלמעלה":"Who came through from above"):(he?"ומי מלמטה":"And from below"))}</span>
+      <b class="qtotal">${esc(head)}</b>
       <div class="qtal">
         ${Q.results.map(r=>{
-          const n=tal[r.k]||0, p=Math.round(n/total*100);
+          const n=tal[r.k]||0, p=total?Math.round(n/total*100):0;
           const cc=qzResultCopy(r);
-          return `<div class="qtrow"><span>${esc(cc.name)}</span><i><b style="inline-size:${p}%"></b></i><span class="num">${p}%</span></div>`;
+          return `<div class="qtrow">
+            <span>${esc(cc.name)}</span>
+            <i><b style="inline-size:${p}%"></b></i>
+            <span class="qtn num">${n}</span>
+          </div>`;
         }).join("")}
       </div>
-      <span class="dim" style="font-size:.78rem">${he?(total===1?"תוצאה אחת":total+" תוצאות"):(total===1?"1 result":total+" results")}${QUIZ_API?"":(he?" · במכשיר הזה":" · on this device")}</span>
+      ${early?`<span class="dim" style="font-size:.78rem">${esc(early)}</span>`:""}
     </div>`;}).filter(Boolean).join("");
   if(!blocks) return "";
   return `<div class="qcounter${quizzes.length===1?" is-one":""}">${blocks}</div>`;
