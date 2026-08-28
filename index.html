@@ -293,7 +293,7 @@ section.band{padding-block:var(--rhythm)}
   position:absolute;inset:0;z-index:-2;
   background-size:cover;background-position:var(--pos,center 40%);
   filter:saturate(.7) contrast(1.05);
-  opacity:.42;
+  opacity:var(--op,.42);
 }
 .phero::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
@@ -1365,14 +1365,12 @@ function vAuthor(){
 
 function vWorlds(){
   const he=lang==="he";
-  return `<section class="band wrap stack g-xl">
-    <div class="stack g-s">
-      <span class="eyebrow">${he?"העולמות":"The worlds"}</span>
-      <h2>${he?"יקום אחד, ארבע דלתות":"One universe, four doors"}</h2>
-      <p class="lede">${he
-        ? "הספרים לא מסודרים לפי סדר הופעה אלא לפי העולם שהם פותחים. בחרו את הדלת שמדברת אליכם."
-        : "The books are organised not by publication order but by the world they open. Choose the door that speaks to you."}</p>
-    </div>
+  return `${pageHero("יריד בין השורות",
+      he?"העולמות":"The worlds",
+      he?"יקום אחד, ארבע דלתות":"One universe, four doors",
+      he?"הספרים לא מסודרים לפי סדר הופעה אלא לפי העולם שהם פותחים. בחרו את הדלת שמדברת אליכם."
+        :"The books are organised not by publication order but by the world they open. Choose the door that speaks to you.", "center 42%", .62)}
+  <section class="band wrap stack g-xl">
     ${orderEl()}
     <div class="grid gworlds">
       ${WORLDS.map((w,i)=>{
@@ -1482,12 +1480,11 @@ function orderEl(){
 
 function vBooks(){
   const he=lang==="he";
-  return `<section class="band wrap stack g-xl">
-    <div class="stack g-s">
-      <span class="eyebrow">${he?"הספרים":"The books"}</span>
-      <h2>${he?"כל הכותרים":"Every title"}</h2>
-      <p class="lede">${he?"מסודרים לפי עולם. כל ספר נשלח חתום בבקשה.":"Grouped by world. Every book ships signed on request."}</p>
-    </div>
+  return `${pageHero("ערימות ספרים",
+      he?"הספרים":"The books",
+      he?"כל הכותרים":"Every title",
+      he?"מסודרים לפי עולם. כל ספר נשלח חתום בבקשה.":"Grouped by world. Every book ships signed on request.", "center 45%")}
+  <section class="band wrap stack g-xl">
     ${WORLDS.map(w=>{
       const bs=BOOKS.filter(b=>b.world===w.id); if(!bs.length) return "";
       return `<div class="stack g-m">
@@ -1608,9 +1605,9 @@ function openField(id){
 /* A page header sitting on one field photograph. The image is dimmed and
    dissolved into the page ground, so it warms the section without ever
    competing with the text on top of it. */
-function pageHero(photoName, eyebrow, title, lede, pos){
+function pageHero(photoName, eyebrow, title, lede, pos, op){
   const f = FIELD.find(x => x.n === photoName);
-  const bg = f ? `<div class="phero-img" style="background-image:url('${fieldSrc(f.i)}');--pos:${pos||"center 40%"}"></div>` : "";
+  const bg = f ? `<div class="phero-img" style="background-image:url('${fieldSrc(f.i)}');--pos:${pos||"center 40%"};--op:${op||.42}"></div>` : "";
   return `<header class="phero">
     ${bg}
     <div class="wrap phero-in stack g-s">
@@ -1624,11 +1621,11 @@ function pageHero(photoName, eyebrow, title, lede, pos){
 function vReviews(){
   const he=lang==="he";
   const big=REVIEWS.filter(r=>r.big), rest=REVIEWS.filter(r=>!r.big);
-  return `${pageHero("חותמת על ספרים בקניון",
+  return `${pageHero("חתימות כנס בוקטוק",
       he?"ביקורות":"Reviews",
       he?"מה קוראים אומרים":"What readers say",
       he?"מתוך ביקורות שנכתבו על הספרים — קוראים ותיקים, סוקרים, וכמה שהגיעו בלי שום כוונה להתאהב."
-        :"From reviews written about the books — long-time readers, reviewers, and a few who arrived with no intention of falling for them.")}
+        :"From reviews written about the books — long-time readers, reviewers, and a few who arrived with no intention of falling for them.", "center 30%")}
   <section class="band wrap stack g-xl">
     ${he?"":`<p class="dim" style="font-size:.85rem">Translated from the Hebrew originals.</p>`}
 
@@ -1646,11 +1643,11 @@ function vReviews(){
 
 function vShop(){
   const he=lang==="he";
-  return `${pageHero("שממת העדן הגיע",
+  return `${pageHero("סימניות עבודת יד",
       he?"הגנזך":"The Archive",
       he?"הזמנה ישירה מהסופרת":"Order direct from the author",
       he?"אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת, ואנחנו שולחים. אפשר להוסיף הקדשה אישית — בלי תוספת תשלום."
-        :"This is not a chain store. The order reaches us, Naama signs it, and we ship it. A personal inscription can be added at no charge.")}
+        :"This is not a chain store. The order reaches us, Naama signs it, and we ship it. A personal inscription can be added at no charge.", "center 55%", .5)}
   <section class="band wrap stack g-xl">
 
     <div class="grid g2">
@@ -1701,7 +1698,7 @@ function vEvents(){
       he?"אירועים קרובים":"Coming up",
       he?"איפה פוגשים את נעמה":"Where to meet Naama",
       he?"כנסים, ירידים, השקות וחתימות. אפשר לתפוס אותה בדוכן, ואפשר פשוט לבוא להגיד שלום."
-        :"Conventions, fairs, launches and signings. Catch her at the booth, or just come and say hello.")}
+        :"Conventions, fairs, launches and signings. Catch her at the booth, or just come and say hello.", "center 20%")}
   <section class="band wrap stack g-xl">
     <div class="stack">
       ${rows.map(r=>`<div class="evrow">
@@ -1736,7 +1733,7 @@ function vSpeaking(){
       he?"הרצאות וסדנאות":"Speaking & workshops",
       he?"להזמין את נעמה":"Invite Naama",
       he?"נעמה מגיעה לבתי ספר, ספריות, מועדוני קריאה וכנסים. כל מפגש נבנה מראש מול הגוף המזמין ומותאם לגיל הקהל."
-        :"Naama appears at schools, libraries, book clubs and conventions. Every session is built with the host in advance and pitched to the age of the room.")}
+        :"Naama appears at schools, libraries, book clubs and conventions. Every session is built with the host in advance and pitched to the age of the room.", "center 38%", .55)}
   <section class="band wrap stack g-xl">
     <div class="split">
       <div class="stack g-m">
@@ -1772,11 +1769,11 @@ function vCommunity(){
   const perks = he
    ? ["מפגשי קריאה מיוחדים","סודות מחדר העריכה","מידע סודי שמתפרסם שם לראשונה"]
    : ["Special reading sessions","Secrets from the editing room","News that breaks there first"];
-  return `${pageHero("אייקון",
+  return `${pageHero("יריד פנטזיה",
       he?"קהילת הקוראים":"The readers",
       he?"המישלינגים":"The Mishlingim",
       he?"קבוצת הקוראים של נעמה. שם מדברים על הספרים לפני שהם יוצאים, שם נחשפים דברים ראשונים, ושם נעמה עונה בעצמה."
-        :"Naama's reader community. Where the books are talked about before they're out, where things are seen first, and where Naama answers in person.")}
+        :"Naama's reader community. Where the books are talked about before they're out, where things are seen first, and where Naama answers in person.", "center 28%")}
   <section class="band wrap stack g-xl">
     <div class="grid g2">
       <div class="world">
