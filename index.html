@@ -255,6 +255,54 @@ section.band{padding-block:var(--rhythm)}
 [dir="ltr"] .plate .cap b{font-family:var(--f-display-lat);font-weight:600}
 .plate .cap span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft)}
 
+/* ============ SOCIAL CARDS ============ */
+.socialgrid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.socialcard{
+  display:flex;flex-direction:column;gap:.2rem;text-decoration:none;
+  border:1px solid var(--line-strong);padding:1.1rem 1.3rem;transition:.22s;
+  background:color-mix(in oklab,var(--surface) 70%,transparent);
+}
+.socialcard:hover{border-color:var(--gold);transform:translateY(-2px)}
+.socialcard b{font-family:var(--f-display);font-size:1.08rem;color:var(--gold-soft)}
+[dir="ltr"] .socialcard b{font-family:var(--f-display-lat);font-weight:600}
+.socialcard span{font-size:.84rem;color:var(--muted)}
+
+/* ============ BOOK PANEL ============ */
+.lb-book{align-items:start;overflow-y:auto}
+.lb-panel{
+  position:relative;width:min(96vw,880px);margin-block:auto;
+  background:var(--surface);border:1px solid var(--line-strong);box-shadow:var(--shadow);
+  padding:clamp(1.4rem,4vw,2.8rem);
+}
+.lb-close{
+  position:absolute;inset-block-start:.7rem;inset-inline-end:.7rem;z-index:2;
+  border:1px solid var(--line-strong);border-radius:999px;width:2rem;height:2rem;
+  display:grid;place-items:center;color:var(--text-dim);
+}
+.lb-close:hover{color:var(--gold-soft);border-color:var(--gold)}
+.bookwrap{display:grid;gap:clamp(1.4rem,4vw,2.6rem);grid-template-columns:1fr;align-items:start}
+@media (min-width:720px){.bookwrap{grid-template-columns:230px 1fr}}
+.bookaside{max-width:230px}
+.bookbuy{
+  display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;
+  margin-block-start:1.2rem;padding-block-start:1.2rem;border-block-start:1px solid var(--line);
+}
+.lb-panel{padding-block-start:clamp(2.6rem,5vw,3.2rem) !important}
+.jacket{display:flex;flex-direction:column;gap:.9rem;margin-block-start:.5rem}
+.jacket p{font-size:1rem;line-height:1.75;color:var(--text-dim);max-width:60ch}
+.bq{
+  margin:0;border-inline-start:2px solid var(--gold);padding-inline-start:1.1rem;
+  font-family:var(--f-display);font-size:1.08rem;line-height:1.6;font-weight:300;color:var(--text);
+}
+[dir="ltr"] .bq{font-family:var(--f-display-lat);font-style:italic}
+.warn{
+  border:1px solid var(--ember);padding:.8rem 1rem;font-size:.88rem;line-height:1.6;
+  color:var(--text-dim);background:color-mix(in oklab,var(--ember) 8%,transparent);
+}
+.warn b{color:var(--ember)}
+.bookbtns{display:flex;gap:.5rem;flex-wrap:wrap}
+.bookbtns .btn{flex:1 1 auto}
+
 /* ============ LIGHTBOX ============ */
 .lb{
   position:fixed;inset:0;z-index:120;display:none;place-items:center;padding:clamp(1rem,4vw,3rem);
@@ -262,7 +310,8 @@ section.band{padding-block:var(--rhythm)}
 }
 .lb[data-open="true"]{display:grid}
 .lb img{max-width:min(92vw,760px);max-height:88vh;object-fit:contain;border:1px solid var(--line-strong)}
-.lb button{
+/* direct child only — a descendant selector here pins every button inside the book panel */
+.lb > button{
   position:absolute;inset-block-start:1rem;inset-inline-end:1rem;
   border:1px solid var(--line-strong);border-radius:999px;padding:.4rem .8rem;color:#EFE6D5;font-size:.9rem;
 }
@@ -331,21 +380,47 @@ section.band{padding-block:var(--rhythm)}
 [dir="rtl"] .startline::before{content:"←"}
 
 /* ============ READING ORDER ============ */
-.order{display:grid;gap:0;border:1px solid var(--line);background:var(--surface)}
-.orow{
-  display:grid;grid-template-columns:auto 1fr;gap:1.1rem;align-items:start;
-  padding:1.15rem clamp(1rem,3vw,1.6rem);border-block-end:1px solid var(--line);
+.otabs{display:flex;flex-wrap:wrap;gap:.4rem}
+.otab{
+  border:1px solid var(--line-strong);padding:.42rem .95rem;font-size:.86rem;
+  color:var(--text-dim);border-radius:999px;transition:.2s;
 }
-.orow:last-child{border-block-end:0}
-.ostep{
-  width:2rem;height:2rem;flex:none;display:grid;place-items:center;border-radius:50%;
-  border:1px solid var(--gold);color:var(--gold-soft);font-family:var(--f-display);
-  font-weight:700;font-size:.9rem;font-variant-numeric:tabular-nums;
-}
-[dir="ltr"] .ostep{font-family:var(--f-display-lat)}
-.orow[data-side="true"] .ostep{border-style:dashed;border-color:var(--line-strong);color:var(--muted)}
+.otab:hover{color:var(--gold-soft);border-color:var(--gold)}
+.otab[data-on="true"]{background:var(--gold);border-color:var(--gold);color:#07090F;font-weight:600}
 
-/* ============ PULLQUOTE ============ */
+.otree{list-style:none;margin:0;padding:0;position:relative}
+.otree::before{
+  content:"";position:absolute;inset-block:1.1rem;inset-inline-start:.95rem;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--line-strong) 8%,var(--line-strong) 92%,transparent);
+}
+.ostep{
+  display:grid;grid-template-columns:2rem 1fr;gap:1rem;align-items:start;
+  padding-block:.85rem;position:relative;
+}
+.odot{
+  width:2rem;height:2rem;display:grid;place-items:center;border-radius:50%;
+  border:1px solid var(--gold);background:var(--bg);color:var(--gold-soft);
+  font-family:var(--f-display);font-weight:700;font-size:.85rem;
+  font-variant-numeric:tabular-nums;z-index:1;
+}
+[dir="ltr"] .odot{font-family:var(--f-display-lat)}
+.ostep.is-side{margin-inline-start:2.4rem}
+.ostep.is-side::before{
+  content:"";position:absolute;inset-inline-start:-1.5rem;inset-block-start:1.75rem;
+  width:1.4rem;height:1px;background:var(--line-strong);
+}
+.ostep.is-side .odot{
+  width:1.25rem;height:1.25rem;margin-inline-start:.38rem;margin-block-start:.38rem;
+  border-style:dashed;border-color:var(--ember);background:var(--bg);
+}
+.obody{display:flex;flex-direction:column;gap:.15rem}
+.obody b{font-family:var(--f-display);font-size:1.06rem;font-weight:700;line-height:1.3}
+[dir="ltr"] .obody b{font-family:var(--f-display-lat);font-weight:600}
+.oser{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.onote{font-size:.9rem;color:var(--text-dim);line-height:1.55;margin-block-start:.35rem;max-width:58ch}
+.ostep.is-side .obody b{font-size:1rem;color:var(--text-dim)}
+
+/* ============ PULLQUOTE ============ *//* ============ PULLQUOTE ============ */
 .pull{
   border-inline-start:2px solid var(--gold);padding-inline-start:1.4rem;
   font-family:var(--f-display);font-size:clamp(1.2rem,2.2vw,1.7rem);line-height:1.5;
@@ -483,6 +558,7 @@ section.band{padding-block:var(--rhythm)}
 
 <div class="scrim" id="scrim" onclick="openCart(false)"></div>
 <div class="lb" id="lb" onclick="lb(null)"><button aria-label="close">✕</button><img id="lbImg" src="" alt=""></div>
+<div class="lb lb-book" id="bookLb" onclick="if(event.target===this)closeBook()"><div class="lb-panel" id="bookPanel"></div></div>
 <aside class="drawer" id="drawer" aria-label="הזמנה">
   <header>
     <h3 id="cartTitle">ההזמנה שלך</h3>
@@ -533,34 +609,34 @@ const T = {
 const WORLDS = [
   { id:"elyon", seq:"1",
     he:{ name:"מלאכיות עליון", kicker:"פנטזיה אורבנית · הסדרה הראשונה",
-      blurb:"ארבע אחיות מגלות שהן הגלגול הנשי של ארבעת המלאכים הראשיים. המלחמה על גורל העולם מתנהלת בין שדרות ירושלים, בשוק, על גשר המיתרים — במקומות שאתם עוברים בהם כל יום. כאן מתחילים.",
+      blurb:"ארבע אחיות מגלות שהן הגלגול הנשי של ארבעת המלאכים הראשיים. המלחמה על עתיד העולם מתרחשת בין הסמטאות בירושלים למדורי השאול. הטרילוגיה שהיא השער לעולם, ומתרחשת בימינו — כאן מתחילים.",
       tags:["טרילוגיה","פרס גפן 2024","מצעד הספרים","מיתולוגיה יהודית"], start:"נקודת ההתחלה של היקום" },
     en:{ name:"The Archangel Sisters", kicker:"Urban fantasy · The first series",
-      blurb:"Four sisters discover they are the feminine incarnations of the four archangels. The war for the world is fought along Jerusalem's boulevards, through its markets, across the Chords Bridge — in places you walk past every day. This is where it begins.",
+      blurb:"Four sisters discover they are the feminine incarnations of the four archangels. The war for the future of the world runs from the alleys of Jerusalem down through the circles of Sheol. The trilogy that is the gate into this universe, set in the present day — this is where it begins.",
       tags:["Trilogy","Geffen Award 2024","National reading list","Jewish mythology"], start:"The universe starts here" } },
 
   { id:"shachar", seq:"2",
     he:{ name:"מלאכיות בשערי השחר", kicker:"פנטזיה אורבנית · המשך ישיר",
-      blurb:"שבע־עשרה שנה אחרי שמלאכיות עליון נסגרה, השערים עדיין פתוחים — ומישהו צריך לשמור עליהם. הסדרה ממשיכה את אותו קו סיפורי ואת אותן דמויות אל תוך מלחמה שכבר לא מסתתרת מתחת לפני השטח.",
+      blurb:"שבע־עשרה שנה אחרי סיום מלאכיות עליון. העולם של מעלה והעולם של מטה בהתנגשות. האם יגיע יום הדין, או שתגיע אחרית הימים?",
       tags:["המשך ישיר","17 שנה אחרי","סדרה נמשכת"], start:"לקרוא אחרי מלאכיות עליון" },
     en:{ name:"Angels at the Gates of Dawn", kicker:"Urban fantasy · Direct sequel",
-      blurb:"Seventeen years after The Archangel Sisters closes, the gates are still open — and someone has to guard them. The series carries the same storyline and the same characters into a war that no longer hides beneath the surface.",
+      blurb:"Seventeen years after The Archangel Sisters ends. The world above and the world below are on a collision course. Will judgement day come — or the end of days?",
       tags:["Direct sequel","17 years later","Ongoing"], start:"Read after The Archangel Sisters" } },
 
   { id:"dimdumim", seq:"3", mature:true,
     he:{ name:"בין השמשות", kicker:"פנטזיה רומנטית · שלושה ספין-אופים",
-      blurb:"שלושה ספרים שכל אחד מהם עומד בפני עצמו, ובכל זאת נטועים ביקום של מלאכיות עליון ונצמדים לדמויות שמוכרות משם. כל אחד נוחת בזמן ובמקום אחר לגמרי — תל אביב של סוף שנות השישים, החאן בירושלים, ומסע שמתחיל בגרמניה ונגמר בים המלח.",
+      blurb:"שלושה ספין-אופים של פנטזיה רומנטית. אפשר לקרוא כל אחד מהם בנפרד — אבל הם מכילים מידע וזוויות נוספות שמעשירות את העולם של מלאכיות עליון. כל אחד נוחת בזמן ובמקום אחר לגמרי: תל אביב של סוף השישים, החאן בירושלים, ומסע שמתחיל באוסטריה ונגמר בים המלח.",
       tags:["רומנטזי","עומד בפני עצמו","ספין-אוף"], start:"אפשר להתחיל מכאן, ואפשר בכל שלב" },
     en:{ name:"Between Twilights", kicker:"Romantasy · Three spin-offs",
-      blurb:"Three books that each stand alone, yet sit inside The Archangel Sisters' universe and follow characters you'll recognise from it. Each lands in a wholly different time and place — Tel Aviv in the late 1960s, the Khan in Jerusalem, and a journey that starts in Germany and ends at the Dead Sea.",
+      blurb:"Three romantasy spin-offs. Each can be read on its own — but each carries information and angles that enrich the world of The Archangel Sisters. Each lands in a wholly different time and place: Tel Aviv in the late 1960s, the Khan in Jerusalem, and a journey that starts in Austria and ends at the Dead Sea.",
       tags:["Romantasy","Standalone","Spin-off"], start:"Start here, or read at any point" } },
 
   { id:"standalone", seq:"—", mature:true,
     he:{ name:"איזבלה מלכת ירושלים", kicker:"פנטזיה רומנטית היסטורית · הוצאת אהבות",
-      blurb:"יציאה מהיקום — ולא באמת יציאה. סיפורה של מלכה אמיתית בירושלים של ממלכת הצלבנים, בקול שמזהים מיד. עומד לגמרי בפני עצמו, ולא דורש היכרות עם שום ספר אחר.",
+      blurb:"בירושלים של סוף המאה ה־12, יותר משמונה מאות שנה לפני מלאכיות עליון. עומד בפני עצמו לגמרי — אך מכיל דמויות שיהיו משמעותיות מאוד גם בסדרה הראשית.",
       tags:["ספר עצמאי","רומנטזי היסטורי","הוצאת אהבות"], start:"עצמאי לחלוטין" },
     en:{ name:"Isabella, Queen of Jerusalem", kicker:"Historical romantasy · Ahavot Press",
-      blurb:"A step out of the universe — and not really a step out at all. The story of a real queen in Crusader Jerusalem, told in a voice you'll recognise instantly. Entirely standalone.",
+      blurb:"Jerusalem at the close of the 12th century, more than eight hundred years before The Archangel Sisters. Entirely standalone — yet carrying characters who matter a great deal in the main series.",
       tags:["Standalone","Historical romantasy","Ahavot Press"], start:"Completely standalone" } }
 ];
 
@@ -624,8 +700,8 @@ const BOOKS = [
    en:{t:"Barak", s:"Between Twilights", d:"Largely set at the Khan in Jerusalem."}},
 
   {id:"suki", img:"cov_suki", world:"dimdumim", mature:true, price:110, sale:85,
-   he:{t:"סוקי", s:"בין השמשות", d:"מתחיל בגרמניה, נודד לחיפה, ומשם לים המלח."},
-   en:{t:"Suki", s:"Between Twilights", d:"Opens in Germany, travels to Haifa, and on to the Dead Sea."}},
+   he:{t:"סוקי", s:"בין השמשות", d:"מתחיל באוסטריה, נודד לחיפה, ומשם לים המלח."},
+   en:{t:"Suki", s:"Between Twilights", d:"Opens in Austria, travels to Haifa, and on to the Dead Sea."}},
 
   {id:"izabela", img:"cov_izabela", world:"standalone", mature:true, price:110, sale:85,
    he:{t:"איזבלה מלכת ירושלים", s:"רומן היסטורי", d:"בהוצאת אהבות."},
@@ -689,9 +765,67 @@ const PLACES = [
    en:{n:"The Dead Sea", d:"Where Suki, Ink and Or meet."}},
 
   {off:true, book:{he:"בין השמשות · סוקי",en:"Between Twilights · Suki"},
-   he:{n:"גרמניה", d:"סוקי נפתח הרחק מכאן, ועושה את הדרך דרומה."},
-   en:{n:"Germany", d:"Suki opens far from here, and makes its way south."}}
+   he:{n:"אוסטריה", d:"עיירת נופש קטנה ומבודדת, שם סוקי ואינק מנהלים מועדון שייט — עד שהשדים מוצאים אותם."},
+   en:{n:"Austria", d:"A small, remote lakeside town where Suki and Ink run a sailing club — until the demons find them."}}
 ];
+
+/* ---------- JACKET COPY ---------- */
+const BLURBS = {
+maayan:{he:[
+"כשתקיפה בלתי צפויה חושפת בפני האחיות מיקה, גבי ואור את סודות שורשיהן הסבוכים, הן הופכות מנערות למלאכיות ומבינות שהן ניצבות מול ייעודן בעולם מסוכן ומופלא שאינן מכירות.",
+"קהילת המלאכים הסודית בחאן בירושלים מקבלת אותן אל חיקה ומוכנה לספק להן הגנה. אור, שתמיד הרגישה שונה, מקווה ששם סוף־סוף תרגיש שייכת. מיקה לא מעוניינת לעזוב את עולמה — טוב לה בחייה כפי שהם והיא אוהבת את חבריה. ואילו גבי מאוהבת בחבר שלה ולא רוצה לוותר עליו, גם כאשר כנפיים ענקיות מתפרצות מגבה כל פעם שהיא מנסה לנשק אותו.",
+"האם האחיות יצליחו להציל מלאכים שנחטפו, לגבור על הסדקים המעמיקים ביחסיהן וללמוד את תפקידן לפני שיותקפו בידי השדים?",
+"היכנסו לעולם הנסתר של המלאכים בירושלים, בספר פנטזיה גדוש הרפתקאות, רומנטיקה ושבעה מדורים של שאול."]},
+
+shaar:{q:"הירח בהק דרך החלון, אור לא הצליחה להפסיק לבהות בו. משהו זר חי בגופה, היא הרגישה אותו גדל, ראתה את דמותו בין העננים, בצללים בפינות הרחוב, בפנים של כל מי שהסתכל עליה.",
+he:[
+"סערה מתחוללת בנפשה של אור. קול מתגבר בתוכה, משתלט עליה, ולמרות שהייתה רוצה להסתיר את זה מהסובבים אותה — הם מתחילים להיפגע. המלאכים חייבים להפריד בינה ובין השדה שכבשה את ליבה, גם אם בכוח.",
+"אור נאלצת לרדת אל מעמקי השאול כדי להציל לא רק את עצמה, אלא גם את כל מי שהיא אוהבת. בעוד היא מנווטת בעולם הבוגדני של מטה, אחיותיה צוללות לעולמות המטושטשים של חצאי השדים שחיים על הקו בין תל אביב לירושלים, כשגורל השמיים והאדמה מונח על הכף.",
+"גבי, מיקה וריף חייבות למצוא דרך לשתף פעולה ולהציל את נפשה של אור לפני שיהיה מאוחר מדי. אך השבר ביניהן הולך וגובר, מאיים לקרוע אותן. הגבולות בין טוב ורע אינם ברורים כפי שחשבו פעם."]},
+
+shimemet:{q:"״את בהחלט מהווה איום,״ אמר לה לוקי, בוחן אותה בעיני האזמרגד שלו. ״אבל אני לא אגלה. לוסי, מתי תביני שאנחנו באותו צד? את שלי.״",
+he:[
+"אור הפכה ללוסיאל. השאול הוא כבר חלק ממנה והיא לא זוכרת דבר ממי שהייתה. בעולם האכזרי של מטה היא חייבת לחזק את כוחה ואחיזתה בין השדים — אך לכוח יש מחיר.",
+"גבי וריף יורדות לשאול כדי להציל את אחותן, מלוות בבנות לילית, חצאי שדים וסוקובוסית אחת שמוכנה לעשות הכול כדי להציל את אהובת ליבה. מיקה מוצאת את עצמה כלואה ביער הפיות בביריה, וכדי להנהיג את המלאכים היא צריכה להילחם בכל מה שהיא עצמה האמינה בו.",
+"הספר השלישי והאחרון בטרילוגיה, ובו העולמות של מעלה ומטה מתכנסים להתנגשות חזיתית. מלאכים, שדים ובני לילית בקרבות מכריעים במעמקי השאול, שדי נזימבי צועדים ברחובות ירושלים, ומעל — בשממת העדן — נחשפים סודות שלא ידענו על קיומם."]},
+
+ben:{he:[
+"שחר מתעורר למציאות שלא הכיר. הוא לא רק בן של מלאכית־עליון. הוא לא רק נער שגדל בין עצי יער הפיות בצפון. הוא משהו אחר לגמרי. משהו מסוכן.",
+"כשהוא מגלה את סודו האפל ובורח אל עולם זר, שחר נאלץ לגלות את זהותו מחדש ולחשוף את הסודות שאימו ואחיותיה הסתירו ממנו כל חייו. בעודו נרדף, כוחות הרסניים מתקרבים אליו — רוקה, שפחתו הקטלנית של אבדון, נשלחת למשימה שאין ממנה דרך חזרה.",
+"באותה עת ארבע האחיות — אור, גבי, מיקה וריף — מתמודדות עם סדקים הולכים ומתרחבים: בגידות, אהבות אסורות, אימהוּת מורכבת ולבטים קיומיים שמאיימים לפרק את הברית ביניהן.",
+"שבע־עשרה שנה לאחר סיום ״מלאכיות עליון״ מתחיל פרק חדש. מהו מקומו של שחר בתוכנית הגדולה? האם האחיות יתאחדו או יקרסו תחת נטל העבר? והאם באמת אפשר לברוח מגורל שנכתב בשמיים ובשאול גם יחד?"]},
+
+tzava:{he:[
+"שחר, בנה של אור מלאכית העליון ולוקיאנתרו מלך השאול, מגיע אל החאן במטרה לממש את ייעודו. תחת עינה הפקוחה של מיקה הוא ניצב מול האתגרים הקשים ביותר: עליו ללמוד על הצד המלאכי שבו, בעוד שד צמא לדם חי בתוכו. האם יהיה המגן של האנושות, או הנשק שיחריב אותה?",
+"בעוד שחר צועד על החבל הדק שבין אור לחושך, החאן כולו ניצב בפני מבחן. מיקה נאבקת לשמור על סדר בעולם קורס, בזמן שאור מתמסרת לכס המלכות של השאול. הכתר כבד, והטראומות מהעבר מאיימות להצית מלחמה בין האחיות שתשרוף את השמיים ואת התהומות גם יחד.",
+"מנקמה שבוערת בתאי המאסר ועד לצבאות הנפילים הצועדים לירושלים — מסע עוצר נשימה של הקרבה וגילוי עצמי. במקום שבו הגבול בין מלאך לשד מיטשטש, רק דבר אחד בטוח: בדרך אל יום הדין, הקשר החזק ביותר אינו נכתב בדם, אלא בבחירה."]},
+
+zohar:{he:[
+"זהר, נצר למשפחה מלאכית עתיקה ורבת עוצמה, תמיד ידעה שנועדה להיות רוקחת. היא התאמנה לכך כל חייה והוכיחה שהיא הטובה ביותר. עם סיום חאן המלאכים ציפתה להמשיך ללגיון הרוקחים — אך ראש לגיון הכלא העמוק, צדקיאל, זיהה את היכולות הטמונות בה ודרש להחזיק בה תחת שליטתו.",
+"כך מוצאת זהר את דרכה אל הכלא הקבור עמוק מתחת לאדמה, מוקפת במאות שדים כלואים, ושוקעת בשגרה שכוללת עבודות מטבח, סיורים ושמירות. בהחלט לא העתיד שעליו חלמה. עד שברגע אחד גורלי נסחפים צדקיאל וזהר למשימה שתשנה את חייה מעבר לכל דמיון.",
+"החלטה של מלאך אחד שינתה את הייעוד שלה, והיכרות עם שד אחד שינתה את כל תפיסת עולמה."],
+warn:"מכיל תכנים מיניים. מסיבות מלאות תשוקה עם ילדי הלילית, אימונים סקסיים מתחת לאדמה, ומלאכית אחת שמגלה שהיא לא כמו שציפו שתהיה."},
+
+barak:{q:"״אתה כל כך שקוף,״ אברה הניח את ידו על הלסת של ברק. ברק לא הצליח להחליט אם לכעוס, להדוף אותו או להתמכר למגע.",
+he:[
+"מבין כל המלאכים שלא רואים את ברק באמת, מלאך אחד רואה אותו — אברה. ברק נאלץ להוכיח את עצמו ואת המחויבות שלו לאברה, שנפצע קשה במתקפה גדולה על מלאכי החאן. הוא חייב להציל אותו, את האדם היחיד שראה מי הוא מעבר לתווית המלאך והלוחם. ברק יוצא למשימה כמעט בלתי אפשרית — השגת דם שדים. למשימה מצטרף לא פחות מאשר אופיר.",
+"אופיר הוא החבר הכי טוב של ברק. או שאולי הוא יותר מזה? ברק היה רוצה להישאר רק השותף לחדר של אופיר, אלא שזה לא כל כך פשוט. למרות הפחד שלו להרוס את החברות ביניהם, ברק מאוהב במלאך עם עיני הדבש בצורת שקד. אבל אופיר בכלל לא רואה אותו ככה — בשבילו ברק הוא רק אח וחבר.",
+"האם ברק ישיג את הדם האסור? האם יצליח להציל את אברה? האם יתוודה בפני אופיר על אהבתו — ובמי מהשניים יבחר, או שמישהו מהם יבחר בו?"],
+warn:"מכיל תכנים מיניים, מלאכים חתיכים, התמזמזות בחדר הכבשן, מסיבות מישלינגים והתגנבויות אסורות בלילה ברחבי החאן."},
+
+suki:{q:"לא כל שד הוא רע, ולא כל מלאך הוא טוב. סוקי הולכת לגלות את זה בדרך הקשה.",
+he:[
+"סוקי חיה עם אביה ואחיה בעיירת נופש קטנה ומבודדת באוסטריה, שם הם מנהלים מועדון שייט. למרות שהתרגלה לחיים שקטים, סוקי יודעת שהיא שונה — היא חצי שדת סוקובוס, יצור מיני עם כוחות מסתוריים ומסוכנים.",
+"השגרה שהכירה מופרת כשהשדים מגלים את מיקומם, וסוקי ואחיה אינק מבינים כי הם חלק מסיפור הרבה יותר גדול שהוסתר מהם — סיפור על סכסוכים בין משפחות, אהבה אסורה וסודות אפלים. האחים יוצאים למסע מסוכן בישראל, שם הם מגלים את זהותם האמיתית ופוגשים מלאכית מסתורית שמערערת את עולמה של סוקי.",
+"הם מוצאים את עצמם בעין הסערה, כשסביבם מתנגשים רגשות, תשוקות וכוחות אכזריים. כעת סוקי צריכה להחליט אם תהפוך לאישה שהיא רוצה להיות, או לשדה חסרת מעצורים."],
+warn:"מכיל עלילה עוצמתית, מלאת תשוקה, ותכנים מיניים."},
+
+izabela:{he:[
+"ממלכת ירושלים על סף קריסה. כס המלכות מתערער, בריתות נרקמות ונפרמות בלילות חשוכים, והארץ נחרבת מבפנים — בידי בני אדם, ובידי כוחות אפלים הרבה יותר.",
+"איזבלה, נסיכה שנולדה אל תוך משחקי שלטון אכזריים, נשואה להאמפרי — אציל ואיש רוח, בן בריתה הקרוב ביותר. נישואיהם מבוססים על נאמנות, חברות ואהבה עמוקה, אך זוהי אהבה שנותרה ללא תשוקה ומגע. אל חייה שב דניאל, חבר ילדות שמעולם לא עזב את ליבה — ומעולם לא השתייך באמת לעולמה.",
+"בעוד מזימות נרקמות בחצר המלוכה ושדים אורבים מסביב לחומות, איזבלה מגלה כי חוב אפל שנחתם בדם עוד בטרם לידתה עומד להיגבות. כעת עליה לבחור: לשמר ממלכה בכל מחיר, או להיאבק על הזכות לאהוב בדרכה שלה — גם אם הבחירה תחריב עולמות.",
+"רומן היסטורי־פנטסטי סוחף, בהשראת דמותה האמיתית של מלכת ירושלים בתקופת מסעות הצלב."]}
+};
 
 /* ---------- REVIEWS ----------
    Hebrew is verbatim from the reviewers; trimmed only, never reworded.
@@ -850,13 +984,45 @@ function linkBtn(url,label,cls){
     : `<span class="${c} is-pending" title="${lang==="he"?"הקישור עוד לא הוגדר":"Link not set yet"}">${esc(label)}</span>`;
 }
 
+function openBook(id){
+  const b=BOOKS.find(x=>x.id===id); if(!b) return;
+  const he=lang==="he", bl=BLURBS[id];
+  const body = bl && he
+    ? (bl.q?`<blockquote class="bq">${esc(bl.q)}</blockquote>`:"") + bl.he.map(t=>`<p>${esc(t)}</p>`).join("")
+    : `<p>${esc(L(b).d || "")}</p>` + (bl?`<p class="dim" style="font-size:.88rem">Full jacket copy is available in Hebrew.</p>`:"");
+  document.getElementById("bookPanel").innerHTML = `
+    <button class="lb-close" onclick="closeBook()" aria-label="${he?"סגירה":"Close"}">✕</button>
+    <div class="bookwrap">
+      <div class="bookaside">
+        ${coverEl(b)}
+      </div>
+      <div class="stack g-s">
+        <span class="eyebrow">${esc(L(b).s)}${b.year?` · ${b.year}`:""}</span>
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.1rem)">${esc(L(b).t)}</h2>
+        ${b.acc?`<ul class="acc">${b.acc.map(a=>`<li>${esc(L(a))}</li>`).join("")}</ul>`:""}
+        ${b.mature?`<span class="mature">${esc(L(MATURE).label)}</span>`:""}
+        <div class="jacket">${body}</div>
+        ${bl&&bl.warn&&he?`<p class="warn"><b>אזהרה:</b> ${esc(bl.warn)}</p>`:""}
+        <div class="bookbuy">
+          <div class="price"><span class="now">₪${b.sale}</span><span class="was">₪${b.price}</span></div>
+          <button class="btn btn-solid btn-sm" onclick="add('${b.id}');closeBook()">${he?"הוספה להזמנה":"Add to order"}</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById("bookLb").dataset.open="true";
+}
+function closeBook(){
+  document.getElementById("bookLb").dataset.open="false";
+  document.getElementById("bookPanel").innerHTML="";
+}
+
 function lb(key){
   const el=document.getElementById("lb");
   if(!key){ el.dataset.open="false"; document.getElementById("lbImg").src=""; return; }
   document.getElementById("lbImg").src=IMG[key];
   el.dataset.open="true";
 }
-addEventListener("keydown",e=>{ if(e.key==="Escape"){ lb(null); openCart(false);} });
+addEventListener("keydown",e=>{ if(e.key==="Escape"){ lb(null); closeBook(); openCart(false);} });
 
 /* ---------- COMPONENTS ---------- */
 function coverEl(b,mini){
@@ -882,7 +1048,10 @@ function bookCard(b){
     ${b.mature?`<span class="mature" title="${esc(L(MATURE).note)}">${esc(L(MATURE).label)}</span>`:""}
     ${L(b).d?`<p class="dim" style="font-size:.88rem">${esc(L(b).d)}</p>`:""}
     <div class="price"><span class="now">₪${b.sale}</span><span class="was">₪${b.price}</span></div>
-    <button class="btn btn-sm" onclick="add('${b.id}')">${lang==="he"?"הוספה להזמנה":"Add to order"}</button>
+    <div class="bookbtns">
+      <button class="btn btn-sm" onclick="add('${b.id}')">${lang==="he"?"הוספה להזמנה":"Add to order"}</button>
+      ${BLURBS[b.id]?`<button class="btn btn-sm btn-quiet" onclick="openBook('${b.id}')">${lang==="he"?"על הספר":"About"}</button>`:""}
+    </div>
   </div>`;
 }
 function quoteEl(i){
@@ -900,8 +1069,8 @@ function vHome(){
       <span class="eyebrow">${he?"בין השמשות":"Between Twilights"}</span>
       <h1>${he?"מלאכים ושדים,<br>ממש כאן.":"Angels and demons,<br>right here."}</h1>
       <p class="lede">${he
-        ? "נעמה בר שירה כותבת פנטזיה שמתרחשת במקומות שאתם כבר מכירים — חאן המלאכים בירושלים, הכרמל, ים המלח, תל אביב של פעם. תשעה ספרים, שלושה פרסים, ועולם אחד שנפתח בשעה שבין אור לחושך."
-        : "N.B. Shira writes fantasy set in places you already know — the Khan of the Angels in Jerusalem, the Carmel, the Dead Sea, the Tel Aviv of another era. Nine novels, three awards, and one world that opens at the hour between light and dark."}</p>
+        ? "נעמה בר שירה כותבת פנטזיה שמתרחשת במקומות שאתם כבר מכירים — חאן המלאכים בירושלים, הכרמל, ים המלח, תל אביב של פעם. תשעה ספרים, ארבעה פרסים, ועולם אחד שנפתח בשעה שבין אור לחושך."
+        : "N.B. Shira writes fantasy set in places you already know — the Khan of the Angels in Jerusalem, the Carmel, the Dead Sea, the Tel Aviv of another era. Nine novels, four awards, and one world that opens at the hour between light and dark."}</p>
       <div class="badges">
         <span class="badge"><b>${he?"פרס גפן 2024":"Geffen Award 2024"}</b> ${he?"שער הצללים":"The Gate of Shadows"}</span>
         <span class="badge"><b>${he?"ספר השנה 2026":"Book of the Year 2026"}</b> ${he?"הבן האובד":"The Lost Son"}</span>
@@ -1066,18 +1235,18 @@ function vAuthor(){
         <p class="dim" style="font-size:.8rem">${he?"עם פרס גפן 2024 על ״שער הצללים״":"With the 2024 Geffen Award for The Gate of Shadows"}</p>
         <div class="grid" style="grid-template-columns:1fr 1fr;gap:1.2rem">
           <div class="stat"><b class="num">9</b><span>${he?"ספרים":"Books"}</span></div>
-          <div class="stat"><b class="num">3</b><span>${he?"פרסים":"Awards"}</span></div>
+          <div class="stat"><b class="num">4</b><span>${he?"פרסים":"Awards"}</span></div>
         </div>
       </div>
       <div class="stack g-m">
         <span class="eyebrow">${he?"הסופרת":"The author"}</span>
         <h2>${he?"נעמה בר שירה":"N.B. Shira"}</h2>
         <p class="lede">${he
-          ? "סופרת, מחזאית ובימאית. אחת הקולות המרכזיים בפנטזיה הישראלית — ובוודאי מהאהובים ביותר על קוראיה."
-          : "Novelist, playwright and director. One of the central voices in Israeli fantasy — and certainly among the most beloved by her readers."}</p>
+          ? "יוצרת מובילה בתחום הפנטזיה הישראלית, שהגיעה לעשרות אלפי קוראים בארץ ובעולם."
+          : "A leading voice in Israeli fantasy, read by tens of thousands in Israel and abroad."}</p>
         <p>${he
-          ? "נעמה גדלה בבית של ספרים: אמה פרסמה ספר שירה, אביה כתב ספרי פסיכולוגיה, ואחותה עורכת דין וסופרת בעצמה. היא שירתה בקרקל, עבדה שנים בתיאטרון, וכשעולם התרבות נעצר בקורונה — ישבה לכתוב במשרה מלאה בפעם הראשונה בחייה. הטרילוגיה הראשונה נכתבה כולה בתוך שנה. היום היא חיה בהוד השרון."
-          : "She grew up surrounded by books: her mother published poetry, her father wrote on psychology, her sister is a lawyer and author. She served in the Caracal battalion, worked for years in theatre, and when the cultural world stopped during the pandemic she sat down and wrote full-time for the first time in her life. The first trilogy was written within a single year. She lives in Hod HaSharon."}</p>
+          ? "נעמה גדלה בבית של ספרים: אמה פרסמה ספר שירה, אביה כתב ספרי פסיכולוגיה, ואחותה עורכת דין וסופרת בעצמה. היא שירתה בקרקל ועבדה שנים בתיאטרון. ״מעיין הנשמות״ נכתב מעט לפני הקורונה ויצא ב־2022; כשעולם התרבות נעצר, היא כתבה את שני ספרי ההמשך במהלך שנה וקצת, והם יצאו בשנים העוקבות. היום היא חיה בהוד השרון."
+          : "She grew up surrounded by books: her mother published poetry, her father wrote on psychology, her sister is a lawyer and author. She served in the Caracal battalion and worked for years in theatre. Spring of Souls was written shortly before the pandemic and published in 2022; when the cultural world stopped, she wrote the two sequels over the following year, and they appeared in the years after. She lives in Hod HaSharon."}</p>
         <p>${he
           ? "הרעיון שפתח הכל היה פשוט: לקחת את ארבעת המלאכים הראשיים — מיכאל, גבריאל, רפאל ואוריאל — ולכתוב אותם כנשים. מה שיצא מזה הוא פנטזיה שמתרחשת בישראל של היום, בכתובות שאפשר להגיע אליהן ברכבת. טרילוגיית מלאכיות עליון נמכרה מאז בעשרות אלפי עותקים."
           : "The idea that opened everything was simple: take the four archangels — Michael, Gabriel, Raphael and Uriel — and write them as women. What came out is fantasy set in present-day Israel, at addresses you can reach by train. The Archangel Sisters trilogy has since sold tens of thousands of copies."}</p>
@@ -1134,36 +1303,83 @@ function vWorlds(){
   </section>`;
 }
 
+/* ---------- READING ORDER ----------
+   Three routes through nine books. The spine is the main storyline;
+   the spin-offs branch off it, each slotted where it pays off. */
+const ORDERS = {
+  basic:{
+    he:{name:"הסדר הבסיסי", note:"רק קו העלילה הראשי. חמישה ספרים, מההתחלה ועד הסוף."},
+    en:{name:"The basic route", note:"The main storyline only. Five books, beginning to end."},
+    steps:[
+      {id:"maayan"},{id:"shaar"},{id:"shimemet"},{id:"ben"},{id:"tzava"}
+    ]},
+  full:{
+    he:{name:"הסדר המומלץ", note:"כל תשעת הספרים, כשכל ספין-אוף נכנס בדיוק במקום שבו הוא מוסיף הכי הרבה."},
+    en:{name:"The recommended route", note:"All nine books, each spin-off slotted exactly where it adds the most."},
+    steps:[
+      {id:"maayan"},
+      {id:"suki", side:true,
+       he:"מתחיל כמה חודשים לפני מעיין הנשמות ונגמר באמצע העלילה שלו — מהזווית של סוקי.",
+       en:"Begins a few months before Spring of Souls and ends in the middle of it — from Suki's side."},
+      {id:"shaar"},
+      {id:"zohar", side:true,
+       he:"מכיל מידע וסיפורים שרלוונטיים מאוד לשממת העדן.",
+       en:"Carries information and stories that matter a great deal for The Desolation of Eden."},
+      {id:"shimemet"},
+      {id:"barak", side:true,
+       he:"מתחיל מעט לפני מעיין הנשמות, ונחתם באפילוג שמתרחש כבר בתקופת בשערי השחר. רלוונטי מאוד להבן האובד.",
+       en:"Starts just before Spring of Souls and closes with an epilogue already set in the Gates of Dawn era. Highly relevant to The Lost Son."},
+      {id:"ben"},
+      {id:"izabela", side:true,
+       he:"מכיל פרטים חשובים ורלוונטיים לצבא המלכה.",
+       en:"Holds details that matter for The Queen's Army."},
+      {id:"tzava"}
+    ]},
+  chrono:{
+    he:{name:"הסדר הכרונולוגי", note:"לפי סדר ההתרחשות בעולם — משמונה מאות שנה אחורה ועד יום הדין."},
+    en:{name:"In world order", note:"By when things actually happen — from eight centuries back to judgement day."},
+    steps:[
+      {id:"izabela", when:{he:"סוף המאה ה־12",en:"late 12th century"}},
+      {id:"zohar",   when:{he:"סוף שנות השישים",en:"late 1960s"}},
+      {id:"suki"},{id:"maayan"},{id:"barak"},{id:"shaar"},{id:"shimemet"},
+      {id:"ben",   when:{he:"17 שנה אחרי",en:"17 years later"}},
+      {id:"tzava"}
+    ]}
+};
+let orderTab = "full";
+function setOrder(k){ orderTab=k; render(); }
+
+const bookById = id => BOOKS.find(b=>b.id===id);
+
 function orderEl(){
   const he=lang==="he";
-  const rows = he ? [
-    ["1","מלאכיות עליון","הסדרה הראשונה. שלושה ספרים, וההתחלה של הכל.",false],
-    ["2","מלאכיות בשערי השחר","ממשיכה ישירות, שבע־עשרה שנה אחרי. לא מומלץ לקרוא לפני הסדרה הראשונה.",false],
-    ["·","בין השמשות","שלושה ספין-אופים. כל אחד עומד בפני עצמו — אפשר להתחיל מהם, ואפשר לקרוא בכל שלב.",true],
-    ["·","איזבלה מלכת ירושלים","מחוץ ליקום, עצמאי לגמרי. אפשר בכל זמן.",true]
-  ] : [
-    ["1","The Archangel Sisters","The first series. Three books, and the start of everything.",false],
-    ["2","Angels at the Gates of Dawn","Picks up seventeen years later. Not recommended before the first series.",false],
-    ["·","Between Twilights","Three spin-offs. Each stands alone — start here, or read at any point.",true],
-    ["·","Isabella, Queen of Jerusalem","Outside the universe, fully standalone. Any time.",true]
-  ];
+  const o=ORDERS[orderTab];
+  const rows = o.steps.map((st,idx)=>{
+    const b=bookById(st.id); if(!b) return "";
+    const n = o.steps.slice(0,idx+1).filter(x=>!x.side).length;
+    return `<li class="ostep${st.side?" is-side":""}">
+      <span class="odot">${st.side?"":n}</span>
+      <div class="obody">
+        <b>${esc(L(b).t)}</b>
+        <span class="oser">${esc(L(b).s)}${st.when?` · ${esc(L(st.when))}`:""}</span>
+        ${st[lang]?`<p class="onote">${esc(st[lang])}</p>`:""}
+      </div>
+    </li>`;
+  }).join("");
+
   return `<div class="stack g-m">
     <div class="stack g-xs">
       <span class="eyebrow">${he?"סדר קריאה":"Reading order"}</span>
       <h3 style="font-size:1.5rem">${he?"מה קודם למה":"What comes before what"}</h3>
-      <p class="dim" style="font-size:.92rem;max-width:60ch">${he
-        ? "רק שתי סדרות תלויות זו בזו. כל השאר פתוח."
-        : "Only two series depend on each other. Everything else is open."}</p>
     </div>
-    <div class="order">
-      ${rows.map(([n,t2,d,side])=>`<div class="orow" data-side="${side}">
-        <span class="ostep">${esc(n)}</span>
-        <div class="stack g-xs">
-          <b style="font-family:var(--f-display);font-size:1.02rem">${esc(t2)}</b>
-          <span class="dim" style="font-size:.9rem">${esc(d)}</span>
-        </div>
-      </div>`).join("")}
+    <div class="otabs">
+      ${Object.keys(ORDERS).map(k=>`<button class="otab" data-on="${k===orderTab}" onclick="setOrder('${k}')">${esc(L(ORDERS[k]).name)}</button>`).join("")}
     </div>
+    <p class="dim" style="font-size:.92rem;max-width:64ch">${esc(L(o).note)}</p>
+    <ol class="otree">${rows}</ol>
+    ${orderTab==="full"?`<p class="dim" style="font-size:.84rem">${he
+      ? "הנקודות המלאות הן קו העלילה הראשי. המקווקוות הן ספרי הצד — אפשר לדלג עליהם, אבל הם משנים איך נקרא מה שבא אחריהם."
+      : "Solid nodes are the main storyline. Dashed ones are the side books — skippable, but they change how what follows reads."}</p>`:""}
   </div>`;
 }
 
@@ -1392,55 +1608,59 @@ function vSpeaking(){
 
 function vCommunity(){
   const he=lang==="he";
+  const perks = he
+   ? ["מפגשי קריאה מיוחדים","סודות מחדר העריכה","מידע סודי שמתפרסם שם לראשונה"]
+   : ["Special reading sessions","Secrets from the editing room","News that breaks there first"];
   return `<section class="band wrap stack g-xl">
     <div class="stack g-s">
-      <span class="eyebrow">${he?"הקהילה":"The readers"}</span>
+      <span class="eyebrow">${he?"קהילת הקוראים":"The readers"}</span>
       <h2>${he?"המישלינגים":"The Mishlingim"}</h2>
       <p class="lede">${he
-        ? "קבוצת הוואטסאפ של קוראי נעמה. שם מדברים על הספרים לפני שהם יוצאים, שם נופלים הספוילרים, ושם נעמה עונה בעצמה."
-        : "The WhatsApp group of Naama's readers. Where the books are discussed before they're out, where the spoilers land, and where Naama answers in person."}</p>
+        ? "קבוצת הקוראים של נעמה. שם מדברים על הספרים לפני שהם יוצאים, שם נופלים הספוילרים, ושם נעמה עונה בעצמה."
+        : "Naama's reader community. Where the books are discussed before they're out, where the spoilers land, and where Naama answers in person."}</p>
     </div>
     <div class="grid g2">
       <div class="world">
-        <span class="wnum">01</span>
-        <h3 style="font-size:1.5rem">${he?"קבוצת הוואטסאפ":"The WhatsApp group"}</h3>
-        <p class="dim">${he
-          ? "הצטרפות פתוחה. הקבוצה מקבלת קטעים מוקדמים, הצצות לכריכות, והודעות על השקות לפני כולם."
-          : "Open to join. The group gets early excerpts, cover reveals, and launch news before anyone else."}</p>
-        <div style="align-self:start">${linkBtn(LINKS.whatsappGroup, he?"להצטרפות לקבוצה":"Join the group")}</div>
+        <span class="wnum">${he?"קבוצת הקוראים":"The group"}</span>
+        <h3 style="font-size:1.5rem">${he?"להצטרף למישלינגים":"Join the Mishlingim"}</h3>
+        <ul class="acc" style="margin-block-start:.2rem">${perks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+        <div style="align-self:start;margin-block-start:.6rem">${linkBtn(LINKS.whatsappGroup, he?"להצטרפות לקבוצה":"Join the group")}</div>
       </div>
       <div class="world">
-        <span class="wnum">02</span>
-        <h3 style="font-size:1.5rem">${he?"נבחרת הסוקרים":"The reviewer team"}</h3>
+        <span class="wnum">${he?"נבחרת הסוקרים":"Reviewers"}</span>
+        <h3 style="font-size:1.5rem">${he?"לקרוא לפני כולם":"Read it first"}</h3>
         <p class="dim">${he
-          ? "קבוצה באינסטגרם שמקבלת עותקים מוקדמים לפני כל השקה. פתוח להצטרפות לכל מי שסוקר ספרים באופן פעיל."
-          : "An Instagram reviewer team that receives advance copies ahead of each launch. Open to active reviewers."}</p>
+          ? "קבוצה באינסטגרם שמקבלת עותקים מוקדמים לפני כל השקה. פתוח לכל מי שסוקר ספרים באופן פעיל."
+          : "An Instagram group that receives advance copies ahead of each launch. Open to anyone who reviews books actively."}</p>
         <div style="align-self:start">${LINKS.reviewersForm
           ? linkBtn(LINKS.reviewersForm, he?"הגשת מועמדות":"Apply", "btn btn-sm btn-quiet")
           : `<a class="btn btn-sm btn-quiet" href="https://wa.me/${PHONE}?text=${encodeURIComponent(he?"היי, אשמח להצטרף לנבחרת הסוקרים":"Hi, I'd like to join the reviewer team")}" target="_blank" rel="noopener">${he?"הגשת מועמדות":"Apply"}</a>`}</div>
       </div>
     </div>
+
     <hr class="rule">
-    <div class="split">
-      <div class="stack g-m">
-        <span class="eyebrow">${he?"רשת":"Follow"}</span>
-        <h3 style="font-size:1.5rem">${he?"אינסטגרם וטיקטוק":"Instagram & TikTok"}</h3>
-        <p class="dim">${he
-          ? "נעמה מספרת שם על הדמויות, על העולם, על מלאכים ושדים — ולפעמים מגיעה בקוספליי של המלאכיות בעצמן."
-          : "Naama posts there about the characters, the world, angels and demons — and sometimes turns up in cosplay as the angels themselves."}</p>
-        <div class="sociallinks">
-          ${linkBtn(LINKS.instagram,"Instagram","chip")}
-          ${linkBtn(LINKS.tiktok,"TikTok","chip")}
-          ${LINKS.facebook?linkBtn(LINKS.facebook,"Facebook","chip"):""}
-          <a class="chip" href="https://wa.me/${PHONE}" target="_blank" rel="noopener">${he?"וואטסאפ ישיר":"WhatsApp"}</a>
-        </div>
+
+    <div class="stack g-m">
+      <div class="stack g-xs">
+        <span class="eyebrow">${he?"לעקוב אחרי נעמה":"Follow Naama"}</span>
+        <h3 style="font-size:1.5rem">${he?"ברשתות":"Online"}</h3>
+        <p class="dim" style="max-width:60ch">${he
+          ? "שם היא מספרת על הדמויות, על העולם, ועל מה שקורה מאחורי הקלעים של הספר הבא."
+          : "Where she posts about the characters, the world, and what's happening behind the scenes of the next book."}</p>
       </div>
-      <div class="stack g-m">
-        <div class="note">${he
-          ? "רעיון להמשך: חידון ״לאיזו מלאכית את שייכת?״ בסגנון מיון הבית של הארי פוטר. זה הכלי הכי חזק לבניית רשימת תפוצה — אבל אני צריך את השמות של ארבע הדמויות ואת התכונות שלהן מנעמה כדי לבנות אותו נכון."
-          : "Next step: a “Which angel are you?” quiz in the spirit of the Sorting Hat — the strongest list-building tool available here. It needs the four characters' names and traits from Naama."}</div>
+      <div class="socialgrid">
+        ${[["Instagram",LINKS.instagram,"@author_naamabs"],
+           ["TikTok",LINKS.tiktok,"@naamabars"],
+           ["Facebook",LINKS.facebook,"נעמה בר שירה"]]
+          .filter(([,u])=>u)
+          .map(([n,u,h])=>`<a class="socialcard" href="${u}" target="_blank" rel="noopener">
+             <b>${esc(n)}</b><span>${esc(h)}</span></a>`).join("")}
       </div>
     </div>
+
+    <div class="note">${he
+      ? "השלב הבא: חידון ״לאיזו מלאכית את שייכת״ ו״איזה שד אתה״. הגלריה כבר בנויה בשבילם."
+      : "Next: the “Which archangel are you?” and “Which demon are you?” quizzes. The gallery is already built for them."}</div>
   </section>`;
 }
 
@@ -1683,7 +1903,7 @@ function footEl(){
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem">
       <div class="stack g-xs">
         <b style="font-family:var(--f-display);color:var(--text);font-size:1.05rem">${he?"נעמה בר שירה":"N.B. SHIRA"}</b>
-        <span>${he?"פנטזיה ישראלית · תשעה ספרים · שלושה פרסים":"Israeli fantasy · Nine novels · Three awards"}</span>
+        <span>${he?"פנטזיה ישראלית · תשעה ספרים · ארבעה פרסים":"Israeli fantasy · Nine novels · Four awards"}</span>
       </div>
       <div class="stack g-xs">
         <span class="eyebrow">${he?"הזמנות ומפגשים":"Orders and appearances"}</span>
