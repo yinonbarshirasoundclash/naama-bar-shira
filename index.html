@@ -268,6 +268,44 @@ section.band{padding-block:var(--rhythm)}
 [dir="ltr"] .plate .cap b{font-family:var(--f-display-lat);font-weight:600}
 .plate .cap span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft)}
 
+/* ============ INTERNATIONAL ============ */
+.intl{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-block-start:.4rem}
+.intlcard{margin:0;display:flex;flex-direction:column;gap:.75rem}
+.intlimg{
+  display:block;width:100%;aspect-ratio:4/3;overflow:hidden;padding:0;
+  border:1px solid var(--line-strong);background:var(--cover-b);cursor:zoom-in;
+}
+.intlimg img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.3,1)}
+.intlimg:hover img{transform:scale(1.05)}
+.intlcard figcaption{display:flex;flex-direction:column;gap:.2rem}
+.intlcard b{font-family:var(--f-display-lat);font-weight:600;font-size:1rem;color:var(--gold-soft)}
+.intlcard span{font-size:.86rem;color:var(--text-dim);line-height:1.55}
+
+/* ============ PAGE HERO ============ */
+.phero{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:grid;align-items:end;
+  min-height:clamp(15rem,30vw,23rem);
+  padding-block:clamp(3rem,7vw,5rem) clamp(1.6rem,4vw,2.6rem);
+  border-block-end:1px solid var(--line);
+}
+.phero-img{
+  position:absolute;inset:0;z-index:-2;
+  background-size:cover;background-position:var(--pos,center 40%);
+  filter:saturate(.7) contrast(1.05);
+  opacity:.42;
+}
+.phero::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(to bottom,color-mix(in oklab,var(--bg) 72%,transparent),color-mix(in oklab,var(--bg) 30%,transparent) 38%,color-mix(in oklab,var(--bg) 88%,transparent) 78%,var(--bg)),
+    linear-gradient(to var(--edge,left),transparent 45%,color-mix(in oklab,var(--bg) 70%,transparent));
+}
+[dir="rtl"] .phero::after{--edge:right}
+.phero-in{position:relative;z-index:1}
+.phero .lede{color:var(--text)}
+.phero + .band{padding-block-start:clamp(2.4rem,5vw,3.4rem)}
+
 /* ============ FIELD GALLERY ============ */
 .tabn{font-size:.72rem;opacity:.65;font-variant-numeric:tabular-nums}
 .fgrid{
@@ -621,7 +659,7 @@ section.band{padding-block:var(--rhythm)}
   <footer id="cartFoot"></footer>
 </aside>
 
-<script id="assets" type="application/json">{"cov_maayan": "1-site-and-covers/assets/img/cov_maayan.webp", "cov_shaar": "1-site-and-covers/assets/img/cov_shaar.webp", "cov_shimemet": "1-site-and-covers/assets/img/cov_shimemet.webp", "cov_tzava": "1-site-and-covers/assets/img/cov_tzava.webp", "cov_zohar": "1-site-and-covers/assets/img/cov_zohar.webp", "cov_barak": "1-site-and-covers/assets/img/cov_barak.webp", "cov_suki": "1-site-and-covers/assets/img/cov_suki.webp", "cov_izabela": "1-site-and-covers/assets/img/cov_izabela.webp", "cov_3d": "1-site-and-covers/assets/img/cov_3d.webp", "ang_red": "1-site-and-covers/assets/img/ang_red.webp", "ang_bob": "1-site-and-covers/assets/img/ang_bob.webp", "ang_brown": "1-site-and-covers/assets/img/ang_brown.webp", "ang_white": "1-site-and-covers/assets/img/ang_white.webp", "fig_green": "1-site-and-covers/assets/img/fig_green.webp", "fig_purple": "1-site-and-covers/assets/img/fig_purple.webp", "fig_blonde": "1-site-and-covers/assets/img/fig_blonde.webp", "fig_teal": "1-site-and-covers/assets/img/fig_teal.webp", "naama_award": "1-site-and-covers/assets/img/naama_award.webp", "naama_win": "1-site-and-covers/assets/img/naama_win.webp", "cov_ben": "1-site-and-covers/assets/img/cov_ben.webp", "cov_spring_en": "1-site-and-covers/assets/img/cov_spring_en.webp"}</script>
+<script id="assets" type="application/json">{"cov_maayan": "assets/img/cov_maayan.webp", "cov_shaar": "assets/img/cov_shaar.webp", "cov_shimemet": "assets/img/cov_shimemet.webp", "cov_tzava": "assets/img/cov_tzava.webp", "cov_zohar": "assets/img/cov_zohar.webp", "cov_barak": "assets/img/cov_barak.webp", "cov_suki": "assets/img/cov_suki.webp", "cov_izabela": "assets/img/cov_izabela.webp", "cov_3d": "assets/img/cov_3d.webp", "ang_red": "assets/img/ang_red.webp", "ang_bob": "assets/img/ang_bob.webp", "ang_brown": "assets/img/ang_brown.webp", "ang_white": "assets/img/ang_white.webp", "fig_green": "assets/img/fig_green.webp", "fig_purple": "assets/img/fig_purple.webp", "fig_blonde": "assets/img/fig_blonde.webp", "fig_teal": "assets/img/fig_teal.webp", "naama_award": "assets/img/naama_award.webp", "naama_win": "assets/img/naama_win.webp", "cov_ben": "assets/img/cov_ben.webp", "cov_spring_en": "assets/img/cov_spring_en.webp"}</script>
 
 <script>
 /* =========================================================================
@@ -630,8 +668,7 @@ section.band{padding-block:var(--rhythm)}
    ========================================================================= */
 
 const IMG = JSON.parse(document.getElementById("assets").textContent);
-const FIELD_DIR = {"27dd2f7215":"2-field-photos-a","51daedfd41":"2-field-photos-a","7a51802f5b":"2-field-photos-a","434bf17945":"2-field-photos-a","606e80862c":"2-field-photos-a","42218212a5":"2-field-photos-a","33f2cabe36":"2-field-photos-a","628fd19886":"2-field-photos-a","56beda4fa3":"2-field-photos-a","3007d708f9":"2-field-photos-a","759308f2cd":"2-field-photos-a","0940a12d34":"2-field-photos-a","2d7c90e82a":"2-field-photos-a","5f4007c8f9":"2-field-photos-a","51bd5bc491":"2-field-photos-a","4a72cf4210":"2-field-photos-a","5344541c50":"2-field-photos-a","7201e39504":"2-field-photos-a","16a20b8969":"2-field-photos-a","671c050e42":"2-field-photos-a","3d7fb752f6":"2-field-photos-a","04274ca82e":"2-field-photos-a","7256f68569":"2-field-photos-a","4e206a32ca":"2-field-photos-a","039fc4819b":"2-field-photos-a","4fb912b230":"2-field-photos-a","3abb82f7bc":"2-field-photos-a","00c6147ae5":"2-field-photos-a","730247132c":"2-field-photos-a","4a63cf0b0b":"2-field-photos-a","6602f075dc":"2-field-photos-a","39bf56b778":"2-field-photos-a","201d158df6":"2-field-photos-a","265dafaa35":"2-field-photos-a","6f42da0a73":"2-field-photos-a","69a16561f4":"2-field-photos-a","0e17952621":"2-field-photos-a","143dd54ece":"2-field-photos-a","5d072ff719":"2-field-photos-a","5ea584343d":"2-field-photos-a","70abb6e2b2":"2-field-photos-a","23178ada78":"2-field-photos-a","103174c143":"2-field-photos-a","2610b1cc61":"2-field-photos-a","2006440e3f":"2-field-photos-a","4f2b830e28":"2-field-photos-a","44e38f6abc":"2-field-photos-a","5d3da8af22":"2-field-photos-a","53c2daf59b":"2-field-photos-a","367f45d852":"2-field-photos-a","6992bad923":"2-field-photos-a","737f38ccea":"2-field-photos-a","4d79746e39":"2-field-photos-a","3c685def6c":"2-field-photos-a","4d94da65bf":"2-field-photos-a","0d9372fc35":"2-field-photos-a","121d1ea3de":"2-field-photos-a","9294caedad":"3-field-photos-b","f89901fc32":"3-field-photos-b","b9c4945d51":"3-field-photos-b","82c0954ebc":"3-field-photos-b","c6efbd8188":"3-field-photos-b","9e2a783f2e":"3-field-photos-b","956201da6b":"3-field-photos-b","8684cb3552":"3-field-photos-b","c226db385a":"3-field-photos-b","b76e6ef8c0":"3-field-photos-b","953b4db770":"3-field-photos-b","e4c672e550":"3-field-photos-b","c2822b5bda":"3-field-photos-b","ea6d7796d2":"3-field-photos-b","903b3f955f":"3-field-photos-b","b72d5f46ae":"3-field-photos-b","c912d7c46e":"3-field-photos-b","af74f440f6":"3-field-photos-b","d47f72dbb5":"3-field-photos-b","9b79efb686":"3-field-photos-b","8e85878952":"3-field-photos-b","7f08f2780a":"3-field-photos-b","94a5d0fd98":"3-field-photos-b","8dd54404c9":"3-field-photos-b","880224408b":"3-field-photos-b","fa370d42cd":"3-field-photos-b","7e72d8d81c":"3-field-photos-b","ee911c77f2":"3-field-photos-b","eafda05f41":"3-field-photos-b","d3416689ab":"3-field-photos-b","b4d2622516":"3-field-photos-b","b3ea89f802":"3-field-photos-b","c09264ebcf":"3-field-photos-b","c595b1bec6":"3-field-photos-b","e23c097c3e":"3-field-photos-b","d9b5af1222":"3-field-photos-b","d22ace04ff":"3-field-photos-b","f31e67ca99":"3-field-photos-b","d2defff687":"3-field-photos-b","f09f8d12bc":"3-field-photos-b","fa72f4c4e0":"3-field-photos-b","e6a9cabc90":"3-field-photos-b","dd8c172dbe":"3-field-photos-b","d2e314c52a":"3-field-photos-b","e6ca05d6c4":"3-field-photos-b","80e4d0831a":"3-field-photos-b","8e0c3ee6a9":"3-field-photos-b","bbcc3850df":"3-field-photos-b","c66ed8dfb2":"3-field-photos-b","ae55780f05":"3-field-photos-b","f57430155e":"3-field-photos-b","f1712f4c8b":"3-field-photos-b","a620366c24":"3-field-photos-b","8c39436776":"3-field-photos-b","87b26f985a":"3-field-photos-b","8e758c2be9":"3-field-photos-b"};
-const fieldSrc = id => IMG["field:"+id] || `${FIELD_DIR[id]}/assets/field/${id}.webp`;
+const fieldSrc = id => IMG["field:"+id] || `assets/field/${id}.webp`;
 
 /* ─── Contact and links. Everything editable lives here. ─────────────── */
 const PHONE      = "972546589303";     // Naama — orders and enquiries land here
@@ -1568,18 +1605,32 @@ function openField(id){
   document.getElementById("bookLb").dataset.open="true";
 }
 
+/* A page header sitting on one field photograph. The image is dimmed and
+   dissolved into the page ground, so it warms the section without ever
+   competing with the text on top of it. */
+function pageHero(photoName, eyebrow, title, lede, pos){
+  const f = FIELD.find(x => x.n === photoName);
+  const bg = f ? `<div class="phero-img" style="background-image:url('${fieldSrc(f.i)}');--pos:${pos||"center 40%"}"></div>` : "";
+  return `<header class="phero">
+    ${bg}
+    <div class="wrap phero-in stack g-s">
+      <span class="eyebrow">${esc(eyebrow)}</span>
+      <h2>${esc(title)}</h2>
+      ${lede?`<p class="lede">${esc(lede)}</p>`:""}
+    </div>
+  </header>`;
+}
+
 function vReviews(){
   const he=lang==="he";
   const big=REVIEWS.filter(r=>r.big), rest=REVIEWS.filter(r=>!r.big);
-  return `<section class="band wrap stack g-xl">
-    <div class="stack g-s">
-      <span class="eyebrow">${he?"ביקורות":"Reviews"}</span>
-      <h2>${he?"מה קוראים אומרים":"What readers say"}</h2>
-      <p class="lede">${he
-        ? "מתוך ביקורות שנכתבו על הספרים — קוראים ותיקים, סוקרים, וכמה שהגיעו בלי שום כוונה להתאהב."
-        : "From reviews written about the books — long-time readers, reviewers, and a few who arrived with no intention of falling for them."}</p>
-      ${he?"":`<p class="dim" style="font-size:.85rem">Translated from the Hebrew originals.</p>`}
-    </div>
+  return `${pageHero("חותמת על ספרים בקניון",
+      he?"ביקורות":"Reviews",
+      he?"מה קוראים אומרים":"What readers say",
+      he?"מתוך ביקורות שנכתבו על הספרים — קוראים ותיקים, סוקרים, וכמה שהגיעו בלי שום כוונה להתאהב."
+        :"From reviews written about the books — long-time readers, reviewers, and a few who arrived with no intention of falling for them.")}
+  <section class="band wrap stack g-xl">
+    ${he?"":`<p class="dim" style="font-size:.85rem">Translated from the Hebrew originals.</p>`}
 
     <div class="revgrid revgrid-big">${big.map(r=>revCard(r,true)).join("")}</div>
     <div class="revgrid">${rest.map(r=>revCard(r,false)).join("")}</div>
@@ -1595,14 +1646,12 @@ function vReviews(){
 
 function vShop(){
   const he=lang==="he";
-  return `<section class="band wrap stack g-xl">
-    <div class="stack g-s">
-      <span class="eyebrow">${he?"הגנזך":"The Archive"}</span>
-      <h2>${he?"הזמנה ישירה מהסופרת":"Order direct from the author"}</h2>
-      <p class="lede">${he
-        ? "אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת, ואנחנו שולחים. אפשר להוסיף הקדשה אישית — בלי תוספת תשלום."
-        : "This is not a chain store. The order reaches us, Naama signs it, and we ship it. A personal inscription can be added at no charge."}</p>
-    </div>
+  return `${pageHero("שממת העדן הגיע",
+      he?"הגנזך":"The Archive",
+      he?"הזמנה ישירה מהסופרת":"Order direct from the author",
+      he?"אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת, ואנחנו שולחים. אפשר להוסיף הקדשה אישית — בלי תוספת תשלום."
+        :"This is not a chain store. The order reaches us, Naama signs it, and we ship it. A personal inscription can be added at no charge.")}
+  <section class="band wrap stack g-xl">
 
     <div class="grid g2">
       ${[[he?"עותקים חתומים":"Signed copies", he?"כל ספר נחתם ביד לפני המשלוח. הקדשה אישית לפי בקשה — כתבו לנו למי.":"Every book is hand-signed before shipping. Personal inscriptions on request."],
@@ -1648,14 +1697,12 @@ function vEvents(){
     {d:"3–4 Sep",   t:"Book fair",     p:"Dizengoff Center, Tel Aviv · booth and signings"},
     {d:"29 Sep–1 Oct", t:"ICon Festival", p:"Tel Aviv · booth, signings and reader meet-ups"}
   ];
-  return `<section class="band wrap stack g-xl">
-    <div class="stack g-s">
-      <span class="eyebrow">${he?"אירועים קרובים":"Coming up"}</span>
-      <h2>${he?"איפה פוגשים את נעמה":"Where to meet Naama"}</h2>
-      <p class="lede">${he
-        ? "כנסים, ירידים, השקות וחתימות. אפשר לתפוס אותה בדוכן, ואפשר פשוט לבוא להגיד שלום."
-        : "Conventions, fairs, launches and signings. Catch her at the booth, or just come and say hello."}</p>
-    </div>
+  return `${pageHero("שבוע הספר 4",
+      he?"אירועים קרובים":"Coming up",
+      he?"איפה פוגשים את נעמה":"Where to meet Naama",
+      he?"כנסים, ירידים, השקות וחתימות. אפשר לתפוס אותה בדוכן, ואפשר פשוט לבוא להגיד שלום."
+        :"Conventions, fairs, launches and signings. Catch her at the booth, or just come and say hello.")}
+  <section class="band wrap stack g-xl">
     <div class="stack">
       ${rows.map(r=>`<div class="evrow">
         <span class="evdate">${esc(r.d)}</span>
@@ -1685,14 +1732,14 @@ function vSpeaking(){
       ["Writing workshops","A hands-on workshop in world-building, character and plot. Single session or a series."],
       ["Library and book-club talks","On Israeli fantasy, Jewish mythology, and turning familiar places into a magical world."],
       ["Conventions and panels","Appearances at SF&F conventions, panels and signings."]];
-  return `<section class="band wrap stack g-xl">
+  return `${pageHero("הרצאה",
+      he?"הרצאות וסדנאות":"Speaking & workshops",
+      he?"להזמין את נעמה":"Invite Naama",
+      he?"נעמה מגיעה לבתי ספר, ספריות, מועדוני קריאה וכנסים. כל מפגש נבנה מראש מול הגוף המזמין ומותאם לגיל הקהל."
+        :"Naama appears at schools, libraries, book clubs and conventions. Every session is built with the host in advance and pitched to the age of the room.")}
+  <section class="band wrap stack g-xl">
     <div class="split">
       <div class="stack g-m">
-        <span class="eyebrow">${he?"הרצאות וסדנאות":"Speaking & workshops"}</span>
-        <h2>${he?"להזמין את נעמה":"Invite Naama"}</h2>
-        <p class="lede">${he
-          ? "נעמה מגיעה לבתי ספר, ספריות, מועדוני קריאה וכנסים. כל מפגש נבנה מראש מול הגוף המזמין ומותאם לגיל הקהל."
-          : "Naama appears at schools, libraries, book clubs and conventions. Every session is built with the host in advance and pitched to the age of the room."}</p>
 
         <div class="creds">
           <div class="cred">
@@ -1725,14 +1772,12 @@ function vCommunity(){
   const perks = he
    ? ["מפגשי קריאה מיוחדים","סודות מחדר העריכה","מידע סודי שמתפרסם שם לראשונה"]
    : ["Special reading sessions","Secrets from the editing room","News that breaks there first"];
-  return `<section class="band wrap stack g-xl">
-    <div class="stack g-s">
-      <span class="eyebrow">${he?"קהילת הקוראים":"The readers"}</span>
-      <h2>${he?"המישלינגים":"The Mishlingim"}</h2>
-      <p class="lede">${he
-        ? "קבוצת הקוראים של נעמה. שם מדברים על הספרים לפני שהם יוצאים, שם נחשפים דברים ראשונים, ושם נעמה עונה בעצמה."
-        : "Naama's reader community. Where the books are talked about before they're out, where things are seen first, and where Naama answers in person."}</p>
-    </div>
+  return `${pageHero("אייקון",
+      he?"קהילת הקוראים":"The readers",
+      he?"המישלינגים":"The Mishlingim",
+      he?"קבוצת הקוראים של נעמה. שם מדברים על הספרים לפני שהם יוצאים, שם נחשפים דברים ראשונים, ושם נעמה עונה בעצמה."
+        :"Naama's reader community. Where the books are talked about before they're out, where things are seen first, and where Naama answers in person.")}
+  <section class="band wrap stack g-xl">
     <div class="grid g2">
       <div class="world">
         <span class="wnum">${he?"קבוצת הקוראים":"The group"}</span>
@@ -1779,12 +1824,10 @@ function vCommunity(){
 }
 
 function vRights(){
-  return `<section class="band wrap narrow stack g-l" dir="ltr" style="text-align:start">
-    <div class="stack g-s">
-      <span class="eyebrow">Rights &amp; Foreign Editions</span>
-      <h2 class="serif-lat">N.B. SHIRA</h2>
-      <p class="lede">Award-winning Israeli fantasy author, writing as <b>N.B. Shira</b>. Nine published novels across two sequential series, a romantasy spin-off trilogy and a standalone historical romantasy — with the first novel now available in English.</p>
-    </div>
+  return `<div dir="ltr">${pageHero("יריד פרנקפורט",
+      "Rights & Foreign Editions", "N.B. SHIRA",
+      "Award-winning Israeli fantasy author. Nine published novels, tens of thousands of copies sold, and the first book already in English.")}</div>
+  <section class="band wrap narrow stack g-l" dir="ltr" style="text-align:start">
     <hr class="rule">
     <div class="grid g2">
       <div class="stack g-s">
@@ -1814,6 +1857,23 @@ function vRights(){
       <span class="eyebrow">In the market</span>
       <p>Beyond her own titles, she is a connective figure in Israeli genre publishing. She founded and runs the country's principal professional network for fantasy authors — <b>127 writers</b>, including most of Israel's best-known names in the field — and works directly with the major retail and distribution channels.</p>
       <p class="dim">For a publisher acquiring rights, this means a local author with reach into the market itself, not only into its readers.</p>
+    </div>
+    <hr class="rule">
+    <div class="stack g-s">
+      <span class="eyebrow">International</span>
+      <h3 style="font-size:1.4rem" class="serif-lat">Already travelling</h3>
+      <div class="intl">
+        ${[["יריד פרנקפורט","Frankfurt Book Fair","Bar Shira has represented her work at Frankfurt, the international rights market."],
+           ["אמאזון","Amazon Best Sellers","The Archangel Sisters charted in Amazon's Metaphysical Fantasy category, alongside English-language titles."],
+           ["יריד פרנקפורט2","Rights conversations","Ongoing discussions about editions beyond Israel."]]
+          .map(([photo,t,d])=>{
+            const f=FIELD.find(x=>x.n===photo);
+            return `<figure class="intlcard">
+              ${f?`<button class="intlimg" onclick="openField('${f.i}')" aria-label="${esc(t)}"><img src="${fieldSrc(f.i)}" alt="${esc(t)}" loading="lazy"></button>`:""}
+              <figcaption><b>${esc(t)}</b><span>${esc(d)}</span></figcaption>
+            </figure>`;
+          }).join("")}
+      </div>
     </div>
     <hr class="rule">
     <div class="stack g-s">
