@@ -1019,7 +1019,7 @@ const T = {
 /* order: 1 = the entry point, 2 = its direct sequel, 3 = spin-offs readable anytime, 4 = standalone */
 const WORLDS = [
   { id:"elyon", seq:"1",
-    he:{ name:"מלאכיות עליון", kicker:"פנטזיה אורבנית · הסדרה הראשונה",
+    he:{ name:"מלאכיות עליון", kicker:"פנטזיה אורבנית ישראלית · הסדרה הראשונה",
       blurb:"ארבע אחיות מגלות שהן הגלגול הנשי של ארבעת המלאכים הראשיים. המלחמה על עתיד העולם מתרחשת בין הסמטאות בירושלים למדורי השאול. הטרילוגיה שהיא השער לעולם, ומתרחשת בימינו - כאן מתחילים.",
       tags:["טרילוגיה","פרס גפן 2024","מצעד הספרים","מיתולוגיה יהודית"], start:"נקודת ההתחלה של היקום" },
     en:{ name:"The Archangel Sisters", kicker:"Urban fantasy · The first series",
@@ -1035,7 +1035,7 @@ const WORLDS = [
       tags:["Direct sequel","17 years later","Ongoing"], start:"Read after The Archangel Sisters" } },
 
   { id:"dimdumim", seq:"3", mature:true,
-    he:{ name:"בין השמשות", kicker:"פנטזיה רומנטית · שלושה ספין-אופים",
+    he:{ name:"בין השמשות", kicker:"רומנטזי · פנטזיה רומנטית · שלושה ספין-אופים",
       blurb:"שלושה ספין-אופים של פנטזיה רומנטית. כל ספר עומד בפני עצמו ומכיל מידע וזוויות נוספות שמעשירות את העולם של מלאכיות עליון. כל אחד נוחת בזמן ובמקום אחר לגמרי: תל אביב של סוף השישים, החאן בירושלים, ומסע שמתחיל באוסטריה ונגמר בים המלח.",
       tags:["רומנטזי","עומד בפני עצמו","ספין-אוף"], start:"אפשר להתחיל מכאן, ואפשר בכל שלב" },
     en:{ name:"Between Twilights", kicker:"Romantasy · Three spin-offs",
@@ -1043,7 +1043,7 @@ const WORLDS = [
       tags:["Romantasy","Standalone","Spin-off"], start:"Start here, or read at any point" } },
 
   { id:"standalone", seq:"-", mature:true,
-    he:{ name:"איזבלה מלכת ירושלים", kicker:"פנטזיה רומנטית היסטורית · הוצאת אהבות",
+    he:{ name:"איזבלה מלכת ירושלים", kicker:"רומנטזי היסטורי · הוצאת אהבות",
       blurb:"ממלכת ירושלים על סף קריסה. כס המלכות מתערער, בריתות נרקמות ונפרמות בלילות חשוכים, והארץ נחרבת מבפנים, בידי בני אדם ובידי כוחות אפלים הרבה יותר. איזבלה, נסיכה שנולדה אל תוך משחקי שלטון אכזריים, מגלה שחוב שנחתם בדם עוד לפני שנולדה עומד להיגבות. סוף המאה ה־12, יותר משמונה מאות שנה לפני מלאכיות עליון. עומד בפני עצמו לגמרי, אך מכיל דמויות שיהיו משמעותיות מאוד גם בסדרה הראשית.",
       tags:["ספר עצמאי","רומנטזי היסטורי","הוצאת אהבות"], start:"עצמאי לחלוטין" },
     en:{ name:"Isabella, Queen of Jerusalem", kicker:"Historical romantasy · Ahavot Press",
@@ -1820,13 +1820,13 @@ function vAuthor(){
         <span class="eyebrow">${he?"הסופרת":"The author"}</span>
         <h2>${he?"נעמה בר שירה":"N.B. Shira"}</h2>
         <p class="lede">${he
-          ? "יוצרת מובילה בתחום הפנטזיה הישראלית, שהגיעה לעשרות אלפי קוראים בארץ ובעולם."
-          : "A leading voice in Israeli fantasy, read by tens of thousands in Israel and abroad."}</p>
+          ? "סופרת נוער ופנטזיה ישראלית, מחזאית ואשת חינוך. זוכת פרס גפן 2024, פרס קיפוד 2025 וספר השנה 2026, ונקראת בעשרות אלפי עותקים בארץ ובעולם. בעיתונות היא מופיעה לעיתים גם כנעמה בר-שירה."
+          : "An Israeli fantasy and young-adult author, playwright and educator. Winner of the Geffen Award 2024, the Kipod Award 2025 and Book of the Year 2026, read in tens of thousands of copies in Israel and abroad."}</p>
         <p>${he
           ? "נעמה גדלה בבית של ספרים ואומנים. אימה שחקנית ובמאית פרסמה ספר שירה, אביה כתב ספרי פסיכולוגיה, אחיה מוזיקאי ומלחין ואחותה עורכת דין וסופרת בעצמה. נעמה עבדה וכתבה שנים לתיאטרון. ״מעיין הנשמות״ נכתב מעט לפני הקורונה ויצא ב־2022. כשעולם התרבות נעצר, היא כתבה את שני ספרי ההמשך במהלך שנה וקצת, והם יצאו בשנים העוקבות. היום היא חיה בהוד השרון עם בן זוגה היוצר והמוזיקאי ינון בר שירה ושתי הבנות שלהן, שחר וקשת."
           : "Naama grew up in a house of books and artists. Her mother, an actor and director, published a poetry collection; her father wrote on psychology; her brother is a musician and composer and her sister is a lawyer and an author. Naama wrote for the theatre for years. Spring of Souls was written shortly before the pandemic and published in 2022. When the cultural world stopped, she wrote the two sequels over the following year, and they appeared in the years after. She lives in Hod HaSharon with her partner, the musician and creator Yinon Bar Shira, and their two daughters, Shachar and Keshet."}</p>
         <p>${he
-          ? "הרעיון שפתח הכל היה פשוט: לקחת את ארבעת המלאכים הראשיים, מיכאל, גבריאל, רפאל ואוריאל, ולכתוב אותם כנשים. מה שיצא מזה הוא פנטזיה שמתרחשת בישראל של היום, בכתובות שאפשר להגיע אליהן ברכבת. טרילוגיית מלאכיות עליון נמכרה מאז בעשרות אלפי עותקים."
+          ? "הרעיון שפתח הכל היה פשוט: לקחת את ארבעת המלאכים הראשיים, מיכאל, גבריאל, רפאל ואוריאל, ולכתוב אותם כנשים. מה שיצא מזה הוא פנטזיה אורבנית שמתרחשת בישראל של היום, נשענת על מיתולוגיה יהודית, ומתרחשת בכתובות שאפשר להגיע אליהן ברכבת. טרילוגיית מלאכיות עליון נמכרה מאז בעשרות אלפי עותקים, ו״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך."
           : "The idea that opened everything was simple: take the four archangels - Michael, Gabriel, Raphael and Uriel, and write them as women. What came out is fantasy set in present-day Israel, at addresses you can reach by train. The Archangel Sisters trilogy has since sold tens of thousands of copies."}</p>
         <p class="dim">${he
           ? "לצד הספרים היא מחזאית, בימאית ומפיקה. בין המחזות שכתבה: ״אין לי שם כי אין לי ילד״, ״טפטוף״, ״עלמה?״. בין ההצגות שביימה: ״מה הבעיה שלך?״, ״מספרים על אדוארד״, ״טריפ״, ״עשן מעל המים״ - שעלו על הבמות של הבימה, החאן, סוזן דלאל, תיאטרון הסמטה ופסטיבל ישראל."
@@ -1846,8 +1846,8 @@ function vWorlds(){
   return `${pageHero("יריד בין השורות",
       he?"הסדרות":"The series",
       he?"יקום אחד, ארבע דלתות":"One universe, four doors",
-      he?"הספרים לא מסודרים לפי סדר הופעה אלא לפי העולם שהם פותחים. בחרו את הדלת שמדברת אליכם."
-        :"The books are organised not by publication order but by the world they open. Choose the door that speaks to you.", "center 42%", .62)}
+      he?"פנטזיה אורבנית ישראלית ורומנטזי בעברית, ביקום אחד שנפרש על ארבע סדרות. הספרים לא מסודרים כאן לפי סדר הופעה אלא לפי העולם שהם פותחים. בחרו את הדלת שמדברת אליכם."
+        :"Israeli urban fantasy and Hebrew romantasy, in one universe spread across four series. The books are ordered here not by publication date but by the world they open. Choose the door that speaks to you.", "center 42%", .62)}
   <section class="band wrap stack g-xl">
     ${orderEl()}
     <div class="grid gworlds">
@@ -1959,8 +1959,10 @@ function vBooks(){
   const he=lang==="he";
   return `${pageHero("ערימות ספרים",
       he?"נעמה בר שירה":"N.B. Shira",
-      he?"הספרים":"The books",
-      "", "center 45%")}
+      he?"כל הספרים":"All the books",
+      he?"תשעה ספרים בארבע סדרות. טרילוגיית מלאכיות עליון - מעיין הנשמות, שער הצללים ושממת העדן; הסיקוול מלאכיות בשערי השחר - צבא המלכה והבן האובד; שלושת ספרי הרומנטזי בין השמשות - זהר, ברק וסוקי; ואיזבלה מלכת ירושלים. כל אחד מהם עומד בפני עצמו."
+        :"Nine books across four series. The Archangel Sisters trilogy - Spring of Souls, The Gate of Shadows and The Desolation of Eden; the sequel series Angels at the Gates of Dawn - The Queen's Army and The Lost Son; the three romantasy standalones of Between Twilights - Zohar, Barak and Suki; and Isabella, Queen of Jerusalem.",
+      "center 45%")}
   <section class="band wrap stack g-xl">
     ${WORLDS.map(w=>{
       const bs=BOOKS.filter(b=>b.world===w.id); if(!bs.length) return "";
@@ -2156,7 +2158,7 @@ function vLore(){
   return `${pageHero("ברק עם סימניה מעוצבת מתנה",
       he?"עולם מלאכיות עליון":"The world of the Archangel Sisters",
       he?"מה שנשאר אחרי העמוד האחרון":"What is left after the last page",
-      he?"שושלות שדים מאוירות, עשרים לגיונות מלאכים, חדרי החאן בירושלים ורצף של שלושים ושלושה דורות. זה העולם ממשיך לעבוד גם כשסוגרים את הכריכה - הנספחים שבסוף הספרים, פתוחים לקריאה."
+      he?"פנטזיה שנשענת על מיתולוגיה יהודית: שושלות שדים מאוירות מלילית ועד אשמדאי, שבעת מדורי השאול, עשרים לגיונות מלאכים, חדרי החאן בירושלים ורצף של שלושים ושלושה דורות. זה העולם ממשיך לעבוד גם כשסוגרים את הכריכה - הנספחים שבסוף הספרים, פתוחים לקריאה."
         : "Illustrated demon dynasties, twenty angel legions, the rooms of the Khan in Jerusalem, and a line of thirty-three generations. This is the world still working after the cover closes - the appendices from the back of the books, open to read.",
       "center 46%", .30)}
 
@@ -2963,9 +2965,9 @@ function vShop(){
   const he=lang==="he";
   return `${pageHero("סימניות עבודת יד",
       he?"החנות":"The shop",
-      he?"הזמנה ישירה מהסופרת":"Order direct from the author",
-      he?"אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת, ואנחנו שולחים. אפשר להוסיף הקדשה אישית - בלי תוספת תשלום."
-        :"This is not a chain store. The order reaches us, Naama signs it, and we ship it. A personal inscription can be added at no charge.", "center 55%", .5)}
+      he?"ספר חתום, ישירות מהסופרת":"A signed copy, direct from the author",
+      he?"אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת ביד, ואנחנו שולחים לכל הארץ. אפשר להוסיף הקדשה אישית בלי תוספת תשלום - וזו הסיבה שהרבה מההזמנות כאן הן מתנה למישהו."
+        :"This is not a chain store. The order reaches us, Naama signs each copy by hand, and we ship anywhere in Israel. A personal inscription costs nothing extra - which is why so many of these orders are a gift for someone.", "center 55%", .5)}
   <section class="band wrap stack g-xl">
 
     <div class="grid g2">
@@ -3042,49 +3044,122 @@ function vEvents(){
   </section>`;
 }
 
+/* This page is the one with the weakest competition and the highest value per
+   visit: a coordinator searching "מפגש סופרת בית ספר" is a booking, not a click.
+   So it is written as a landing page for that reader - what happens in the room,
+   what the school gets, what it costs to arrange - and not as a menu of services. */
 function vSpeaking(){
   const he=lang==="he";
-  const items = he
-   ? [["מפגשי סופרת בבתי ספר","מפגש עם כיתות חטיבה ותיכון סביב הספרים, בניית עולם, חיבור לארץ ולמיתולוגיה ועוד. מתאים לימי שיא, לשבוע הספר ולשיעורי ספרות."],
-      ["סדנאות כתיבה","סדנה מעשית בבניית עולם, דמויות ועלילה. מפגש בודד או סדרה."],
-      ["הרצאות לספריות ולמועדוני קריאה","על פנטזיה ישראלית, מיתולוגיה יהודית, והפיכת מקומות מוכרים לעולם קסום."],
+  const creds = he
+   ? [["מצעד הספרים","״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך"],
+      ["מאושר גפ״ן","תוכנית מספר 4776 - אפשר לתקצב דרך הסל המוסדי"],
+      ["פרס גפן 2024","הפרס המרכזי בישראל למדע בדיוני ופנטזיה, על ״שער הצללים״"],
+      ["רקע חינוכי","תואר בספרות, היסטוריה ותנ״ך, ותעודת הוראה"]]
+   : [["National reading list","Spring of Souls, selected by the Ministry of Education"],
+      ["Gefen programme","Programme 4776 - can be funded through the institutional budget"],
+      ["Geffen Award 2024","Israel's principal prize for science fiction and fantasy"],
+      ["Teaching background","A degree in literature, history and Bible, and a teaching certificate"]];
+
+  const gets = he
+   ? [["ערכת פעילות פדגוגית למורה","מערכי שיעור לפני המפגש ואחריו, שאלות למעגלי שיח על חוסן אישי ועל התמודדות עם קשיי למידה, ותרגילי כתיבה יצירתית להמשך העבודה בכיתה."],
+      ["ספרים לספרייה","ארבעה ספרים לספריית בית הספר בכל מפגש - או, לחלופין, אפשרות רכישה בהנחה לכל תלמיד."],
+      ["התאמה מראש","כל מפגש נבנה מול רכזת הספרות או הספרנית לפני התאריך, ומותאם לשכבה, לגודל הקהל ולמטרה של היום."]]
+   : [["A teacher's activity kit","Lesson plans for before and after, discussion questions on personal resilience, and creative writing exercises."],
+      ["Books for the library","Four books for the school library with every session, or discounted copies for every student."],
+      ["Built with you in advance","Every session is shaped with the literature coordinator or librarian before the date."]];
+
+  const other = he
+   ? [["ספריות ומועדוני קריאה","הרצאה על פנטזיה ישראלית, מיתולוגיה יהודית, והפיכת מקומות מוכרים - ירושלים, הכרמל, ים המלח - לעולם קסום."],
+      ["סדנאות כתיבה יצירתית","סדנה מעשית בבניית עולם, דמויות ועלילה. מפגש בודד או סדרה של מפגשים."],
       ["כנסים ופאנלים","הופעות בכנסי מדע בדיוני ופנטזיה, פאנלים וחתימות."]]
-   : [["School author visits","Sessions with middle- and high-school classes on the books, world-building, and the road to a literary award."],
-      ["Writing workshops","A hands-on workshop in world-building, character and plot. Single session or a series."],
-      ["Library and book-club talks","On Israeli fantasy, Jewish mythology, and turning familiar places into a magical world."],
+   : [["Libraries and book clubs","A talk on Israeli fantasy, Jewish mythology, and turning familiar places into a magical world."],
+      ["Creative writing workshops","A hands-on workshop in world-building, character and plot."],
       ["Conventions and panels","Appearances at SF&F conventions, panels and signings."]];
+
+  const waText = he ? "היי, אני מבית ספר ואשמח לבדוק זמינות למפגש סופרת עם נעמה"
+                    : "Hi, I'm from a school and would like to check availability for an author visit";
+
   return `${pageHero("הרצאה",
-      he?"הרצאות וסדנאות":"Speaking & workshops",
-      he?"להזמין את נעמה":"Invite Naama",
-      he?"נעמה מגיעה לבתי ספר, ספריות, מועדוני קריאה וכנסים. כל מפגש נבנה מראש מול הגוף המזמין ומותאם לגיל הקהל."
-        :"Naama appears at schools, libraries, book clubs and conventions. Every session is built with the host in advance and pitched to the age of the room.", "center 38%", .55)}
+      he?"מפגשי סופרת":"Author visits",
+      he?"מפגש סופרת בבית ספר":"An author visit to your school",
+      he?"נעמה בר שירה מגיעה לחטיבות, לתיכונים ולספריות ברחבי הארץ. הפעילות מאושרת בגפ״ן (תוכנית 4776), ו״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך."
+        :"Naama Bar Shira visits middle schools, high schools and libraries across Israel. The programme is approved for institutional funding, and Spring of Souls is on the Ministry of Education's reading list.",
+      "center 38%", .55)}
+
   <section class="band wrap stack g-xl">
+
+    <div class="creds">
+      ${creds.map(([b,t])=>`<div class="cred"><b>${esc(b)}</b><span>${esc(t)}</span></div>`).join("")}
+    </div>
+
     <div class="split">
       <div class="stack g-m">
-
-        <div class="creds">
-          <div class="cred">
-            <b>${he?"מצעד הספרים":"National reading list"}</b>
-            <span>${he?"״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך":"Spring of Souls was selected for the Ministry of Education's reading programme"}</span>
-          </div>
-          <div class="cred">
-            <b>${he?"פרס גפן 2024":"Geffen Award 2024"}</b>
-            <span>${he?"הפרס המרכזי בישראל למדע בדיוני ופנטזיה":"Israel's principal prize for science fiction and fantasy"}</span>
-          </div>
+        <span class="eyebrow">${he?"מה קורה במפגש":"What happens in the room"}</span>
+        <h2>${he?"הרצאה אחת, שני חצאים":"One session, two halves"}</h2>
+        <p class="lede">${he
+          ? "החצי הראשון הוא הסיפור האישי: הדרך מילדה דיסלקטית ועד תשעה ספרים ומעל חמישים אלף עותקים - כולל שגיאות הכתיב שנשארו בדרך. החצי השני הוא הפנטזיה הישראלית עצמה: איך לוקחים את חאן המלאכים בירושלים, את הכרמל ואת ים המלח והופכים אותם לעולם שלם, ולמה דווקא מיתולוגיה יהודית."
+          : "The first half is the personal story: the road from a dyslexic girl to nine books and more than fifty thousand copies - spelling mistakes included, to this day. The second is Israeli fantasy itself: how the Khan in Jerusalem, the Carmel and the Dead Sea become a whole world, and why Jewish mythology."}</p>
+        <p>${he
+          ? "המפגש עובד בשני פורמטים: שכבה שלמה באודיטוריום, או מפגש אינטימי של כיתה אחת בספרייה. שניהם באורך שיעור כפול, ושניהם מסתיימים בשאלות מהתלמידים - שזה בדרך כלל החלק הכי טוב."
+          : "It works in two formats: a whole year group in the auditorium, or a single class in the library. Both run for a double period, and both end with questions from the students - usually the best part."}</p>
+        <div class="stack g-xs" style="margin-block-start:.4rem">
+          <span class="eyebrow">${he?"מתי מזמינים":"When to book"}</span>
+          <p class="dim">${he
+            ? "שבוע השפה העברית, חודש הקריאה, ימי שיא שכבתיים, שבוע הספר, או פעילות העשרה לאורך השנה. יומן התאריכים מתמלא מוקדם, ובעיקר סביב שבוע הספר."
+            : "Hebrew Language Week, reading month, year-group activity days, Book Week, or enrichment across the year. The calendar fills up early."}</p>
         </div>
-
-        ${quoteEl(2)}
-        <a class="btn btn-solid" style="align-self:start" href="https://wa.me/${PHONE}?text=${encodeURIComponent(he?"היי, אשמח לבדוק זמינות למפגש עם נעמה":"Hi, I'd like to check availability for an appearance")}" target="_blank" rel="noopener">
-          ${he?"בדיקת זמינות":"Check availability"}
-        </a>
       </div>
-      <div class="grid" style="gap:1rem">
-        ${items.map(([h,pp])=>`<div class="card"><h3 style="color:var(--gold-soft)">${esc(h)}</h3><p class="dim" style="font-size:.92rem">${esc(pp)}</p></div>`).join("")}
-        <div class="note">${he
-          ? "מפגשי בתי ספר מותאמים לגיל הקהל. כל תשעת הספרים יכולים להיכנס למפגש כמכלול: עולם, דמויות ותהליך כתיבה."
-          : "School sessions are pitched to the age of the room. All nine books can feature as whole works: world, characters and craft."}</div>
+
+      <div class="stack g-m">
+        <div class="stack g-xs">
+          <span class="eyebrow">${he?"למי זה מתאים":"Who it suits"}</span>
+          <h3 style="font-size:1.35rem">${he?"מכיתה ח׳ ומעלה":"Year 8 and up"}</h3>
+          <p class="dim">${he
+            ? "״מעיין הנשמות״ כתוב מותח ומתרחש בישראל של היום, ועובד טוב מול בנות ובנים כאחד. הוא כולל העצמה של נערות, רפרנסים למיתולוגיה יהודית וגיבורים שיושבים בתיכון בארץ. הסיפור על דיסלקציה עובד במיוחד מול תלמידים שמתקשים בקריאה ובכתיבה."
+            : "Spring of Souls is a page-turner set in present-day Israel, and works with boys and girls alike."}</p>
+        </div>
+        ${quoteEl(2)}
       </div>
     </div>
+
+    <hr class="rule">
+
+    <div class="stack g-m">
+      <div class="stack g-xs">
+        <span class="eyebrow">${he?"מה בית הספר מקבל":"What the school gets"}</span>
+        <h2>${he?"לא רק שעה בבוקר":"More than an hour in the morning"}</h2>
+      </div>
+      <div class="grid g3">
+        ${gets.map(([h,t])=>`<div class="card"><h3 style="color:var(--gold-soft)">${esc(h)}</h3><p class="dim" style="font-size:.94rem">${esc(t)}</p></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="stack g-xs">
+        <span class="eyebrow">${he?"שריון מועד":"Book a date"}</span>
+        <b>${he?"לבדוק זמינות לתאריך שלכם":"Check availability for your date"}</b>
+        <span class="dim" style="font-size:.9rem">${he
+          ? `הודעה אחת בוואטסאפ למספר ${PHONE_DISP}, או מייל, ונחזור אליכם עם זמינות ועם הצעה מסודרת.`
+          : `One WhatsApp message to ${PHONE_DISP}, or an email, and we come back with availability and a written offer.`}</span>
+      </div>
+      <div class="btns">
+        <a class="btn btn-solid" href="https://wa.me/${PHONE}?text=${encodeURIComponent(waText)}" target="_blank" rel="noopener">${he?"וואטסאפ":"WhatsApp"}</a>
+        <a class="btn btn-quiet" href="mailto:${FORMS_EMAIL}?subject=${encodeURIComponent(he?"בקשה למפגש סופרת בבית ספר":"Author visit enquiry")}">${he?"מייל":"Email"}</a>
+      </div>
+    </div>
+
+    <hr class="rule">
+
+    <div class="stack g-m">
+      <div class="stack g-xs">
+        <span class="eyebrow">${he?"מסגרות נוספות":"Other settings"}</span>
+        <h2>${he?"לא רק בתי ספר":"Not only schools"}</h2>
+      </div>
+      <div class="grid g3">
+        ${other.map(([h,t])=>`<div class="card"><h3 style="color:var(--gold-soft)">${esc(h)}</h3><p class="dim" style="font-size:.94rem">${esc(t)}</p></div>`).join("")}
+      </div>
+    </div>
+
   </section>`;
 }
 
@@ -3531,9 +3606,9 @@ const SEO = {
          en:["On tour - fairs, conventions and signings","Photographs from book fairs, conventions and launches."]},
   events:{he:["אירועים קרובים - איפה פוגשים את נעמה בר שירה","כנסים, ירידים, השקות וחתימות."],
           en:["Events - where to meet Naama","Conventions, fairs, launches and signings."]},
-  speaking:{he:["הרצאות וסדנאות כתיבה - מפגשי סופרת בבתי ספר וספריות",
-                "מפגשי סופרת לחטיבות ולתיכונים, סדנאות כתיבה ובניית עולם, והרצאות בספריות ובמועדוני קריאה. הפעילות מאושרת בגפ\"ן."],
-            en:["Speaking and workshops","School visits, writing workshops and library talks."]},
+  speaking:{he:["מפגש סופרת בבית ספר - נעמה בר שירה | מאושר גפ\"ן 4776",
+                "מפגשי סופרת לחטיבות ולתיכונים מכיתה ח׳: סיפור אישי על דיסלקציה וחוסן, פנטזיה ישראלית, ערכת פעילות פדגוגית וספרים לספרייה. ״מעיין הנשמות״ במצעד הספרים של משרד החינוך, והפעילות מאושרת בגפ\"ן, תוכנית 4776. גם סדנאות כתיבה יצירתית והרצאות בספריות."],
+            en:["Author visits to schools - N.B. Shira","Author visits for middle and high schools, with a teacher's activity kit and books for the library."]},
   community:{he:["המישלינגים - קהילת הקוראים של נעמה בר שירה","קבוצת הקוראים שמקבלת עדכונים ראשונה, עותקים מוקדמים ומפגשים."],
              en:["The readers' community","The reader group that hears everything first."]},
   rights:{he:["Rights - זכויות תרגום לספרי נעמה בר שירה","Foreign rights information for N.B. Shira's novels."],
