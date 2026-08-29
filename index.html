@@ -22,7 +22,9 @@
   --ink:#04050A; --ink-2:#0A0C16; --ink-3:#131624;
   --gold:#C9A356; --gold-soft:#E4C889; --ember:#D9663E;
   --bg:var(--ink); --surface:var(--ink-2); --surface-2:var(--ink-3);
-  --text:#EAE3D6; --text-dim:#B6AF9F; --muted:#8A8474;
+  /* the two greys sat at the AA floor and read as washed out at small sizes;
+     these clear it comfortably and still keep the hierarchy */
+  --text:#EFE9DE; --text-dim:#C7C0AF; --muted:#A8A190;
   --line:rgba(201,163,86,.20); --line-strong:rgba(201,163,86,.42);
   --glow:rgba(201,163,86,.10);
   --sky-top:#020307; --sky-mid:#0E0B26; --sky-low:#2E1B34; --sky-horizon:#7E4029; --city:#010204;
@@ -41,7 +43,9 @@
 #stars{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 body{
   margin:0; background:var(--bg); color:var(--text);
-  font-family:var(--f-body); font-weight:300; font-size:clamp(1rem,.55vw + .9rem,1.09rem);
+  /* 300 was too thin for light-on-dark: strokes thinned out and readers called
+     it low contrast. 400 fixes more of the complaint than any colour change. */
+  font-family:var(--f-body); font-weight:400; font-size:clamp(1.06rem,.6vw + .95rem,1.18rem);
   line-height:1.72; -webkit-font-smoothing:antialiased;
 }
 [dir="ltr"] body{font-family:var(--f-body)}
@@ -59,10 +63,18 @@ h2{font-size:clamp(1.75rem,3.6vw,2.8rem)}
 h3{font-size:clamp(1.15rem,1.8vw,1.42rem);font-weight:700}
 p{margin:0}
 .eyebrow{
-  font-family:var(--f-body);font-size:.72rem;font-weight:600;letter-spacing:.22em;
+  font-family:var(--f-body);font-size:.78rem;font-weight:600;letter-spacing:.22em;
   text-transform:uppercase;color:var(--gold);display:block;
 }
 [dir="rtl"] .eyebrow{letter-spacing:.14em}
+/* The opening line is the tagline, so it carries display type and gold - the
+   paragraph under it stays quiet and explains. */
+.hero-kick{
+  font-family:var(--f-display);font-weight:700;color:var(--gold-soft);
+  font-size:clamp(1.16rem,1.9vw,1.55rem);line-height:1.35;
+  max-width:var(--measure);margin-block-end:.2rem;
+}
+[dir="ltr"] .hero-kick{font-family:var(--f-display-lat);font-weight:600}
 .lede{font-size:clamp(1.06rem,1.4vw,1.28rem);color:var(--text-dim);line-height:1.66;max-width:var(--measure)}
 .dim{color:var(--muted)}
 .num{font-variant-numeric:tabular-nums}
@@ -103,7 +115,7 @@ section.band{padding-block:var(--rhythm)}
 .tools{display:flex;align-items:center;gap:.4rem}
 .chip{
   border:1px solid var(--line-strong);border-radius:999px;padding:.3rem .72rem;
-  font-size:.75rem;letter-spacing:.06em;color:var(--text-dim);transition:.2s;
+  font-size:.8rem;letter-spacing:.06em;color:var(--text-dim);transition:.2s;
 }
 .chip:hover{color:var(--gold-soft);border-color:var(--gold)}
 .chip b{font-weight:700;color:var(--gold-soft)}
@@ -116,9 +128,13 @@ body[data-nav="compact"] .nav{
   position:fixed;inset-block-start:66px;inset-inline:0;background:var(--surface);
   border-block-end:1px solid var(--line);flex-direction:column;gap:0;padding:.5rem var(--pad) 1.1rem;
   display:none;
+  /* Fourteen items are taller than a phone screen, and a fixed element cannot
+     be scrolled by the page - the items below the fold were unreachable. */
+  max-block-size:calc(100dvh - 66px);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
 }
 body[data-nav="compact"] .nav[data-open="true"]{display:flex}
-body[data-nav="compact"] .nav button{padding:.66rem .2rem;font-size:1rem;text-align:start;border-block-end:1px solid var(--line)}
+body[data-nav="compact"] .nav button{padding:.8rem .2rem;font-size:1.05rem;text-align:start;border-block-end:1px solid var(--line)}
 body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 
 .crosslink{
@@ -165,7 +181,7 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .qrimg.is-plate img{background:#E9DFC9}
 .qrkick{color:var(--gold-soft);font-size:.82rem;letter-spacing:.1em}
 .qchips{display:flex;flex-wrap:wrap;gap:.4rem;margin-block-start:.3rem}
-.qchip{border:1px solid var(--line-strong);border-radius:999px;padding:.25rem .7rem;font-size:.75rem;color:var(--text-dim)}
+.qchip{border:1px solid var(--line-strong);border-radius:999px;padding:.28rem .75rem;font-size:.82rem;color:var(--text-dim)}
 .qacts{display:flex;flex-wrap:wrap;gap:.5rem;margin-block-start:1rem}
 
 .qbars,.qtal{display:grid;gap:.35rem;margin-block-start:1.1rem;max-width:34rem}
@@ -210,6 +226,8 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .pshot img{width:100%;height:auto;display:block}
 .dplate:hover .pshot,.dplate:focus-visible .pshot{border-color:var(--gold);transform:translateY(-3px)}
 /* Always on, not only on hover - on a phone there is no hover to discover it with */
+.plate .cap{position:relative}
+.plate .pmore{position:absolute;inset-block-start:-.2rem;inset-inline-end:.5rem;inset-block-end:auto}
 .pmore{
   position:absolute;inset-block-end:.4rem;inset-inline-end:.4rem;
   inline-size:1.6rem;block-size:1.6rem;border-radius:50%;
@@ -232,7 +250,7 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 }
 .dplate .pname{display:block;margin-block-start:.5rem;font-family:var(--f-display);color:var(--text);font-size:.92rem;line-height:1.25}
 [dir="ltr"] .dplate .pname{font-family:var(--f-display-lat)}
-.dplate .prole{display:block;margin-block-start:.15rem;color:var(--text-dim);font-size:.73rem;line-height:1.35}
+.dplate .prole{display:block;margin-block-start:.15rem;color:var(--text-dim);font-size:.8rem;line-height:1.35}
 
 .loreview{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:1.6rem;align-items:start}
 .loreplate{width:100%;height:auto;border:1px solid var(--line-strong);background:#E9DFC9}
@@ -246,7 +264,7 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 }
 .dcard b{display:block;font-family:var(--f-display);color:var(--gold-soft);font-size:1rem;margin-block-end:.4rem}
 [dir="ltr"] .dcard b{font-family:var(--f-display-lat)}
-.dcard p{color:var(--text-dim);font-size:.88rem;line-height:1.65}
+.dcard p{color:var(--text-dim);font-size:.93rem;line-height:1.65}
 .agechip{
   font-size:.7rem;color:var(--text-dim);border:1px solid var(--line-strong);
   border-radius:999px;padding:.1rem .5rem;margin-inline-start:.35rem;vertical-align:.1em;
@@ -313,13 +331,18 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
   border:1px solid var(--gold);color:var(--gold-soft);font-size:.9rem;font-weight:600;
   letter-spacing:.05em;border-radius:2px;transition:.22s;background:transparent;
   text-decoration:none;                 /* an <a> styled as a button is still a button */
+  /* Readers noticed buttons of different heights sitting side by side, and
+     labels drifting left or right inside them. One shape, one alignment. */
+  justify-content:center;text-align:center;
+  min-block-size:2.9rem;line-height:1.25;
 }
+.btn-sm{min-block-size:2.4rem}
 .btn:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
 .btn-solid{background:var(--gold);color:#0B0F1C;border-color:var(--gold)}
 .btn-solid:hover{background:var(--gold-soft);border-color:var(--gold-soft);color:#0B0F1C}
 .btn-quiet{border-color:var(--line-strong);color:var(--text-dim)}
 .btn-quiet:hover{background:transparent;color:var(--gold-soft);border-color:var(--gold)}
-.btn-sm{padding:.46rem 1rem;font-size:.8rem}
+.btn-sm{padding:.46rem 1rem;font-size:.85rem}
 
 /* ============ CARDS / GRIDS ============ */
 .grid{display:grid;gap:1.4rem}
@@ -700,6 +723,15 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .pin:hover .pnum,.pin[data-on="true"] .pnum{fill:#fff}
 .pin[data-on="true"] .halo{opacity:.55;stroke:var(--ember)}
 
+.cxbox{fill:var(--ink-2);stroke:var(--ember);stroke-width:1}
+.cxline{stroke:var(--ember);stroke-width:1;opacity:.8}
+.cxtext{font-family:var(--f-body);font-size:9.5px;font-weight:700;fill:var(--gold-soft)}
+.placeshot{
+  inline-size:100%;block-size:auto;border:1px solid var(--line-strong);
+  margin-block:.5rem;background:var(--surface-2);
+}
+.mapnote{border:1px solid var(--line);padding:.9rem 1rem;transition:border-color .25s,background .25s}
+.mapnote[data-on="true"]{border-color:var(--gold);background:var(--glow)}
 .placelist{display:grid;gap:0;border:1px solid var(--line);background:var(--surface)}
 .ploc{
   display:flex;gap:.9rem;align-items:baseline;width:100%;text-align:start;
@@ -788,6 +820,57 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .pcheck[data-on="true"]{border-color:var(--gold);background:var(--glow)}
 .pcheck input{margin-block-start:.3rem;accent-color:var(--gold)}
 
+/* ============ ACCESSIBILITY ============ */
+/* Three settings, each one a complaint we actually heard: text too small,
+   text too faint, and a moving background behind the words. */
+.a11y-open{
+  position:fixed;inset-block-end:1rem;inset-inline-start:1rem;z-index:70;
+  inline-size:3rem;block-size:3rem;border-radius:50%;
+  display:grid;place-items:center;font-size:1.3rem;line-height:1;
+  background:var(--surface);border:1px solid var(--gold);color:var(--gold-soft);
+  box-shadow:var(--shadow);transition:.2s;
+}
+.a11y-open:hover{background:var(--gold);color:#0B0F1C}
+.a11y{
+  position:fixed;inset-block-end:5rem;inset-inline-start:1rem;z-index:71;
+  inline-size:min(20rem,calc(100vw - 2rem));
+  background:var(--surface);border:1px solid var(--gold);box-shadow:var(--shadow);
+  padding:1.1rem;display:none;flex-direction:column;gap:1rem;
+  max-block-size:calc(100dvh - 7rem);overflow-y:auto;
+}
+.a11y[data-open="true"]{display:flex}
+.a11y h4{font-family:var(--f-display);font-size:1.05rem;color:var(--gold-soft)}
+.a11y .grp{display:flex;flex-direction:column;gap:.45rem}
+.a11y .lbl{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.a11y .row{display:flex;gap:.4rem;flex-wrap:wrap}
+.a11y .opt{
+  flex:1;min-inline-size:3.4rem;padding:.5rem .4rem;text-align:center;
+  border:1px solid var(--line-strong);color:var(--text-dim);font-size:.85rem;transition:.2s;
+}
+.a11y .opt[data-on="true"]{border-color:var(--gold);background:var(--glow);color:var(--gold-soft)}
+.a11y .sw{
+  display:flex;align-items:center;justify-content:space-between;gap:.8rem;
+  border:1px solid var(--line-strong);padding:.6rem .75rem;font-size:.9rem;
+  color:var(--text-dim);inline-size:100%;text-align:start;transition:.2s;
+}
+.a11y .sw[data-on="true"]{border-color:var(--gold);background:var(--glow);color:var(--gold-soft)}
+.a11y .sw i{font-style:normal;font-size:.8rem;letter-spacing:.1em}
+
+/* High contrast: pure values, no half-transparent lines, no dimmed photographs. */
+body[data-contrast="high"]{
+  --text:#FFFFFF; --text-dim:#F0EAE0; --muted:#DCD5C6;
+  --gold-soft:#FFE2A8; --gold:#E7C57A;
+  --line:rgba(231,197,122,.45); --line-strong:rgba(231,197,122,.75);
+  --bg:#000000; --surface:#0A0C14; --surface-2:#141826;
+}
+body[data-contrast="high"] .phero-img{opacity:.12 !important}
+body[data-contrast="high"] .dim,body[data-contrast="high"] .fnote{color:var(--text-dim)}
+body[data-contrast="high"] #stars{display:none}
+
+body[data-motion="off"] #stars,body[data-motion="off"] #sky{display:none}
+body[data-motion="off"] .hero{background:linear-gradient(180deg,var(--sky-top),var(--sky-mid) 55%,var(--sky-low))}
+body[data-motion="off"] *{animation:none !important}
+
 /* ============ READER FORMS ============ */
 /* One card shape for the readers' list, a review and a letter, so the three
    read as the same gesture wherever they appear. */
@@ -801,7 +884,7 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 @media (min-width:640px){.frow.two{grid-template-columns:1fr 1fr}}
 .fcard textarea{resize:vertical;min-height:6.5rem;line-height:1.55}
 .fsend{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.fnote{font-size:.79rem;color:var(--muted);max-width:52ch;line-height:1.5}
+.fnote{font-size:.85rem;color:var(--muted);max-width:52ch;line-height:1.5}
 .ferr{font-size:.86rem;color:#e79a9a}
 .fthanks{
   border:1px solid var(--gold);background:var(--glow);
@@ -852,6 +935,9 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 <main id="app"></main>
 
 <div class="scrim" id="scrim" onclick="openCart(false)"></div>
+<button class="a11y-open" id="a11yBtn" onclick="toggleA11y()" aria-label="נגישות" title="נגישות">א</button>
+<div class="a11y" id="a11y" role="dialog" aria-label="הגדרות נגישות"></div>
+
 <div class="lb" id="lb" onclick="lb(null)"><button aria-label="close">✕</button><img id="lbImg" src="" alt=""></div>
 <div class="lb lb-book" id="bookLb" onclick="if(event.target===this)closeBook()"><div class="lb-panel" id="bookPanel"></div></div>
 <aside class="drawer" id="drawer" aria-label="הזמנה">
@@ -899,13 +985,13 @@ const FORMS_EMAIL_CC = "naama.nbs@gmail.com";       // and a copy here
 const T = {
   he:{
     dir:"rtl", brand:"נעמה בר שירה", brandSub:"מלאכיות עליון", lang:"EN",
-    nav:{home:"פתח",author:"הסופרת",worlds:"העולמות",books:"הספרים",lore:"הנספחים",gallery:"הגלריה",quiz:"חידונים",field:"בשטח",reviews:"ביקורות",shop:"הגנזך",events:"אירועים",speaking:"הרצאות",community:"המישלינגים",rights:"Rights"},
-    cart:{title:"ההזמנה שלך",empty:"עוד לא הוספת ספרים.",emptyHint:"הגנזך פתוח - כל הספרים נשלחים חתומים בבקשה.",total:"סה״כ",send:"שליחת ההזמנה בוואטסאפ",bit:"תשלום בביט",note:"ההזמנה נשלחת ישירות לנעמה. נאשר, נסכם משלוח, ונשלח פרטי תשלום בביט.",signed:"אני רוצה עותק חתום בהקדשה",signedHint:"ללא תוספת תשלום",remove:"הסרה",name:"שם מלא",addr:"כתובת למשלוח",dedication:"למי להקדיש?",dedicationPh:"לדוגמה: לרוני, שקוראת בלילות"}
+    nav:{home:"פתח",author:"הסופרת",worlds:"הסדרות",books:"הספרים",lore:"העולם",gallery:"הגלריה",quiz:"חידונים",field:"בשטח",reviews:"ביקורות",shop:"החנות",events:"אירועים",speaking:"הרצאות",community:"המישלינגים",rights:"Rights"},
+    cart:{title:"ההזמנה שלך",empty:"עוד לא הוספת ספרים.",emptyHint:"החנות פתוחה - כל הספרים נשלחים חתומים בבקשה.",total:"סה״כ",send:"שליחת ההזמנה בוואטסאפ",bit:"תשלום בביט",note:"ההזמנה נשלחת ישירות לנעמה. נאשר, נסכם משלוח, ונשלח פרטי תשלום בביט.",signed:"אני רוצה עותק חתום בהקדשה",signedHint:"ללא תוספת תשלום",remove:"הסרה",name:"שם מלא",addr:"כתובת למשלוח",dedication:"למי להקדיש?",dedicationPh:"לדוגמה: לרוני, שקוראת בלילות"}
   },
   en:{
     dir:"ltr", brand:"N.B. SHIRA", brandSub:"The Archangel Sisters", lang:"עב",
-    nav:{home:"Threshold",author:"Author",worlds:"Worlds",books:"Books",lore:"Appendices",gallery:"Gallery",quiz:"Quizzes",field:"On Tour",reviews:"Reviews",shop:"Archive",events:"Events",speaking:"Speaking",community:"Readers",rights:"Rights"},
-    cart:{title:"Your order",empty:"No books yet.",emptyHint:"The Archive is open - every copy ships signed on request.",total:"Total",send:"Send order via WhatsApp",bit:"Pay with Bit",note:"The order goes straight to Naama. We confirm, arrange shipping, and send Bit payment details.",signed:"I'd like a signed, inscribed copy",signedHint:"No extra charge",remove:"Remove",name:"Full name",addr:"Shipping address",dedication:"Inscribe it to…",dedicationPh:"e.g. For Roni, who reads at night"}
+    nav:{home:"Threshold",author:"Author",worlds:"The Series",books:"Books",lore:"The World",gallery:"Gallery",quiz:"Quizzes",field:"On Tour",reviews:"Reviews",shop:"Shop",events:"Events",speaking:"Speaking",community:"Readers",rights:"Rights"},
+    cart:{title:"Your order",empty:"No books yet.",emptyHint:"The shop is open - every copy ships signed on request.",total:"Total",send:"Send order via WhatsApp",bit:"Pay with Bit",note:"The order goes straight to Naama. We confirm, arrange shipping, and send Bit payment details.",signed:"I'd like a signed, inscribed copy",signedHint:"No extra charge",remove:"Remove",name:"Full name",addr:"Shipping address",dedication:"Inscribe it to…",dedicationPh:"e.g. For Roni, who reads at night"}
   }
 };
 
@@ -958,6 +1044,26 @@ const GALLERY = {
     {k:"fig_teal",   he:"אופיר",   en:"Ofir",    rhe:"מלאך",          ren:"Angel"},
     {k:"fig_blonde", he:"שחר",     en:"Shachar", rhe:"חצי מלאך, חצי שד",  ren:"Half angel, half demon"}
   ]
+};
+
+/* ---------- WHO THE GALLERY FACES ARE ----------
+   Keyed by the image key in GALLERY above. r = the line under the name,
+   t = the description shown when the picture is opened. To add a character,
+   fill in t here - nothing else needs changing. */
+const FIGURES = {
+  ang_brown:{ he:{a:"בת 17", r:"מלאכית העליון מיכאל", t:"התגלמותו של מלאך העליון מיכאל על האדמה, ראש לגיון הלוחמים."},
+              en:{a:"17", r:"The archangel Michael", t:"The incarnation of the archangel Michael on earth, head of the soldiers' legion."}},
+  ang_red:{   he:{a:"בת 17", r:"מלאכית העליון גבריאל", t:"התגלמותו של מלאך העליון גבריאל על האדמה, ראש לגיון הכלא העמוק."},
+              en:{a:"17", r:"The archangel Gabriel", t:"The incarnation of the archangel Gabriel on earth, head of the Deep Prison legion."}},
+  ang_bob:{   he:{a:"בת 17", r:"מלאכית העליון רפאל", t:"התגלמותו של מלאך העליון רפאל על האדמה, ראש לגיון המרפאים."},
+              en:{a:"17", r:"The archangel Raphael", t:"The incarnation of the archangel Raphael on earth, head of the healers' legion."}},
+  ang_white:{ he:{a:"בת 17", r:"מלאכית העליון אוריאל", t:"התגלמותו של מלאך העליון אוריאל על האדמה."},
+              en:{a:"17", r:"The archangel Uriel", t:"The incarnation of the archangel Uriel on earth."}},
+  fig_teal:{  he:{a:"בן 17", r:"מלאך משושלת מלאכי מיכאל", t:"בנו של צדקיאל סגול הכנפיים. אימו נרצחה בידי שדים."},
+              en:{a:"17", r:"Of Michael's line", t:"Son of Tzadkiel Purple Wings. His mother was killed by demons."}},
+  fig_green:{ he:{r:"שד", t:""},            en:{r:"Demon", t:""}},
+  fig_purple:{he:{r:"חצי שדה", t:""},       en:{r:"Half-demon", t:""}},
+  fig_blonde:{he:{r:"חצי מלאך, חצי שד", t:""}, en:{r:"Half angel, half demon", t:""}}
 };
 
 const MATURE = {
@@ -1269,7 +1375,9 @@ const L = o => o[lang];
 const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 /* ---------- ROUTER ---------- */
-const VIEWS = ["home","author","worlds","books","lore","gallery","quiz","field","reviews","shop","events","speaking","community","rights"];
+/* Nav order follows the reader: what there is, how to buy it, then the world
+   behind it. The author and the rest of the shelf come after. */
+const VIEWS = ["home","books","shop","worlds","lore","gallery","quiz","author","reviews","field","events","speaking","community","rights"];
 function go(v){ view=v; if(v==="quiz") qzLoaded=false; /* re-read the tally on every visit */
   setHash(v); unlockScroll();
 
@@ -1430,9 +1538,12 @@ function vHome(){
     <canvas id="sky"></canvas>
     <div class="wrap hero-in">
       <h1>${he?"מלאכים ושדים,<br>ממש כאן.":"Angels and demons,<br>right here."}</h1>
+      <p class="hero-kick">${he
+        ? "מלאכים, שדים, מישלינגים ומלחמה בין העולם של מעלה ומטה."
+        : "Angels, demons, Mishlingim, and a war between the world above and the world below."}</p>
       <p class="lede">${he
-        ? "נעמה בר שירה כותבת פנטזיה שמתרחשת במקומות שאתם כבר מכירים - חאן המלאכים בירושלים, הכרמל, ים המלח, תל אביב של פעם. תשעה ספרים, ארבעה פרסים, ועולם אחד שנפתח בשעה שבין אור לחושך."
-        : "N.B. Shira writes fantasy set in places you already know - the Khan of the Angels in Jerusalem, the Carmel, the Dead Sea, the Tel Aviv of another era. Nine novels, four awards, and one world that opens at the hour between light and dark."}</p>
+        ? "נעמה בר שירה יצרה את היקום של ״מלאכיות עליון״ - פנטזיה אורבנית שנשענת על מיתולוגיה יהודית, ומביאה את הקוראים היישר למקומות שאנחנו מכירים: ירושלים, הכרמל, ים המלח, תל אביב ועוד. מתח, רומנטיקה ואקשן, בשילוב שסחף אחריו קהילת קוראים מושבעת."
+        : "N.B. Shira built the universe of The Archangel Sisters - urban fantasy rooted in Jewish mythology, taking readers straight into the places we know: Jerusalem, the Carmel, the Dead Sea, Tel Aviv and more. Suspense, romance and action, in a blend that has swept up a devoted community of readers."}</p>
       <div class="badges">
         <span class="badge"><b>${he?"פרס גפן 2024":"Geffen Award 2024"}</b> ${he?"שער הצללים":"The Gate of Shadows"}</span>
         <span class="badge"><b>${he?"ספר השנה 2026":"Book of the Year 2026"}</b> ${he?"הבן האובד":"The Lost Son"}</span>
@@ -1440,8 +1551,8 @@ function vHome(){
         <span class="badge"><b>${he?"מצעד הספרים":"National reading list"}</b> ${he?"מעיין הנשמות":"Spring of Souls"}</span>
       </div>
       <div class="cta-row">
-        <button class="btn btn-solid" onclick="go('worlds')">${he?"היכנסו לעולמות":"Enter the worlds"}</button>
-        <button class="btn btn-quiet" onclick="go('shop')">${he?"הגנזך - רכישת ספרים":"The Archive - buy books"}</button>
+        <button class="btn btn-solid" onclick="go('worlds')">${he?"מאיפה מתחילים":"Where to start"}</button>
+        <button class="btn btn-quiet" onclick="go('shop')">${he?"לחנות - רכישת ספרים":"To the shop - buy books"}</button>
       </div>
     </div>
   </div>
@@ -1455,7 +1566,7 @@ function vHome(){
           ? "שלוש סדרות, יקום אחד. אפשר להתחיל מההתחלה עם מעיין הנשמות, או לקפוץ ישר לחיפה של בין השמשות - היא עומדת בפני עצמה."
           : "Three series, one universe. Start at the beginning with Spring of Souls, or jump straight into the Haifa of Between Twilights - it stands on its own."}</p>
         <div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-block-start:.6rem">
-          <button class="btn btn-sm" onclick="go('worlds')">${he?"מדריך העולמות":"The world guide"}</button>
+          <button class="btn btn-sm" onclick="go('worlds')">${he?"מדריך הסדרות":"The series guide"}</button>
           <button class="btn btn-sm btn-quiet" onclick="go('books')">${he?"כל הספרים":"All books"}</button>
         </div>
       </div>
@@ -1500,7 +1611,7 @@ function vHome(){
 
   <section class="band wrap stack g-l">
     <div class="stack g-s">
-      <span class="eyebrow">${he?"הנספחים":"The appendices"}</span>
+      <span class="eyebrow">${he?"עולם מלאכיות עליון":"The world"}</span>
       <h2>${he?"ומול המלאכיות, עולם מטה":"And facing them, the world below"}</h2>
       <p class="lede">${he
         ? "בסוף הספרים נעמה משאירה נספחים: שבעה מדורי שאול, עשרים לגיונות מלאכים, ושושלת אחת שנמתחת שמונה מאות וחמישים שנה. הכול פתוח לקריאה."
@@ -1516,7 +1627,7 @@ function vHome(){
           <span class="pname">${esc(L(d).n)}</span>
         </div>`;}).join("")}
     </div>
-    <button class="btn btn-quiet" style="align-self:start" onclick="go('lore')">${he?"לנספחים":"Open the appendices"}</button>
+    <button class="btn btn-quiet" style="align-self:start" onclick="go('lore')">${he?"להיכנס לעולם":"Step into the world"}</button>
   </section>
 
   <hr class="rule">
@@ -1584,6 +1695,7 @@ function mapEl(){
         <rect x="0" y="0"   width="218" height="34" fill="url(#fadeTop)"/>
         <rect x="0" y="470" width="218" height="52" fill="url(#fadeBot)"/>
         ${pins}
+        <g id="mapCallout"></g>
       </svg>
     </div>
     <div class="stack g-m">
@@ -1597,16 +1709,68 @@ function mapEl(){
     </div>
   </div>`;
 }
+/* The description used to sit only in the panel below, and readers told us they
+   never noticed it. Now the name is drawn right beside the pin you pressed, and
+   the panel carries the rest - with a photograph when the place has one. */
 function showPlace(i){
-  const p=PLACES[i], pl=L(p);
+  const p=PLACES[i], pl=L(p), he=lang==="he";
   document.querySelectorAll(".pin").forEach(el=>el.dataset.on = el.dataset.i==String(i)?"true":"false");
   document.querySelectorAll(".ploc").forEach(el=>el.dataset.on = el.dataset.i==String(i)?"true":"false");
-  document.getElementById("mapNote").innerHTML =
-    `<div class="stack g-xs">
-       <span class="eyebrow">${esc(L(p.book))}</span>
-       <h3 style="color:var(--gold-soft);font-size:1.2rem">${esc(pl.n)}</h3>
-       <p>${esc(pl.d)}</p>
-     </div>`;
+  mapCallout(i);
+
+  const note=document.getElementById("mapNote");
+  if(note){
+    note.dataset.on="true";
+    note.innerHTML =
+      `<div class="stack g-xs">
+         <span class="eyebrow">${esc(L(p.book))}</span>
+         <h3 style="color:var(--gold-soft);font-size:1.25rem">${esc(pl.n)}</h3>
+         ${p.img?`<img class="placeshot" src="assets/places/${esc(p.img)}.webp" alt="${esc(pl.n)}" loading="lazy"
+                    onerror="this.remove()">`:""}
+         <p>${esc(pl.d)}</p>
+       </div>`;
+    /* on a phone the panel sits under the map, off screen - bring it along */
+    if(matchMedia("(max-width:759px)").matches) note.scrollIntoView({block:"nearest",behavior:"smooth"});
+  }
+}
+
+/* The label is drawn inside the SVG so it travels with the pin at any size.
+   Long names ("ירושלים - חאן המלאכים") do not fit beside a pin near the middle
+   of a 218-wide frame, so the box takes whichever side has room and drops above
+   or below the pin when neither does. It is always clamped inside the frame. */
+function mapCallout(i){
+  const g=document.getElementById("mapCallout"); if(!g) return;
+  const p=PLACES[i];
+  const x = p.off?px(35.30):px(p.lon), y = p.off?10:py(p.lat);
+  const name = L(p).n;
+  const W=218, H=522, pad=3, gap=13, h=17;
+  const w = Math.min(W-2*pad, Math.max(30, name.length*5.9 + 14));
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+
+  const fitsStart = x - gap - w >= pad;      /* room on the low-x side  */
+  const fitsEnd   = x + gap + w <= W - pad;  /* room on the high-x side */
+  let bx, by, lx;
+  if(fitsStart || fitsEnd){
+    const onStart = fitsStart && (x > W/2 || !fitsEnd);
+    bx = onStart ? x - gap - w : x + gap;
+    by = clamp(y - h/2, pad, H - h - pad);
+    lx = onStart ? bx + w : bx;              /* the edge the leader touches */
+    g.innerHTML = `
+      <line x1="${(onStart?x-11:x+11).toFixed(1)}" y1="${y.toFixed(1)}" x2="${lx.toFixed(1)}" y2="${(by+h/2).toFixed(1)}" class="cxline"></line>
+      ${boxEl(bx,by,w,h,name)}`;
+  } else {
+    bx = clamp(x - w/2, pad, W - w - pad);
+    by = y - gap - h;
+    if(by < pad) by = y + gap;               /* flip under the pin near the top */
+    const anchorY = by < y ? by + h : by;
+    g.innerHTML = `
+      <line x1="${x.toFixed(1)}" y1="${(by<y?y-11:y+11).toFixed(1)}" x2="${clamp(x,bx+4,bx+w-4).toFixed(1)}" y2="${anchorY.toFixed(1)}" class="cxline"></line>
+      ${boxEl(bx,by,w,h,name)}`;
+  }
+}
+function boxEl(bx,by,w,h,name){
+  return `<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${w.toFixed(1)}" height="${h}" rx="2" class="cxbox"></rect>
+    <text x="${(bx+w/2).toFixed(1)}" y="${(by+h/2+3.6).toFixed(1)}" text-anchor="middle" class="cxtext">${esc(name)}</text>`;
 }
 
 function vAuthor(){
@@ -1651,7 +1815,7 @@ function vAuthor(){
 function vWorlds(){
   const he=lang==="he";
   return `${pageHero("יריד בין השורות",
-      he?"העולמות":"The worlds",
+      he?"הסדרות":"The series",
       he?"יקום אחד, ארבע דלתות":"One universe, four doors",
       he?"הספרים לא מסודרים לפי סדר הופעה אלא לפי העולם שהם פותחים. בחרו את הדלת שמדברת אליכם."
         :"The books are organised not by publication order but by the world they open. Choose the door that speaks to you.", "center 42%", .62)}
@@ -1780,23 +1944,60 @@ function vBooks(){
 
     <div class="crosslink">
       <div class="stack g-xs">
-        <span class="eyebrow">${he?"הגנזך":"The Archive"}</span>
+        <span class="eyebrow">${he?"החנות":"The shop"}</span>
         <b>${he?"עותקים חתומים, חבילות ומשלוח":"Signed copies, bundles and shipping"}</b>
         <p class="dim">${he
-          ? "כל ספר נחתם ביד לפני המשלוח, ואפשר להוסיף הקדשה אישית בלי תוספת תשלום. פרטי החבילות, המשלוח והתשלום נמצאים בגנזך."
-          : "Every book is hand-signed before shipping, and a personal inscription costs nothing extra. Bundles, shipping and payment details are in the Archive."}</p>
+          ? "כל ספר נחתם ביד לפני המשלוח, ואפשר להוסיף הקדשה אישית בלי תוספת תשלום. פרטי החבילות, המשלוח והתשלום נמצאים בחנות."
+          : "Every book is hand-signed before shipping, and a personal inscription costs nothing extra. Bundles, shipping and payment details are in the shop."}</p>
       </div>
-      <button class="btn btn-sm" onclick="go('shop')">${he?"לגנזך":"To the Archive"}</button>
+      <button class="btn btn-sm" onclick="go('shop')">${he?"לחנות":"To the shop"}</button>
     </div>
   </section>`;
 }
 
+const GAL_ALL = () => GALLERY.angels.concat(GALLERY.others);
+
 function galRow(items){
-  return `<div class="gal">${items.map(x=>`
-    <button class="plate" onclick="lb('${x.k}')" aria-label="${esc(L(x))}">
+  const he=lang==="he";
+  return `<div class="gal">${items.map(x=>{
+    const f=FIGURES[x.k];
+    const role = f ? L(f).r : (x.rhe ? (he?x.rhe:x.ren) : "");
+    return `
+    <button class="plate" onclick="openFig('${x.k}')" aria-label="${esc(L(x))}${role?" - "+esc(role):""}">
       <img src="${IMG[x.k]}" alt="${esc(L(x))}" loading="lazy">
-      <span class="cap"><b>${esc(L(x))}</b>${x.rhe?`<span>${esc(lang==="he"?x.rhe:x.ren)}</span>`:""}</span>
-    </button>`).join("")}</div>`;
+      <span class="cap"><span class="pmore" aria-hidden="true">+</span><b>${esc(L(x))}</b>${role?`<span>${esc(role)}</span>`:""}</span>
+    </button>`;}).join("")}</div>`;
+}
+
+/* The demon plates opened into a card with the whole entry, and the gallery
+   opened into a bare photograph with nothing beside it. Same card for both. */
+function openFig(k){
+  const all=GAL_ALL();
+  const x=all.find(g=>g.k===k); if(!x) return;
+  const i=all.indexOf(x), he=lang==="he";
+  const prev=all[(i-1+all.length)%all.length].k, next=all[(i+1)%all.length].k;
+  const f=FIGURES[k] || {he:{r:"",t:""},en:{r:"",t:""}};
+  const c=L(f);
+  const body = c.t
+    ? `<p>${esc(c.t)}</p>`
+    : `<p class="dim">${he?"התיאור של הדמות הזו עוד נכתב, ויעלה לכאן בקרוב.":"This character's entry is still being written, and will appear here soon."}</p>`;
+  document.getElementById("bookPanel").innerHTML = `
+    <button class="lb-close" onclick="closeBook()" aria-label="${he?"סגירה":"Close"}">✕</button>
+    <div class="loreview">
+      <img class="loreplate" src="${IMG[k]}" alt="${esc(L(x))}">
+      <div class="stack g-s">
+        ${c.r?`<span class="eyebrow">${esc(c.r)}</span>`:""}
+        <h3 class="h3">${esc(L(x))}${c.a?` <span class="agechip num">${esc(c.a)}</span>`:""}</h3>
+        ${body}
+        <span class="fnav">
+          <button onclick="openFig('${prev}')" aria-label="${he?"הקודם":"Previous"}">‹</button>
+          <span class="dim num">${i+1} / ${all.length}</span>
+          <button onclick="openFig('${next}')" aria-label="${he?"הבא":"Next"}">›</button>
+        </span>
+      </div>
+    </div>`;
+  document.getElementById("bookLb").dataset.open="true";
+  document.body.style.overflow="hidden";
 }
 function vGallery(){
   const he=lang==="he";
@@ -1829,13 +2030,13 @@ function vGallery(){
 
     <div class="crosslink">
       <div class="stack g-xs">
-        <span class="eyebrow">${he?"בנספחים":"In the appendices"}</span>
+        <span class="eyebrow">${he?"בעולם":"In the world"}</span>
         <b>${he?"שושלות השדים, מאוירות":"The demon dynasties, illustrated"}</b>
         <p class="dim">${he
           ? "תשע עשרה דמויות מעולם מטה, מהשטן ולילית ועד שדי העופרית, כפי שהן מופיעות בנספחי הספרים."
           : "Nineteen figures from the world below, from Satan and Lilith to the Ophrit demons, as they appear in the appendices of the books."}</p>
       </div>
-      <button class="btn btn-sm" onclick="go('lore')">${he?"לנספחים":"To the appendices"}</button>
+      <button class="btn btn-sm" onclick="go('lore')">${he?"לעולם":"To the world"}</button>
     </div>
 
   </section>`;
@@ -1910,7 +2111,7 @@ function openField(id){
    competing with the text on top of it. */
 /* ---------- APPENDICES ---------- */
 let loreTab = "demons";
-function setLore(k){ loreTab=k; render(); document.getElementById("loreTop").scrollIntoView({block:"start",behavior:"smooth"}); }
+function setLore(k){ loreTab=k; render(); const t=document.getElementById("loreTop"); if(t) t.scrollIntoView({block:"start",behavior:"smooth"}); }
 
 function vLore(){
   const he=lang==="he";
@@ -1920,10 +2121,10 @@ function vLore(){
               {k:"angels",he:"מלאכים בוגרים",en:"The angels"},
               {k:"line",he:"33 הדורות",en:"33 generations"}];
   return `${pageHero("ברק עם סימניה מעוצבת מתנה",
-      he?"הנספחים":"The appendices",
+      he?"עולם מלאכיות עליון":"The world of the Archangel Sisters",
       he?"מה שנשאר אחרי העמוד האחרון":"What is left after the last page",
-      he?"בסוף הספרים נעמה משאירה נספחים: שושלות שדים, לגיונות מלאכים, מפת חדרים ורצף דורות שלם. זה העולם ממשיך לעבוד גם כשסוגרים את הכריכה. מה שכאן הוא קיצור מתוכם."
-        : "At the back of the books Naama leaves appendices: demon dynasties, angel legions, a map of rooms and a full line of descent. This is the world still working after the cover closes. What follows is a digest of them.",
+      he?"שושלות שדים מאוירות, עשרים לגיונות מלאכים, חדרי החאן בירושלים ורצף של שלושים ושלושה דורות. זה העולם ממשיך לעבוד גם כשסוגרים את הכריכה - הנספחים שבסוף הספרים, פתוחים לקריאה."
+        : "Illustrated demon dynasties, twenty angel legions, the rooms of the Khan in Jerusalem, and a line of thirty-three generations. This is the world still working after the cover closes - the appendices from the back of the books, open to read.",
       "center 46%", .30)}
 
   <section class="band wrap stack g-l" id="loreTop">
@@ -2070,6 +2271,60 @@ function loreLine(){
         </ol>
       </div>`).join("")}
   </div>`;
+}
+
+/* ---------- ACCESSIBILITY ---------- */
+/* Kept outside render(): these settings belong to the reader and their browser,
+   not to the page being shown, so they survive every navigation. */
+const A11Y_SIZES = {normal:"100%", large:"115%", xlarge:"132%"};
+let a11y = {size:"normal", contrast:"normal", motion:"on", open:false};
+
+function a11yLoad(){
+  try{
+    const saved = JSON.parse(localStorage.getItem("nbs_a11y")||"null");
+    if(saved) a11y = Object.assign(a11y, saved, {open:false});
+  }catch(e){}
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) a11y.motion="off";
+  a11yApply();
+}
+function a11ySave(){ try{ localStorage.setItem("nbs_a11y", JSON.stringify({size:a11y.size,contrast:a11y.contrast,motion:a11y.motion})); }catch(e){} }
+function a11yApply(){
+  document.documentElement.style.fontSize = A11Y_SIZES[a11y.size] || "100%";
+  document.body.dataset.contrast = a11y.contrast;
+  document.body.dataset.motion   = a11y.motion;
+  if(a11y.motion==="off"){ if(skyRAF) cancelAnimationFrame(skyRAF); if(starRAF) cancelAnimationFrame(starRAF); }
+  else if(view==="home") startSky();
+  a11yPanel();
+  fitNav();                      /* bigger labels may no longer fit on one row */
+}
+function a11ySet(k,v){ a11y[k]=v; a11ySave(); a11yApply(); }
+function toggleA11y(){ a11y.open=!a11y.open; a11yPanel(); }
+function a11yReset(){ a11y={size:"normal",contrast:"normal",motion:"on",open:true}; a11ySave(); a11yApply(); }
+
+function a11yPanel(){
+  const el=document.getElementById("a11y"); if(!el) return;
+  const he=lang==="he";
+  el.dataset.open = a11y.open ? "true" : "false";
+  const sizes=[["normal",he?"רגיל":"Normal"],["large",he?"גדול":"Large"],["xlarge",he?"ענק":"Largest"]];
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:.8rem">
+      <h4 style="margin-inline-end:auto">${he?"נגישות":"Accessibility"}</h4>
+      <button class="chip" onclick="toggleA11y()" aria-label="${he?"סגירה":"Close"}">✕</button>
+    </div>
+    <div class="grp">
+      <span class="lbl">${he?"גודל הטקסט":"Text size"}</span>
+      <div class="row">${sizes.map(([k,n])=>
+        `<button class="opt" data-on="${a11y.size===k}" onclick="a11ySet('size','${k}')">${esc(n)}</button>`).join("")}</div>
+    </div>
+    <div class="grp">
+      <button class="sw" data-on="${a11y.contrast==="high"}" onclick="a11ySet('contrast','${a11y.contrast==="high"?"normal":"high"}')">
+        <span>${he?"ניגודיות גבוהה":"High contrast"}</span><i>${a11y.contrast==="high"?(he?"פועל":"On"):(he?"כבוי":"Off")}</i>
+      </button>
+      <button class="sw" data-on="${a11y.motion==="off"}" onclick="a11ySet('motion','${a11y.motion==="off"?"on":"off"}')">
+        <span>${he?"עצירת התנועה ברקע":"Stop background motion"}</span><i>${a11y.motion==="off"?(he?"פועל":"On"):(he?"כבוי":"Off")}</i>
+      </button>
+    </div>
+    <button class="btn btn-sm btn-quiet" onclick="a11yReset()">${he?"איפוס להגדרות ברירת המחדל":"Reset to defaults"}</button>`;
 }
 
 /* A button that takes you to a block further down the same page. */
@@ -2672,7 +2927,7 @@ function vReviews(){
 function vShop(){
   const he=lang==="he";
   return `${pageHero("סימניות עבודת יד",
-      he?"הגנזך":"The Archive",
+      he?"החנות":"The shop",
       he?"הזמנה ישירה מהסופרת":"Order direct from the author",
       he?"אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת, ואנחנו שולחים. אפשר להוסיף הקדשה אישית - בלי תוספת תשלום."
         :"This is not a chain store. The order reaches us, Naama signs it, and we ship it. A personal inscription can be added at no charge.", "center 55%", .5)}
@@ -2921,7 +3176,7 @@ function renderCart(){
   document.getElementById("cartTitle").textContent=c.title;
   if(!items.length){
     body.innerHTML=`<div class="stack g-s"><p>${esc(c.empty)}</p><p class="dim" style="font-size:.9rem">${esc(c.emptyHint)}</p>
-      <button class="btn btn-sm" style="align-self:start" onclick="openCart(false);go('shop')">${lang==="he"?"לגנזך":"To the Archive"}</button></div>`;
+      <button class="btn btn-sm" style="align-self:start" onclick="openCart(false);go('shop')">${lang==="he"?"לחנות":"To the shop"}</button></div>`;
     foot.innerHTML=""; return;
   }
   const bd=bundleFor(cartQty());
@@ -2959,6 +3214,7 @@ let skyRAF=null;
 let starRAF=null;
 function startStars(){
   const cv=document.getElementById("stars"); if(!cv) return;
+  if(a11y.motion==="off") return;
   const ctx=cv.getContext("2d"); let w,h,stars=[];
   let seed=20240;
   const rnd=()=>{ seed=(seed*1664525+1013904223)>>>0; return seed/4294967296; };
@@ -2992,6 +3248,7 @@ function startStars(){
 
 function startSky(){
   const cv=document.getElementById("sky"); if(!cv) return;
+  if(a11y.motion==="off") return;
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const ctx=cv.getContext("2d"); let w,h,parts=[];
   function size(){
@@ -3003,7 +3260,7 @@ function startSky(){
       s:Math.random()*.14+.03, a:Math.random()*.5+.12, p:Math.random()*Math.PI*2
     }));
   }
-  size(); addEventListener("resize",size,{passive:true});
+  size(); addEventListener("resize",()=>{ size(); skyCache=null; },{passive:true});
   const css=getComputedStyle(document.documentElement);
   function frame(ts){
     const gold=css.getPropertyValue("--gold-soft").trim()||"#E4C889";
@@ -3022,64 +3279,184 @@ function startSky(){
       ctx.fillStyle=gold; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7); ctx.fill();
     });
     ctx.globalAlpha=1;
-    drawSkyline(ctx,w,h,css);
+    ctx.drawImage(buildSkyline(w,h,css), 0, 0, w, h);
     skyRAF=requestAnimationFrame(frame);
   }
   cancelAnimationFrame(skyRAF); skyRAF=requestAnimationFrame(frame);
 }
 
-/* A Levantine roofline: flat roofs, a dome, a minaret, arched openings.
-   Deterministic - the same skyline every load, so it reads as a place, not noise. */
-const SKYLINE = [
-  [0,74,"flat"],[52,58,"flat"],[92,86,"arch"],[150,46,"flat"],[196,64,"dome"],
-  [268,52,"flat"],[310,96,"flat"],[352,38,"minaret"],[382,70,"arch"],[446,54,"flat"],
-  [498,88,"flat"],[540,60,"dome"],[604,44,"flat"],[652,78,"arch"],[712,56,"flat"],
-  [764,92,"flat"],[806,50,"minaret"],[838,72,"flat"],[898,60,"dome"],[962,46,"flat"],[1010,80,"flat"]
-];
-function drawSkyline(ctx,w,h,css){
-  const unit = w/1040, base = h + 2;
+/* A Levantine roofline, drawn the way you actually see one at dusk: a hazy far
+   ridge, a nearer row of blocks in front of it, and on top of those the clutter
+   that makes an Israeli roof an Israeli roof - solar tanks, aerials, parapets,
+   a stray dome and a minaret. Deterministic, so it is the same city every load.
+
+   The whole thing is baked once into an offscreen canvas and blitted each
+   frame; only the sky gradient and the drifting motes are redrawn. */
+let skyCache=null, skyCacheKey="";
+
+function mulberry(seed){
+  return function(){
+    seed|=0; seed=seed+0x6D2B79F5|0;
+    let t=Math.imul(seed^seed>>>15,1|seed);
+    t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296;
+  };
+}
+
+/* One row of buildings. Widths and heights vary, roofs are never perfectly
+   level, and every so often a landmark interrupts the blocks. */
+function skylineRow(ctx,w,base,scale,seed,opts){
+  const rnd=mulberry(seed);
+  const {fill,alpha,clutter,windows,glowColor,glowAlpha}=opts;
   ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(0, base);
-  for(let i=0;i<SKYLINE.length;i++){
-    const [x0,ht,kind] = SKYLINE[i];
-    const x = x0*unit;
-    const nx = (i+1<SKYLINE.length ? SKYLINE[i+1][0] : 1040)*unit;
-    const y = base - ht*unit*1.35;
+  ctx.globalAlpha=alpha;
+  let x=-20*scale;
+  const tops=[];
+  while(x < w+20*scale){
+    const bw = (26 + rnd()*54) * scale;
+    let bh = (34 + rnd()*72) * scale;
+    const roll = rnd();
+    const kind = roll>.955 ? "minaret" : roll>.90 ? "dome" : "flat";
+    if(kind==="minaret") bh *= 1.5;
+    const y = base - bh;
+
+    ctx.beginPath();
+    ctx.moveTo(x, base);
     if(kind==="dome"){
-      const cx=(x+nx)/2, r=(nx-x)/2;
-      ctx.lineTo(x,y+r*.35);
-      ctx.arc(cx,y+r*.35,r,Math.PI,0);
-      ctx.lineTo(nx,base);
-      ctx.lineTo(nx,y+r*.35);
+      const r=bw*.42, cx=x+bw/2;
+      ctx.lineTo(x, y+r*.5);
+      ctx.arc(cx, y+r*.5, r, Math.PI, 0);
+      ctx.lineTo(x+bw, base);
     } else if(kind==="minaret"){
-      const cx=(x+nx)/2, tw=(nx-x)*.34;
-      ctx.lineTo(x,base - ht*unit*.5);
-      ctx.lineTo(cx-tw,base - ht*unit*.5);
-      ctx.lineTo(cx-tw,y);
-      ctx.lineTo(cx,y-14*unit);
-      ctx.lineTo(cx+tw,y);
-      ctx.lineTo(cx+tw,base - ht*unit*.5);
-      ctx.lineTo(nx,base - ht*unit*.5);
-    } else if(kind==="arch"){
-      const cx=(x+nx)/2, r=(nx-x)/2;
-      ctx.lineTo(x,y);
-      ctx.quadraticCurveTo(cx,y-r*.5,nx,y);
+      const cx=x+bw/2, tw=bw*.16, shoulder=base-bh*.42;
+      ctx.lineTo(x, shoulder);
+      ctx.lineTo(cx-tw, shoulder);
+      ctx.lineTo(cx-tw, y+6*scale);
+      ctx.lineTo(cx-tw*1.7, y+6*scale);            /* the balcony ring */
+      ctx.lineTo(cx-tw*1.7, y+2*scale);
+      ctx.lineTo(cx-tw, y+2*scale);
+      ctx.lineTo(cx, y-9*scale);                   /* the cap */
+      ctx.lineTo(cx+tw, y+2*scale);
+      ctx.lineTo(cx+tw*1.7, y+2*scale);
+      ctx.lineTo(cx+tw*1.7, y+6*scale);
+      ctx.lineTo(cx+tw, y+6*scale);
+      ctx.lineTo(cx+tw, shoulder);
+      ctx.lineTo(x+bw, shoulder);
+      ctx.lineTo(x+bw, base);
     } else {
-      ctx.lineTo(x,y); ctx.lineTo(nx,y);
+      /* a roofline that wanders a little, and a parapet on some of them */
+      const step=Math.max(3*scale,bw/4);
+      ctx.lineTo(x, y + (rnd()-.5)*2*scale);
+      for(let sx=x+step; sx<x+bw; sx+=step) ctx.lineTo(sx, y + (rnd()-.5)*2.2*scale);
+      ctx.lineTo(x+bw, y + (rnd()-.5)*2*scale);
+      if(rnd()>.55){                                /* parapet wall */
+        ctx.lineTo(x+bw, y-2.6*scale);
+        ctx.lineTo(x+bw*.86, y-2.6*scale);
+        ctx.lineTo(x+bw*.86, y);
+      }
+      ctx.lineTo(x+bw, base);
+    }
+    ctx.closePath();
+    ctx.fillStyle=fill;
+    ctx.fill();
+
+    if(clutter && kind==="flat") skylineClutter(ctx,x,y,bw,scale,rnd,fill);
+    if(windows && kind!=="minaret") tops.push([x,y,bw,bh]);
+    x += bw + rnd()*5*scale;
+  }
+
+  /* dusk caught along the top edge, so the shapes are not flat cut-outs */
+  if(glowColor){
+    ctx.globalAlpha=glowAlpha;
+    ctx.strokeStyle=glowColor; ctx.lineWidth=1;
+    ctx.stroke();
+  }
+  ctx.restore();
+  return tops;
+}
+
+/* What sits on an Israeli roof: solar water tanks, aerials, a satellite dish. */
+function skylineClutter(ctx,x,y,bw,scale,rnd,fill){
+  ctx.fillStyle=fill; ctx.strokeStyle=fill;
+  ctx.lineWidth=Math.max(.7,1.1*scale);
+  const n=Math.floor(rnd()*3);
+  for(let i=0;i<n;i++){
+    const cx = x + 4*scale + rnd()*(bw-8*scale);
+    const pick = rnd();
+    if(pick<.42){                                   /* dud shemesh: tank + panel */
+      const tw=7*scale, th=3.4*scale;
+      ctx.fillRect(cx-tw/2, y-th-1.4*scale, tw, th);
+      ctx.beginPath();
+      ctx.moveTo(cx-tw*.8, y);
+      ctx.lineTo(cx+tw*.5, y-3.2*scale);
+      ctx.lineTo(cx+tw*.8, y-2.4*scale);
+      ctx.lineTo(cx-tw*.5, y+.4*scale);
+      ctx.closePath(); ctx.fill();
+    } else if(pick<.72){                            /* aerial */
+      const ah=(5+rnd()*8)*scale;
+      ctx.beginPath();
+      ctx.moveTo(cx,y); ctx.lineTo(cx,y-ah);
+      ctx.moveTo(cx-2.2*scale,y-ah*.55); ctx.lineTo(cx+2.2*scale,y-ah*.55);
+      ctx.moveTo(cx-1.6*scale,y-ah*.8);  ctx.lineTo(cx+1.6*scale,y-ah*.8);
+      ctx.stroke();
+    } else if(pick<.88){                            /* satellite dish */
+      const r=2.6*scale;
+      ctx.beginPath(); ctx.arc(cx,y-r,r,Math.PI*.15,Math.PI*1.15); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(cx,y); ctx.lineTo(cx,y-r); ctx.stroke();
+    } else {                                        /* a box, a stairwell head */
+      ctx.fillRect(cx-3*scale, y-4*scale, 6*scale, 4*scale);
     }
   }
-  ctx.lineTo(w,base); ctx.lineTo(0,base);
-  ctx.closePath();
-  ctx.globalAlpha=1;
-  ctx.fillStyle = css.getPropertyValue("--city").trim() || "#05070F";
-  ctx.fill();
-  /* dawn caught on the roofline */
-  ctx.globalAlpha=.5;
-  ctx.lineWidth=1;
-  ctx.strokeStyle = css.getPropertyValue("--gold").trim() || "#C9A356";
-  ctx.stroke();
-  ctx.restore();
+}
+
+function buildSkyline(w,h,css){
+  const key = Math.round(w)+"x"+Math.round(h)+"|"+css.getPropertyValue("--city").trim();
+  if(skyCache && skyCacheKey===key) return skyCache;
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const cv=document.createElement("canvas");
+  cv.width=Math.max(1,Math.round(w*dpr)); cv.height=Math.max(1,Math.round(h*dpr));
+  const c=cv.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0);
+
+  const city   = css.getPropertyValue("--city").trim()      || "#05070F";
+  const gold   = css.getPropertyValue("--gold").trim()      || "#C9A356";
+  const horizon= css.getPropertyValue("--sky-horizon").trim()|| "#7E4029";
+  const scale  = Math.max(.75, Math.min(1.6, w/1100));
+  const base   = h + 2;
+
+  /* the far ridge: lower, softer, half dissolved in the haze */
+  skylineRow(c, w, base - 10*scale, scale*.72, 9137,
+    {fill:city, alpha:.45, clutter:false, windows:false,
+     glowColor:horizon, glowAlpha:.30});
+
+  /* haze between the two rows - what makes distance read as distance */
+  const haze=c.createLinearGradient(0, base-105*scale, 0, base);
+  haze.addColorStop(0,"rgba(0,0,0,0)");
+  haze.addColorStop(1, horizon);
+  c.save(); c.globalAlpha=.30; c.fillStyle=haze;
+  c.fillRect(0, base-105*scale, w, 105*scale); c.restore();
+
+  /* the near row, with everything on its roofs */
+  const tops = skylineRow(c, w, base, scale, 4471,
+    {fill:city, alpha:1, clutter:true, windows:true,
+     glowColor:gold, glowAlpha:.42});
+
+  /* a few lit windows - sparse, warm, never in rows */
+  const rnd=mulberry(2213);
+  c.save();
+  tops.forEach(([bx,by,bw,bh])=>{
+    const n=Math.floor(rnd()*4);
+    for(let i=0;i<n;i++){
+      const wx = bx + 4*scale + rnd()*(bw-8*scale);
+      const wy = by + 7*scale + rnd()*Math.max(1,(bh-12*scale));
+      c.globalAlpha = .12 + rnd()*.3;
+      c.fillStyle = rnd()>.35 ? "#E9C27A" : "#B9D2E8";
+      c.fillRect(wx, wy, 1.5*scale, 2.1*scale);
+    }
+  });
+  c.restore();
+
+  skyCache=cv; skyCacheKey=key;
+  return cv;
 }
 
 /* ---------- RENDER ---------- */
@@ -3097,7 +3474,7 @@ function render(){
   const map={home:vHome,author:vAuthor,worlds:vWorlds,books:vBooks,lore:vLore,gallery:vGallery,quiz:vQuiz,field:vField,reviews:vReviews,shop:vShop,events:vEvents,speaking:vSpeaking,community:vCommunity,rights:vRights};
   const app=document.getElementById("app");
   app.innerHTML=`<div class="view">${(map[view]||vHome)()}</div>` + footEl();
-  if(view==="home") startSky(); else if(skyRAF) cancelAnimationFrame(skyRAF);
+  if(view==="home" && a11y.motion!=="off") startSky(); else if(skyRAF) cancelAnimationFrame(skyRAF);
   renderCart(); syncCount(); fitNav();
 }
 function footEl(){
@@ -3129,9 +3506,11 @@ function footEl(){
   </footer>`;
 }
 
-startStars();
 view = fromHash();
+a11yLoad();      /* before the first paint, so nothing flashes at the wrong size */
+startStars();
 render();
+a11yPanel();
 </script>
 </body>
 </html>
