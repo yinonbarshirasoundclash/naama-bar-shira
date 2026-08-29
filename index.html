@@ -205,10 +205,31 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .dplate{display:block;width:100%;text-align:start;cursor:pointer}
 .pshot{
   display:block;border:1px solid var(--line-strong);background:#E9DFC9;
-  transition:border-color .25s, transform .25s;
+  transition:border-color .25s, transform .25s;position:relative;
 }
 .pshot img{width:100%;height:auto;display:block}
 .dplate:hover .pshot,.dplate:focus-visible .pshot{border-color:var(--gold);transform:translateY(-3px)}
+/* Always on, not only on hover - on a phone there is no hover to discover it with */
+.pmore{
+  position:absolute;inset-block-end:.4rem;inset-inline-end:.4rem;
+  inline-size:1.6rem;block-size:1.6rem;border-radius:50%;
+  display:grid;place-items:center;font-size:1rem;line-height:1;font-weight:700;
+  background:rgba(11,15,28,.82);color:var(--gold-soft);border:1px solid var(--gold);
+  transition:.22s;
+}
+.dplate:hover .pmore,.dplate:focus-visible .pmore{background:var(--gold);color:#0B0F1C}
+/* A one-line instruction that is not styled like small print */
+.hint{
+  display:inline-flex;align-items:center;gap:.55rem;width:max-content;max-width:100%;
+  border:1px solid var(--line-strong);padding:.5rem .85rem;border-radius:2px;
+  font-size:.86rem;color:var(--gold-soft);
+  background:color-mix(in oklab,var(--surface) 45%,transparent);
+}
+.hintdot{
+  inline-size:1.35rem;block-size:1.35rem;border-radius:50%;flex:none;
+  display:grid;place-items:center;font-size:.9rem;font-weight:700;line-height:1;
+  background:var(--gold);color:#0B0F1C;
+}
 .dplate .pname{display:block;margin-block-start:.5rem;font-family:var(--f-display);color:var(--text);font-size:.92rem;line-height:1.25}
 [dir="ltr"] .dplate .pname{font-family:var(--f-display-lat)}
 .dplate .prole{display:block;margin-block-start:.15rem;color:var(--text-dim);font-size:.73rem;line-height:1.35}
@@ -1915,9 +1936,37 @@ function vLore(){
   </section>`;
 }
 
+/* The plates come first: they are the reason to be on this page, and a wall of
+   text above them means half the readers never scroll far enough to find them.
+   The seven circles are the reference table, and reference tables can wait. */
 function loreDemons(){
   const he=lang==="he";
   return `<div class="stack g-l">
+    <div class="stack g-s">
+      <h3 class="h3">${he?"השושלות":"The dynasties"}</h3>
+      <p class="dim" style="max-width:62ch">${he
+        ? "תשע עשרה דמויות מעולם מטה, מהשטן ולילית ועד שדי העופרית. האיורים והטקסטים הם מתוך נספחי הספרים."
+        : "Nineteen figures from the world below, from Satan and Lilith to the Ophrit demons. The plates and the texts come from the appendices of the books."}</p>
+      <span class="hint"><span class="hintdot" aria-hidden="true">+</span>${he
+        ? "לחצו על כל דמות כדי לקרוא את הסיפור המלא שלה"
+        : "Tap any figure to read its full story"}</span>
+      <div class="pgrid">
+        ${LORE_DEMONS.map(d=>`
+          <div class="dplate" role="button" tabindex="0" onclick="openLore('${d.k}')"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLore('${d.k}')}"
+               aria-label="${esc(L(d).n)} - ${he?"לסיפור המלא":"read the full story"}">
+            <span class="pshot">
+              <img src="${loreSrc(d.k)}" alt="${esc(L(d).n)}" loading="lazy" width="520" height="667">
+              <span class="pmore" aria-hidden="true">+</span>
+            </span>
+            <span class="pname">${esc(L(d).n)}</span>
+            <span class="prole">${esc(L(d).r)}</span>
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <hr class="rule">
+
     <div class="stack g-s">
       <h3 class="h3">${he?"שבעת מדורי השאול":"The seven circles of Sheol"}</h3>
       <p class="dim" style="max-width:60ch">${he
@@ -1931,23 +1980,6 @@ function loreDemons(){
           <span class="cruler">${esc(L(c).r)}</span>
         </li>`).join("")}
       </ol>
-    </div>
-
-    <div class="stack g-s">
-      <h3 class="h3">${he?"השושלות":"The dynasties"}</h3>
-      <p class="dim" style="max-width:62ch">${he
-        ? "האיורים והטקסטים הם מתוך נספחי הספרים. לחצו על דמות כדי לקרוא עליה."
-        : "The plates and the texts come from the appendices of the books. Tap a figure to read about it."}</p>
-      <div class="pgrid">
-        ${LORE_DEMONS.map(d=>`
-          <div class="dplate" role="button" tabindex="0" onclick="openLore('${d.k}')"
-               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLore('${d.k}')}"
-               aria-label="${esc(L(d).n)}">
-            <span class="pshot"><img src="${loreSrc(d.k)}" alt="${esc(L(d).n)}" loading="lazy" width="520" height="667"></span>
-            <span class="pname">${esc(L(d).n)}</span>
-            <span class="prole">${esc(L(d).r)}</span>
-          </div>`).join("")}
-      </div>
     </div>
   </div>`;
 }
