@@ -291,6 +291,7 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
   display:inline-flex;align-items:center;gap:.55rem;padding:.72rem 1.5rem;
   border:1px solid var(--gold);color:var(--gold-soft);font-size:.9rem;font-weight:600;
   letter-spacing:.05em;border-radius:2px;transition:.22s;background:transparent;
+  text-decoration:none;                 /* an <a> styled as a button is still a button */
 }
 .btn:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
 .btn-solid{background:var(--gold);color:#0B0F1C;border-color:var(--gold)}
@@ -765,6 +766,47 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .pcheck:hover{border-color:var(--line-strong)}
 .pcheck[data-on="true"]{border-color:var(--gold);background:var(--glow)}
 .pcheck input{margin-block-start:.3rem;accent-color:var(--gold)}
+
+/* ============ READER FORMS ============ */
+/* One card shape for the readers' list, a review and a letter, so the three
+   read as the same gesture wherever they appear. */
+.fcard{
+  border:1px solid var(--line);background:color-mix(in oklab,var(--surface) 55%,transparent);
+  padding:clamp(1.2rem,3vw,2rem);display:flex;flex-direction:column;gap:1.1rem;
+}
+.fcard-t,.fthanks-t{font-family:var(--f-display);font-size:1.25rem;font-weight:700;color:var(--gold-soft);line-height:1.2}
+[dir="ltr"] .fcard-t,[dir="ltr"] .fthanks-t{font-family:var(--f-display-lat);font-weight:600}
+.frow{display:grid;gap:.9rem;grid-template-columns:1fr}
+@media (min-width:640px){.frow.two{grid-template-columns:1fr 1fr}}
+.fcard textarea{resize:vertical;min-height:6.5rem;line-height:1.55}
+.fsend{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.fnote{font-size:.79rem;color:var(--muted);max-width:52ch;line-height:1.5}
+.ferr{font-size:.86rem;color:#e79a9a}
+.fthanks{
+  border:1px solid var(--gold);background:var(--glow);
+  padding:clamp(1.2rem,3vw,2rem);display:flex;flex-direction:column;gap:.55rem;
+}
+.fthanks p{max-width:62ch}
+.hp{position:absolute;inset-inline-start:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* Said once at the top of a page, so nobody has to scroll to find out it exists. */
+.callout{
+  border:1px solid var(--gold);background:var(--glow);padding:1.1rem 1.25rem;
+  display:flex;flex-wrap:wrap;gap:1rem 1.4rem;align-items:center;justify-content:space-between;
+}
+.callout b{font-family:var(--f-display);font-size:1.1rem;color:var(--gold-soft)}
+[dir="ltr"] .callout b{font-family:var(--f-display-lat);font-weight:600}
+.callout .btns{display:flex;gap:.6rem;flex-wrap:wrap}
+#revBlock,#letBlock{scroll-margin-block-start:96px}
+
+/* The share block on a quiz result - the one thing we want people to press. */
+.qshare{
+  border:1px solid var(--gold);background:var(--glow);padding:1.1rem 1.25rem;
+  display:flex;flex-wrap:wrap;gap:1rem 1.4rem;align-items:center;justify-content:space-between;
+}
+.qshare b{font-family:var(--f-display);font-size:1.1rem;color:var(--gold-soft)}
+[dir="ltr"] .qshare b{font-family:var(--f-display-lat);font-weight:600}
+.qshare .btns{display:flex;gap:.6rem;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -823,6 +865,15 @@ const LINKS = {
   facebook      : "https://www.facebook.com/naamag",
   reviewersForm : ""    // ← optional: a form for the reviewer team
 };
+
+/* ─── Reader forms: the mailing list, reviews, letters to Naama. ──────────
+   A second Google Apps Script, separate from the quiz counter above, so that
+   neither can take the other down. Paste its /exec address into FORMS_API and
+   the forms post straight to it; leave it empty and every form falls back to a
+   prefilled email the reader sends from their own mail app. */
+const FORMS_API      = "";                          // ← the second Apps Script /exec URL
+const FORMS_EMAIL    = "stageart.pnima@gmail.com";  // where the forms land
+const FORMS_EMAIL_CC = "naama.nbs@gmail.com";       // and a copy here
 
 const T = {
   he:{
@@ -1969,6 +2020,275 @@ function loreLine(){
   </div>`;
 }
 
+/* A button that takes you to a block further down the same page. */
+function jumpTo(id){
+  const e=document.getElementById(id);
+  if(e) e.scrollIntoView({block:"start",behavior:"smooth"});
+}
+
+/* ---------- READER FORMS ---------- */
+/* Three forms, one pipe: the readers' list on the quiz result screen, and a
+   review and a personal letter on the reviews page. The site is static, so
+   the posts go to a Google Apps Script - a second one, separate from the quiz
+   counter, so neither can break the other. Until FORMS_API is filled in every
+   form falls back to a prefilled email the reader sends from their own app. */
+
+const FORM_ST  = {};        /* idle | sending | done | mail | err, per form */
+const FORM_ERR = {};
+const FORM_VAL = {};        /* typed text survives a re-render */
+const fv    = k => FORM_VAL[k] || "";
+function fset(k,v){ FORM_VAL[k]=v; }
+function fclear(keys){ keys.forEach(k=>delete FORM_VAL[k]); }
+const okMail = s => /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(s);
+
+function formMailto(subject, lines){
+  return `mailto:${FORMS_EMAIL}?cc=${encodeURIComponent(FORMS_EMAIL_CC)}`
+       + `&subject=${encodeURIComponent(subject)}`
+       + `&body=${encodeURIComponent(lines.filter(Boolean).join("\n"))}`;
+}
+async function formPost(kind, data){
+  if(!FORMS_API) return "mail";
+  const r = await fetch(FORMS_API, {method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},   /* text/plain avoids a CORS preflight Apps Script cannot answer */
+    body: JSON.stringify(Object.assign({kind, lang, at:new Date().toISOString()}, data))});
+  if(!r.ok) throw new Error("bad status");
+  return "sent";
+}
+/* One path for all three: validate, send, then say what happened. */
+async function formSubmit(form, data, subject, lines, fields){
+  FORM_ERR[form]=""; FORM_ST[form]="sending"; render();
+  try{
+    const how = await formPost(form, data);
+    if(how==="mail") location.href = formMailto(subject, lines);
+    FORM_ST[form] = how==="mail" ? "mail" : "done";
+    fclear(fields);
+  }catch(e){
+    FORM_ST[form]="err";
+    FORM_ERR[form] = lang==="he"
+      ? "משהו נתקע בדרך. אפשר לנסות שוב, או לכתוב ישירות ל־" + FORMS_EMAIL
+      : "Something got stuck on the way. Try again, or write to " + FORMS_EMAIL;
+  }
+  render();
+}
+
+/* --- the readers' list, under a quiz result --- */
+const LEAD_FIELDS = ["ld-name","ld-mail","ld-tel"];
+function sendLead(){
+  const he=lang==="he";
+  if(fv("ld-hp")) return;                      /* a bot filled the hidden field */
+  const name=fv("ld-name").trim(), mail=fv("ld-mail").trim(), tel=fv("ld-tel").trim();
+  if(!mail && !tel){
+    FORM_ERR.lead = he ? "צריך מייל או טלפון - אחד מהם מספיק." : "Leave an email or a phone number - one is enough.";
+    render(); return;
+  }
+  if(mail && !okMail(mail)){
+    FORM_ERR.lead = he ? "כתובת המייל לא נראית תקינה." : "That email address doesn't look right.";
+    render(); return;
+  }
+  const Q = qz.quiz ? QUIZZES[qz.quiz] : null;
+  const res = (Q && qz.out) ? qzResultCopy(Q.results.find(x=>x.k===qz.out.win)).name : "";
+  const quizName = qz.quiz==="angels" ? (he?"חידון המלאכיות":"Archangel quiz")
+                 : qz.quiz==="demons" ? (he?"חידון השדים":"Demon quiz") : "";
+  formSubmit("lead",
+    {name, email:mail, phone:tel, quiz:qz.quiz||"", result:qz.out?qz.out.win:"", resultName:res},
+    he?"הרשמה לעדכונים מהאתר":"New sign-up from the site",
+    [ (he?"שם: ":"Name: ")+(name||"-"),
+      (he?"מייל: ":"Email: ")+(mail||"-"),
+      (he?"טלפון: ":"Phone: ")+(tel||"-"),
+      quizName?((he?"מהחידון: ":"From: ")+quizName+(res?" · "+res:"")):"" ],
+    LEAD_FIELDS);
+}
+
+/* --- a review, and a letter to Naama --- */
+const REV_FIELDS = ["rv-name","rv-book","rv-text","rv-mail"];
+function sendReview(){
+  const he=lang==="he";
+  if(fv("rv-hp")) return;
+  const name=fv("rv-name").trim(), bk=fv("rv-book"), txt=fv("rv-text").trim(), mail=fv("rv-mail").trim();
+  if(!name || !txt){
+    FORM_ERR.review = he ? "צריך שם ומשהו לכתוב." : "A name and a few words, please.";
+    render(); return;
+  }
+  if(mail && !okMail(mail)){
+    FORM_ERR.review = he ? "כתובת המייל לא נראית תקינה." : "That email address doesn't look right.";
+    render(); return;
+  }
+  const b = BOOKS.find(x=>x.id===bk);
+  const bookName = b ? L(b).t : (he?"על העולם בכלל":"The world in general");
+  formSubmit("review",
+    {name, book:bookName, bookId:bk||"", text:txt, email:mail},
+    (he?"ביקורת חדשה מהאתר · ":"New review from the site · ")+bookName,
+    [ (he?"שם: ":"Name: ")+name,
+      (he?"על: ":"About: ")+bookName,
+      (he?"מייל: ":"Email: ")+(mail||"-"),
+      "", txt ],
+    REV_FIELDS);
+}
+
+const LET_FIELDS = ["lt-name","lt-mail","lt-text"];
+function sendLetter(){
+  const he=lang==="he";
+  if(fv("lt-hp")) return;
+  const name=fv("lt-name").trim(), mail=fv("lt-mail").trim(), txt=fv("lt-text").trim();
+  if(!name || !txt){
+    FORM_ERR.letter = he ? "צריך שם ומשהו לכתוב." : "A name and a few words, please.";
+    render(); return;
+  }
+  if(mail && !okMail(mail)){
+    FORM_ERR.letter = he ? "כתובת המייל לא נראית תקינה." : "That email address doesn't look right.";
+    render(); return;
+  }
+  formSubmit("letter",
+    {name, email:mail, text:txt},
+    (he?"מכתב לנעמה מהאתר · ":"A letter to Naama from the site · ")+name,
+    [ (he?"שם: ":"Name: ")+name,
+      (he?"מייל לתשובה: ":"Reply to: ")+(mail||"-"),
+      "", txt ],
+    LET_FIELDS);
+}
+
+/* --- small building blocks, so the three forms look like one family --- */
+function fInput(id,label,type,ph){
+  return `<div class="field">
+    <label for="${id}">${esc(label)}</label>
+    <input id="${id}" type="${type||"text"}"${type==="email"?' inputmode="email" autocomplete="email"':""}${type==="tel"?' inputmode="tel" autocomplete="tel"':""}
+      placeholder="${esc(ph||"")}" value="${esc(fv(id))}" oninput="fset('${id}',this.value)">
+  </div>`;
+}
+function fArea(id,label,ph,rows){
+  return `<div class="field">
+    <label for="${id}">${esc(label)}</label>
+    <textarea id="${id}" rows="${rows||5}" placeholder="${esc(ph||"")}" oninput="fset('${id}',this.value)">${esc(fv(id))}</textarea>
+  </div>`;
+}
+function fHoney(id){
+  return `<input class="hp" id="${id}" tabindex="-1" autocomplete="off" aria-hidden="true" value="${esc(fv(id))}" oninput="fset('${id}',this.value)">`;
+}
+function fThanks(title,body,again,onAgain){
+  return `<div class="fthanks">
+    <span class="eyebrow">${esc(lang==="he"?"תודה":"Thank you")}</span>
+    <b class="fthanks-t">${esc(title)}</b>
+    <p class="dim">${esc(body)}</p>
+    ${again?`<div><button class="btn btn-sm btn-quiet" onclick="${onAgain}">${esc(again)}</button></div>`:""}
+  </div>`;
+}
+function fFoot(form,btn,note){
+  const st=FORM_ST[form], err=FORM_ERR[form];
+  return `${err?`<p class="ferr">${esc(err)}</p>`:""}
+    <div class="fsend">
+      <button class="btn btn-solid btn-sm" onclick="${form==="lead"?"sendLead()":form==="review"?"sendReview()":"sendLetter()"}" ${st==="sending"?"disabled":""}>
+        ${esc(st==="sending" ? (lang==="he"?"שולח…":"Sending…") : btn)}
+      </button>
+      ${note?`<span class="fnote">${esc(note)}</span>`:""}
+    </div>`;
+}
+
+/* The readers' list, shown under every quiz result. */
+function leadForm(){
+  const he=lang==="he", st=FORM_ST.lead;
+  if(st==="done") return fThanks(
+    he?"נרשמתם.":"You're on the list.",
+    he?"נעדכן כשיוצא ספר חדש, כשיש מבצע לקוראי האתר וכשעולה חידון חדש. אפשר לצאת מהרשימה מתי שרוצים - מספיק להשיב למייל ולבקש."
+      :"We'll write when a new book is out, when there's an offer for site readers, and when a new quiz goes up. Leaving the list takes one reply to any email.");
+  if(st==="mail") return fThanks(
+    he?"כמעט.":"Almost there.",
+    he?"נפתח אצלכם חלון מייל עם הפרטים. צריך רק ללחוץ שליחה, וזה אצלנו."
+      :"An email window just opened with your details. Press send and it reaches us.");
+  return `<div class="fcard" id="leadForm">
+    <div class="stack g-xs">
+      <span class="eyebrow">${he?"להישאר מעודכנים":"Stay in the loop"}</span>
+      <b class="fcard-t">${he?"השאירו פרטים":"Leave your details"}</b>
+      <p class="dim">${he
+        ? "נעדכן כשיוצא ספר חדש, כשיש הנחה או מבצע לקוראי האתר, וכשעולה חידון חדש. אפשר להשאיר מייל, טלפון או את שניהם - אין שדה חובה, רק צריך שתישאר דרך אחת להגיע אליכם."
+        : "We'll write when a new book is out, when there's a discount or an offer for site readers, and when a new quiz goes up. Email, phone, or both - nothing is required on its own, we just need one way to reach you."}</p>
+    </div>
+    <div class="frow two">
+      ${fInput("ld-name", he?"שם":"Name","text", he?"לא חובה":"Optional")}
+      ${fInput("ld-mail", he?"מייל":"Email","email","")}
+    </div>
+    <div class="frow">
+      ${fInput("ld-tel", he?"טלפון":"Phone","tel", he?"אפשר גם רק אחד מהשניים":"One of the two is enough")}
+    </div>
+    ${fHoney("ld-hp")}
+    ${fFoot("lead", he?"שליחה":"Send",
+      he?"הפרטים נשמרים אצל נעמה ולא מועברים לאף אחד."
+        :"Your details stay with Naama and go to no one else.")}
+  </div>`;
+}
+
+/* A review, on the reviews page. Nothing here publishes itself. */
+function reviewForm(){
+  const he=lang==="he", st=FORM_ST.review;
+  if(st==="done") return fThanks(
+    he?"הביקורת הגיעה.":"Your review is here.",
+    he?"נעמה קוראת כל ביקורת שנשלחת דרך האתר, מהתחלה ועד הסוף. לעמוד הזה עולה מבחר מתוך מה שמגיע."
+      :"Naama reads every review sent through the site, start to finish. A selection of what comes in goes up on this page.",
+    he?"לכתוב ביקורת נוספת":"Write another", "FORM_ST.review='idle';render()");
+  if(st==="mail") return fThanks(
+    he?"כמעט.":"Almost there.",
+    he?"נפתח אצלכם חלון מייל עם הביקורת. צריך רק ללחוץ שליחה."
+      :"An email window just opened with your review. Press send.",
+    he?"חזרה לטופס":"Back to the form", "FORM_ST.review='idle';render()");
+  return `<div class="fcard" id="reviewForm">
+    <div class="stack g-xs">
+      <span class="eyebrow">${he?"לכתוב ביקורת":"Write a review"}</span>
+      <b class="fcard-t">${he?"קראתם? ספרו לנו":"Read one? Tell us"}</b>
+      <p class="dim">${he
+        ? "נעמה קוראת כל ביקורת שמגיעה, ולעמוד הזה עולה מבחר מתוכן. מוזמנים לכתוב את כל מה שעולה על לבכם - שורה אחת או עמוד שלם, מה שבא."
+        : "Naama reads everything that comes in, and a selection of it goes up on this page. Write whatever is on your mind - a single line or a whole page, as you like."}</p>
+    </div>
+    <div class="frow two">
+      ${fInput("rv-name", he?"השם שלכם":"Your name","text", he?"איך לחתום את הביקורת":"How to sign it")}
+      <div class="field">
+        <label for="rv-book">${he?"על איזה ספר":"Which book"}</label>
+        <select id="rv-book" onchange="fset('rv-book',this.value)">
+          <option value=""${fv("rv-book")===""?" selected":""}>${he?"על העולם בכלל":"The world in general"}</option>
+          ${BOOKS.map(b=>`<option value="${esc(b.id)}"${fv("rv-book")===b.id?" selected":""}>${esc(L(b).t)}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    ${fArea("rv-text", he?"מה חשבתם?":"What did you think?", he?"מה נשאר אתכם, מה הפתיע, למי הייתם נותנים את הספר":"What stayed with you, what surprised you, who you'd hand it to", 6)}
+    ${fInput("rv-mail", he?"מייל":"Email","email", he?"לא חובה - רק אם מותר לחזור אליכם":"Optional - only if we may come back to you")}
+    ${fHoney("rv-hp")}
+    ${fFoot("review", he?"שליחת הביקורת":"Send the review",
+      he?"לעמוד הביקורות עולה מבחר מתוך מה שמגיע."
+        :"A selection of what comes in goes up on the reviews page.")}
+  </div>`;
+}
+
+/* A private letter. This one only ever goes to the inbox. */
+function letterForm(){
+  const he=lang==="he", st=FORM_ST.letter;
+  if(st==="done") return fThanks(
+    he?"המכתב נשלח.":"Your letter is sent.",
+    he?"הוא מגיע ישירות לתיבה של נעמה, ולא עולה לאתר. היא קוראת הכול בעצמה ומשיבה כשהיא מספיקה - לפעמים זה לוקח קצת."
+      :"It goes straight to Naama's inbox and never to the site. She reads all of it herself and answers when she can - sometimes that takes a while.",
+    he?"לכתוב עוד":"Write again", "FORM_ST.letter='idle';render()");
+  if(st==="mail") return fThanks(
+    he?"כמעט.":"Almost there.",
+    he?"נפתח אצלכם חלון מייל עם המכתב. צריך רק ללחוץ שליחה."
+      :"An email window just opened with your letter. Press send.",
+    he?"חזרה לטופס":"Back to the form", "FORM_ST.letter='idle';render()");
+  return `<div class="fcard" id="letterForm">
+    <div class="stack g-xs">
+      <span class="eyebrow">${he?"מכתב אישי":"A personal letter"}</span>
+      <b class="fcard-t">${he?"לכתוב לנעמה":"Write to Naama"}</b>
+      <p class="dim">${he
+        ? "שאלה, בקשה, משהו שרציתם להגיד ולא במקום ציבורי. המכתב מגיע לתיבה של נעמה בלבד ולא מתפרסם באתר."
+        : "A question, a request, something you'd rather not say in public. This reaches Naama's inbox only and is never published on the site."}</p>
+    </div>
+    <div class="frow two">
+      ${fInput("lt-name", he?"השם שלכם":"Your name","text","")}
+      ${fInput("lt-mail", he?"מייל לתשובה":"Email for a reply","email", he?"לא חובה":"Optional")}
+    </div>
+    ${fArea("lt-text", he?"מה רציתם להגיד?":"What did you want to say?","",6)}
+    ${fHoney("lt-hp")}
+    ${fFoot("letter", he?"שליחת המכתב":"Send the letter",
+      he?"המכתב לא עולה לאתר. נעמה קוראת הכול בעצמה."
+        :"Letters never go on the site. Naama reads them herself.")}
+  </div>`;
+}
+
 /* ---------- QUIZ ENGINE ---------- */
 let qz = {stage:"menu", quiz:null, gender:"f", i:0, ans:[], out:null};
 let qzTally = null;                      /* {angels:{k:n}, demons:{k:n}} */
@@ -2130,9 +2450,12 @@ function qzDone(){
   const he=lang==="he", Q=QUIZZES[qz.quiz];
   const r=Q.results.find(x=>x.k===qz.out.win), c=qzResultCopy(r);
   const order=qz.out.keys.slice().sort((a,b)=>qz.out.norm[b]-qz.out.norm[a]);
+  const quizLabel = he ? (qz.quiz==="angels"?"חידון המלאכיות":"חידון השדים")
+                       : (qz.quiz==="angels"?"archangel":"demon");
   const share = he
-    ? `${qz.gender==="f"?"יצא לי":"יצא לי"} ${c.name} - ${qz.quiz==="angels"?"חידון המלאכיות":"חידון השדים"} של נעמה בר שירה`
-    : `I got ${c.name} - N.B. Shira's ${qz.quiz==="angels"?"archangel":"demon"} quiz`;
+    ? `יצא לי ${c.name} ב${quizLabel} של נעמה בר שירה. תגלו מה יוצא לכם:`
+    : `I got ${c.name} in N.B. Shira's ${quizLabel} quiz. Find out what you get:`;
+  const shareText = share + " " + location.href;
   return `<section class="band wrap stack g-l" id="qzTop">
     <div class="qresult">
       <div class="qrimg ${qz.quiz==="demons"?"is-plate":""}"><img src="${qzResultImg(r)}" alt="${esc(c.name)}"></div>
@@ -2151,16 +2474,40 @@ function qzDone(){
           }).join("")}
         </div>
 
+        <div class="qshare">
+          <div class="stack g-xs">
+            <b>${esc(he?`יצא לי ${c.name}. ומה יוצא לכם?`:`I got ${c.name}. And you?`)}</b>
+            <span class="dim" style="font-size:.88rem">${he
+              ? "שלחו את התוצאה לקבוצה ותראו מי יוצא מה."
+              : "Send your result to the group and see who comes out as what."}</span>
+          </div>
+          <div class="btns">
+            <a class="btn btn-solid" href="https://wa.me/?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">${he?"שיתוף בוואטסאפ":"Share on WhatsApp"}</a>
+            <button class="btn btn-quiet" data-share="${esc(shareText)}" onclick="qzCopy(this)">${he?"העתקת הקישור":"Copy the link"}</button>
+          </div>
+        </div>
+
         <div class="qacts">
-          <a class="btn btn-sm btn-solid" href="https://wa.me/?text=${encodeURIComponent(share+" "+location.href)}" target="_blank" rel="noopener">${he?"שיתוף בוואטסאפ":"Share on WhatsApp"}</a>
           <button class="btn btn-sm btn-quiet" onclick="startQuiz('${qz.quiz}')">${he?"שוב":"Again"}</button>
           <button class="btn btn-sm btn-quiet" onclick="startQuiz('${qz.quiz==="angels"?"demons":"angels"}')">${he?(qz.quiz==="angels"?"ועכשיו השדים":"ועכשיו המלאכיות"):(qz.quiz==="angels"?"Now the demons":"Now the archangels")}</button>
           <button class="btn btn-sm btn-quiet" onclick="resetQuiz()">${he?"לחידונים":"All quizzes"}</button>
         </div>
       </div>
     </div>
+
+    ${leadForm()}
     ${qzCounter(qz.quiz)}
   </section>`;
+}
+
+/* Copying is the quiet second option next to WhatsApp - for anyone who wants
+   to paste the result somewhere else. The button says so itself, briefly. */
+function qzCopy(el){
+  const back = el.textContent;
+  const said = () => { el.textContent = lang==="he" ? "הועתק" : "Copied";
+                       setTimeout(()=>{ el.textContent = back; }, 1800); };
+  try{ navigator.clipboard.writeText(el.dataset.share).then(said, said); }
+  catch(e){ said(); }
 }
 
 function qzCounter(only){
@@ -2227,15 +2574,44 @@ function vReviews(){
       he?"מתוך ביקורות שנכתבו על הספרים - קוראים ותיקים, סוקרים, וכמה שהגיעו בלי שום כוונה להתאהב."
         :"From reviews written about the books - long-time readers, reviewers, and a few who arrived with no intention of falling for them.", "center 30%")}
   <section class="band wrap stack g-xl">
+    <div class="callout">
+      <div class="stack g-xs">
+        <span class="eyebrow">${he?"גם אתם":"You too"}</span>
+        <b>${he?"קראתם ספר? כתבו עליו כאן":"Read one? Write about it here"}</b>
+        <span class="dim" style="font-size:.9rem">${he
+          ? "ביקורת שתעלה לעמוד הזה, או מכתב אישי לנעמה שנשאר בינה לביניכם."
+          : "A review for this page, or a private letter that stays between you and Naama."}</span>
+      </div>
+      <div class="btns">
+        <button class="btn btn-solid btn-sm" onclick="jumpTo('revBlock')">${he?"לכתוב ביקורת":"Write a review"}</button>
+        <button class="btn btn-sm btn-quiet" onclick="jumpTo('letBlock')">${he?"לכתוב לנעמה":"Write to Naama"}</button>
+      </div>
+    </div>
+
     ${he?"":`<p class="dim" style="font-size:.85rem">Translated from the Hebrew originals.</p>`}
 
     <div class="revgrid revgrid-big">${big.map(r=>revCard(r,true)).join("")}</div>
     <div class="revgrid">${rest.map(r=>revCard(r,false)).join("")}</div>
 
+    <hr class="rule">
+
+    <div class="stack g-s" id="revWrite">
+      <span class="eyebrow">${he?"התור שלכם":"Your turn"}</span>
+      <h3 style="font-size:1.5rem">${he?"להוסיף את הקול שלכם":"Add your voice"}</h3>
+      <p class="lede">${he
+        ? "שני דברים אפשר לשלוח מכאן: ביקורת על ספר, שעולה לעמוד הזה, ומכתב אישי לנעמה שלא מתפרסם בשום מקום."
+        : "Two things can be sent from here: a review of a book, which goes on this page, and a private letter to Naama that is published nowhere."}</p>
+    </div>
+
+    <div class="grid g2" style="align-items:start">
+      <div id="revBlock">${reviewForm()}</div>
+      <div id="letBlock">${letterForm()}</div>
+    </div>
+
     <div class="split">
       <p class="dim">${he
-        ? "קראתם ורוצים להגיד משהו? הכי טוב זה מגיע בקבוצת המישלינגים."
-        : "Read one and want to say something? The best place for it is the Mishlingim group."}</p>
+        ? "ורוצים פשוט לדבר על הספרים עם עוד קוראים? זה קורה בקבוצת המישלינגים."
+        : "And if you just want to talk about the books with other readers, that happens in the Mishlingim group."}</p>
       <div style="align-self:start">${linkBtn(LINKS.whatsappGroup, he?"להצטרפות לקבוצה":"Join the group")}</div>
     </div>
   </section>`;
