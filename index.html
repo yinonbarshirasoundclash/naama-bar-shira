@@ -871,7 +871,7 @@ const LINKS = {
    neither can take the other down. Paste its /exec address into FORMS_API and
    the forms post straight to it; leave it empty and every form falls back to a
    prefilled email the reader sends from their own mail app. */
-const FORMS_API      = "";                          // ← the second Apps Script /exec URL
+const FORMS_API      = "https://script.google.com/macros/s/AKfycbyQsCpRG5SHCMqSwsVj2yOZBe-Rut24h5_LRD2u6odmDGaTiHMncPRLEBzYTEAG6v6V/exec";
 const FORMS_EMAIL    = "stageart.pnima@gmail.com";  // where the forms land
 const FORMS_EMAIL_CC = "naama.nbs@gmail.com";       // and a copy here
 
@@ -1250,7 +1250,21 @@ const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 /* ---------- ROUTER ---------- */
 const VIEWS = ["home","author","worlds","books","lore","gallery","quiz","field","reviews","shop","events","speaking","community","rights"];
 function go(v){ view=v; if(v==="quiz") qzLoaded=false; /* re-read the tally on every visit */
+  setHash(v);
   document.getElementById("nav").dataset.open="false"; render(); window.scrollTo({top:0,behavior:"instant"}); }
+
+/* The address bar follows the page you are on, so a link someone shares from
+   the quiz opens the quiz and not the front door. replaceState, not push, so
+   the back button still leaves the site rather than walking the whole tour. */
+function setHash(v){
+  try{ history.replaceState(null, "", v==="home" ? location.pathname : "#"+v); }catch(e){}
+}
+const viewUrl = v => location.origin + location.pathname + (v==="home" ? "" : "#"+v);
+function fromHash(){
+  const h = (location.hash||"").replace(/^#/,"");
+  return VIEWS.includes(h) ? h : "home";
+}
+addEventListener("hashchange", ()=>{ const v=fromHash(); if(v!==view){ view=v; if(v==="quiz") qzLoaded=false; render(); } });
 function fitNav(){
   const bar=document.querySelector(".topbar-in"), nav=document.getElementById("nav");
   document.body.removeAttribute("data-nav");     /* measure the row at full size */
@@ -2455,7 +2469,7 @@ function qzDone(){
   const share = he
     ? `יצא לי ${c.name} ב${quizLabel} של נעמה בר שירה. תגלו מה יוצא לכם:`
     : `I got ${c.name} in N.B. Shira's ${quizLabel} quiz. Find out what you get:`;
-  const shareText = share + " " + location.href;
+  const shareText = share + " " + viewUrl("quiz");
   return `<section class="band wrap stack g-l" id="qzTop">
     <div class="qresult">
       <div class="qrimg ${qz.quiz==="demons"?"is-plate":""}"><img src="${qzResultImg(r)}" alt="${esc(c.name)}"></div>
@@ -3078,6 +3092,7 @@ function footEl(){
 }
 
 startStars();
+view = fromHash();
 render();
 </script>
 </body>
