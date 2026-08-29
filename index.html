@@ -5,13 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="נעמה בר שירה - סופרת פנטזיה ישראלית זוכת פרס גפן. תשעה ספרים: מלאכיות עליון, מלאכיות בשערי השחר, בין השמשות ואיזבלה מלכת ירושלים.">
 <meta name="theme-color" content="#04050A">
+<link rel="canonical" href="https://nbshira.com/">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
 <meta property="og:site_name" content="נעמה בר שירה · מלאכיות עליון">
 <meta property="og:title" content="נעמה בר שירה - מלאכים ושדים, ממש כאן">
 <meta property="og:description" content="פנטזיה ישראלית שמתרחשת במקומות שאתם מכירים. תשעה ספרים, ארבעה פרסים.">
 <meta property="og:image" content="https://yinonbarshirasoundclash.github.io/naama-bar-shira/assets/img/cov_3d.webp">
 <meta name="twitter:card" content="summary_large_image">
-<title>נעמה בר שירה · מלאכיות עליון</title>
+<title>נעמה בר שירה - פנטזיה ישראלית · מלאכיות עליון</title>
+<script type="application/ld+json" id="jsonld">{}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;500;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Assistant:wght@300;400;600;700&display=swap">
@@ -161,7 +164,16 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .qbar{block-size:2px;background:var(--line);position:relative}
 .qbar i{position:absolute;inset-block:0;inset-inline-start:0;background:var(--gold);transition:inline-size .3s}
 .qhead{display:flex;align-items:center;justify-content:space-between}
-.qback{font-size:.8rem;color:var(--text-dim)}
+.qback{font-size:.85rem;color:var(--text-dim)}
+.qback:hover{color:var(--gold-soft)}
+/* The only complaint about the quiz was not knowing how to get out of it, so
+   the exit sits at the top of every quiz screen, in the same spot each time. */
+.qexit{
+  align-self:start;display:inline-flex;align-items:center;gap:.4rem;
+  border:1px solid var(--line-strong);padding:.45rem .9rem;border-radius:2px;
+  font-size:.85rem;color:var(--text-dim);transition:.2s;
+}
+.qexit:hover{border-color:var(--gold);color:var(--gold-soft)}
 .qback:hover{color:var(--gold-soft)}
 .qq{font-size:clamp(1.35rem,3.4vw,1.9rem)}
 .qopts{display:grid;gap:.55rem}
@@ -811,7 +823,15 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .portrait .ph{color:rgba(241,232,215,.55);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;z-index:1;text-align:center;padding:1rem}
 .evrow{display:flex;gap:1.2rem;align-items:baseline;padding-block:1.1rem;border-block-end:1px solid var(--line);flex-wrap:wrap}
 .evdate{font-family:var(--f-display);font-weight:700;color:var(--gold-soft);min-width:5.5rem;font-variant-numeric:tabular-nums}
-.foot{border-block-start:1px solid var(--line);padding-block:2.6rem 3.4rem;color:var(--muted);font-size:.86rem}
+.foot{border-block-start:1px solid var(--line);padding-block:2.6rem 3.4rem;color:var(--muted);font-size:.9rem}
+.footlegal{
+  margin-block-start:2.4rem;padding-block-start:1.4rem;border-block-start:1px solid var(--line);
+  display:flex;flex-direction:column;gap:.5rem;font-size:.82rem;color:var(--muted);
+}
+.footlegal .dim{max-width:70ch;line-height:1.6}
+.footlinks{display:flex;gap:1.2rem;flex-wrap:wrap;margin-block-start:.3rem}
+.footlinks button{color:var(--text-dim);text-decoration:underline;text-underline-offset:3px;font-size:.82rem}
+.footlinks button:hover{color:var(--gold-soft)}
 .sociallinks{display:flex;gap:.5rem;flex-wrap:wrap}
 .view{animation:rise .5s cubic-bezier(.2,.7,.3,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -1061,9 +1081,15 @@ const FIGURES = {
               en:{a:"17", r:"The archangel Uriel", t:"The incarnation of the archangel Uriel on earth."}},
   fig_teal:{  he:{a:"בן 17", r:"מלאך משושלת מלאכי מיכאל", t:"בנו של צדקיאל סגול הכנפיים. אימו נרצחה בידי שדים."},
               en:{a:"17", r:"Of Michael's line", t:"Son of Tzadkiel Purple Wings. His mother was killed by demons."}},
-  fig_green:{ he:{r:"שד", t:""},            en:{r:"Demon", t:""}},
-  fig_purple:{he:{r:"חצי שדה", t:""},       en:{r:"Half-demon", t:""}},
-  fig_blonde:{he:{r:"חצי מלאך, חצי שד", t:""}, en:{r:"Half angel, half demon", t:""}}
+  /* Loki is Lukiantro - the same figure the demon dynasties call by his full
+     name, so the card carries the entry from there and points at the plate. */
+  fig_green:{ lore:"lukiantro",
+              he:{r:"לוקיאנתרו · מלך השאול", t:""},
+              en:{r:"Lukiantro · King of Sheol", t:""}},
+  fig_purple:{he:{r:"חצי סוקובוס", t:"חצי סוקובוס, זוגתה של אור ואחותו של אינק."},
+              en:{r:"Half succubus", t:"Half succubus, Or's partner and Ink's sister."}},
+  fig_blonde:{he:{r:"חצי מלאך, חצי שד", t:"נבואה גדולה נקשרה אל גורלו."},
+              en:{r:"Half angel, half demon", t:"A great prophecy is bound to his fate."}}
 };
 
 const MATURE = {
@@ -1187,7 +1213,7 @@ const FIELD=[{"i":"4a72cf4210","n":"איזבלה יריד בין השורות","
 
 /* ---------- THE APPENDICES ----------
    Printed at the back of the books; transcribed here as the site's archive. */
-const LORE_DEMONS = [{"k": "satan", "he": {"n": "השטן - הילל בן שחר", "r": "אבי השדים", "t": "מלאך ממלאכי העליון. הוא ואחותו יופיאל היו היפים במלאכים, וצבע שערם בהק כשמש. הילל חטא בחטא היוהרה, ברצונו להיות אל, מרד וגורש מגן העדן. כעונש נלקח ממנו היופי: על גופו השרירי הולבש ראש עז, שערו הבוהק הפך לרעמה פרועה, וכנפיו הלבנות הפכו קירחות וקשות ככנפי עטלף. המלאך המגורש התאחד עם אשתו הראשונה של האדם, לילית, ובתמורה לחיי נצח ולכוחות ילדה לו מאה צאצאים, שמהם נוצרו כל השדים."}, "en": {"n": "Hillel ben Shachar - Satan, father of demons", "r": "Father of demons", "t": "One of the high angels. He and his sister Yofiel were the most beautiful of the angels, their hair as bright as the sun. Hillel sinned in pride, wanting to be a god, rebelled and was cast out of Eden. His beauty was taken from him as punishment: a goat's head set on his muscled body, his bright hair turned to a wild mane, his white wings made bald and hard as a bat's. The exiled angel joined with Lilith, Adam's first wife, and in exchange for eternal life and power she bore him a hundred offspring, from whom all demons came."}}, {"k": "shamdon", "he": {"n": "שמדון", "r": "אבי שושלת שדי שמדון", "t": "השד הראשון שנולד לשושלת השדים, צאצאו הראשון של הילל בן שחר. הוא ואשתר, שהייתה אשתו השנייה של אדם, יצרו את שושלת נסיכי השאול. הושמד במלחמה הראשונה בין המלאכים, בני האדם והשדים, מלחמה שבסופה, במבול הגדול, גורשו השדים לשאול."}, "en": {"n": "Shamdon", "r": "Father of the Shamdon line", "t": "The first demon born into the line, Hillel ben Shachar's firstborn. Together with Ashtar, Adam's second wife, he founded the dynasty of the princes of Sheol. He was destroyed in the first war between angels, humans and demons, the war that ended in the great flood, when the demons were banished to Sheol."}}, {"k": "ashmadai", "he": {"n": "אשמדאי", "r": "אבי מלך השדים", "t": "צאצאו הראשון של שמדון. צאצאי שושלתו נקראים אגרים ובעלי יכולת לשינוי צורה. שלושת צאצאיו הבולטים: לוקיאנתרו הבכור, אמדאוס השני והלבינדי השלישי."}, "en": {"n": "Ashmadai", "r": "Father of the demon king", "t": "Shamdon's firstborn. His descendants are called Agarim and can change shape. His three notable children: Lukiantro the eldest, Amadeus the second and Halevindi the third."}}, {"k": "lukiantro", "he": {"n": "לוקיאנתרו", "r": "מלך השאול · המדור השביעי, עיר החטאים", "t": "ארמונו נמצא במדור השביעי, המכונה גם עיר החטאים, ושם נמצאים רוב עדרי השאול. הוא שולט בעזרת דודיו נסיכי השאול, ובמדור השני בעזרת אחיו האגרתים, שדים משני צורה. הם כולאים את הנשמות המגיעות לשאול בבורות תחתית ומענים אותן בחזרה על הרגעים הגרועים בחייהן, אלה שהובילו אותן לשם, עד שנשמה מתוקנת זכאית לניסיון נוסף בעולם בני האדם. צאצאיו: הלני, בתו והמלאכית בנש, שהושמדה לפי התיעודים, ושחר, בנו ומלאכית העליון אור, שחי על פני האדמה עם אימו."}, "en": {"n": "Lukiantro", "r": "King of Sheol · the seventh circle, the City of Sinners", "t": "His palace stands in the seventh circle, the City of Sinners, where most of the herds of Sheol are kept. He rules with his uncles, the princes of Sheol, and holds the second circle through his shape-shifting Agarti brothers. Souls that reach Sheol are held in pits and made to relive the worst hours of their lives, the ones that sent them there, until a mended soul earns another attempt in the world of the living. His children: Helni, his daughter by the angel Benesh, destroyed according to the records, and Shachar, his son by the archangel Or, who lives on earth with his mother."}}, {"k": "sagu", "he": {"n": "סאגו", "r": "שליט מדור צלמוות · המדור הראשון", "t": "צאצאו השני של שמדון, שליט המדור לחוטאים בכעס. צלמוות הוא המדור שמפריד בין עולם בני האדם למדורי השאול. סאגו הוא אבי שדי ענקי האש, שבסיפורי המלחמה האחרונה תוארו כשדים בגודל עצום ובעלי כוח אדיר יותר מרעידת אדמה, שיכולים להגיע לגובה של הר. גם לפני הגירוש נצפו רק מעט שדים כאלה, בעיקר בקרבת הרי געש. לרוב הם נמצאים תחת קליפת האדמה."}, "en": {"n": "Sagu", "r": "Ruler of Tzalmavet · the first circle", "t": "Shamdon's second son, ruler of the circle of wrath. Tzalmavet is the circle that separates the human world from the circles of Sheol. Sagu is the father of the fire giants, described in the tales of the last war as demons of enormous size, stronger than an earthquake, able to grow as tall as a mountain. Even before the banishment only a few were ever seen, mostly near volcanoes. Most of the time they lie beneath the earth's crust."}}, {"k": "samuel", "he": {"n": "סמואל", "r": "שליט מדור גולא · המדור השני", "t": "צאצאו החמישי של שמדון. מדור גולא הוא המדור לחוטאים בגרגרנות, ובו הם מעונים ברעב בלתי נגמר ובלתי נשלט. סמואל חולק את המדור עם שליט זוטר בשם בעל זבוב, והמדור מלא חרקים ומזיקים הניזונים מנשמות בני האדם. סמואל אינו בנה של אשתר כשאר אחיו, אלא צאצא של שמדון ומלאכית ששמה לא ידוע, ולכן מכונה גם 'מלאך המוות', בהיותו חצי שד וחצי מלאך. החיבה שלו לבני האדם הולידה לו שני צאצאים שהם חצי אדם וחצי שד."}, "en": {"n": "Samuel", "r": "Ruler of Gula · the second circle", "t": "Shamdon's fifth son. Gula is the circle of gluttony, where souls are tormented by a hunger that never ends and cannot be controlled. Samuel shares the circle with a lesser ruler named Ba'al Zvuv, and it swarms with insects and vermin that feed on human souls. Unlike his brothers Samuel is not Ashtar's son but the child of Shamdon and an angel whose name is unknown, which is why he is also called the Angel of Death, being half demon and half angel. His fondness for humans gave him two children who are half human, half demon."}}, {"k": "ghul", "he": {"n": "ע'ול", "r": "הצאצא הראשון של סמואל", "t": "אבי שדי הנזימבי, המוכרים בשמם הרווח זומבים. שדי הנזימבי אינם נולדים, אלא הם גופות של בני אדם שע'ול משתלט עליהן ומפעיל כמו בובות. כשהגופות אינן בשליטתו, הצורך היחיד שמניע אותן דומה לזה של הנשמות המעונות במדור השני: רעב בלתי נגמר ובלתי נשלט, והן יאכלו כל דבר שנקלע בדרכן."}, "en": {"n": "Ghul", "r": "Samuel's firstborn", "t": "Father of the Nzimbi demons, better known as zombies. Nzimbi are not born: they are human corpses that Ghul takes over and works like puppets. Out of his control, the only thing that drives them is the hunger of the second circle, endless and uncontrollable, and they will eat whatever crosses their path."}}, {"k": "gaotika", "he": {"n": "גאוטיקה", "r": "הצאצאית השנייה של סמואל", "t": "אם שדי הטוביקנה, המכונים גם אנשי זאב, שדים ממושמעים ויחסית ניתנים לשליטה, המשמשים מגינים ולוחמים של שושלת הנסיכים. בגלל דם האדם הזורם בגאוטיקה, אפשר להעביר את כוחות השד של שושלתה לבני אדם באמצעות נשיכה, דם או קיום יחסי מין."}, "en": {"n": "Gaotika", "r": "Samuel's second child", "t": "Mother of the Tovikana demons, also called wolf men: disciplined and relatively controllable, they serve as guards and fighters for the princes' line. Because human blood runs in Gaotika, the powers of her line can pass to humans through a bite, through blood, or through sex."}}, {"k": "abadon", "he": {"n": "אבדון", "r": "שליט מדור אבדון · המדור השלישי", "t": "צאצאו השלישי של שמדון, אבי שדי המאגוס המכונים מכשפים. המדור השלישי הוא מדור החמדנות: הנשמות מוחזקות בו בכלובים מזהב, נרדפות בתחושת חוסר הגשמה ונטרפות שוב ושוב על ידי שדיה של ממון, השליטה הזוטרה של המדור. גם שדי ההאנהגוארה חיים במדור הזה, ונשלטים בידי ממון ברמת תודעה של חיות טורפות."}, "en": {"n": "Abadon", "r": "Ruler of Abadon · the third circle", "t": "Shamdon's third son, father of the Magus demons, the sorcerers. The third circle is greed: souls are kept in cages of gold, hounded by a sense of never having enough, devoured again and again by the demons of Mammon, the circle's lesser ruler. The Hanhaguara demons also live here, ruled by Mammon at the awareness of predatory animals."}}, {"k": "belial", "he": {"n": "בלייעל", "r": "שליט מדור אסידיה · המדור הרביעי", "t": "צאצאו השני של הילל בן שחר. במדור אסידיה נענשים החוטאים בשקרים, בעצלנות ובניצול. זהו מדור שכולו מים, וכלואה בו גם השדה לוויתן. החוטאים שוקעים בו בים אין סופי של שקרים ואשמה. בלייעל ובנו הבכור אוסה, שהיה בן ארבע מאות שנה, הושמדו במלחמה הגדולה של השדים, אך בעזרת דמה של לילית הוחזר בלייעל לחיים, ומאז הוא וצאצאיו אינם יכולים למות. בלייעל ולילית יצרו את שושלת לוציפר, שדי הפמליירים המוכרים כערפדים."}, "en": {"n": "Belial", "r": "Ruler of Acedia · the fourth circle", "t": "The second son of Hillel ben Shachar. Acedia punishes lies, sloth and exploitation. It is a circle of water, and the demon Leviathan is imprisoned there too. Its sinners sink into an endless sea of lies and guilt. Belial and his firstborn Osa, who was four hundred years old, were destroyed in the great war of the demons, but Lilith's blood brought Belial back, and since then neither he nor his descendants can die. Belial and Lilith created the line of Lucifer, the Famelier demons known as vampires."}}, {"k": "elias", "he": {"n": "אליאס", "r": "שליט מדור שחט · המדור החמישי", "t": "צאצאו הרביעי של שמדון, אבי שדי הדראקון המכונים דרקונים. המדור שומם ויש בו בעיקר סלעים, והוא מיועד לחוטאים מתוך קנאה. נשמות האדם בו נרדפות בידי צאצאיו של אליאס שוב ושוב ואינן מוצאות מנוח."}, "en": {"n": "Elias", "r": "Ruler of Shachat · the fifth circle", "t": "Shamdon's fourth son, father of the Draconi demons, the dragons. The circle is barren and mostly rock, and it is meant for envy. The souls there are hunted by Elias's offspring again and again and find no rest."}}, {"k": "lucifer", "he": {"n": "לוציפר", "r": "שליט מדור אופליה · המדור השישי", "t": "צאצאו של בלייעל, אבי שדי הפמליירים המוכרים בשם ערפדים. אינם יכולים למות והם ניזונים מדם ומפחד. המדור של לוציפר שרוי בחשכה מוחלטת, ואליו נשלחים החוטאים בחטא הגאווה."}, "en": {"n": "Lucifer", "r": "Ruler of Ophelia · the sixth circle", "t": "Belial's son, father of the Famelier demons known as vampires. They cannot die and they feed on blood and on fear. Lucifer's circle lies in total darkness, and pride is what sends a soul there."}}, {"k": "lilith", "he": {"n": "לילית", "r": "אם השדים, השדה הראשונה", "t": "נועדה לשרת ולהיות זוגתו של אדם, אך במהרה התגלתה כלא ציתנית, מרדנית ופרועה, ואדם ביקש אישה אחרת במקומה. לאחר הגירוש פגשה לילית את הילל בן שחר, מלאך שגורש מגן העדן. הם התאחדו, ובתמורה לחיי נצח ולכוחות ילדה לו מאה צאצאים, השדים."}, "en": {"n": "Lilith", "r": "Mother of demons, the first she-demon", "t": "She was meant to serve Adam as his mate, but she was quickly found disobedient, rebellious and wild, and Adam asked for another woman in her place. After she was cast out Lilith met Hillel ben Shachar, an angel exiled from Eden. They joined, and in exchange for eternal life and power she bore him a hundred offspring: the demons."}}, {"k": "lilo", "he": {"n": "לילו", "r": "אבי שושלת שדי הלילית", "t": "צאצאם של לילית ובלייעל ואבי שדי הלילית, המכונים פיות ופיונים. לילית ולילו הולידו שתים עשרה בנות, שייסדו את שנים עשר שבטי הפיות. בני שבטי הפיות אינם יכולים ללדת צאצאים נוספים, ודרכם היחידה להמשיך את השושלת היא לחטוף ילדים אנושיים, לשתות את דמם ולהחליפו בדם פיות בשילוב עם כוח הטבע."}, "en": {"n": "Lilo", "r": "Father of the Lilith demon line", "t": "Child of Lilith and Belial and father of the Lilith demons, the fae. Lilith and Lilo had twelve daughters, who founded the twelve fae tribes. The fae cannot bear children of their own, and the only way they have to continue the line is to take human children, drink their blood and replace it with fae blood bound to the power of nature."}}, {"k": "balt", "he": {"n": "בלת-אילו", "r": "המלכה האם של שבט הפרחים", "t": "בתם הצעירה של לילית ולילו. צאצאיה נוצרים בשילוב של ילדי הלילית עם פרחים, פירות ועצים. בלת-אילו יצרה שתים עשרה גבירות, והן מפוזרות ברחבי העולם ומפיצות את שושלתה."}, "en": {"n": "Balt-Ilu", "r": "Queen mother of the flower tribe", "t": "The youngest daughter of Lilith and Lilo. Her offspring are made by binding Lilith's children to flowers, fruit and trees. Balt-Ilu created twelve ladies, scattered across the world, who carry her line onward."}}, {"k": "lilach", "he": {"n": "לילך", "r": "גבירת הפרחים", "t": "בתה הצעירה של בלת-אילו. לילך יצרה שנים עשר צאצאים. הצאצאים הזכרים של גבירת הפרחים מכונים ביור והנקבות מכונות דיור."}, "en": {"n": "Lilach", "r": "Lady of the flowers", "t": "The youngest daughter of Balt-Ilu. Lilach made twelve offspring. The males of a flower lady's line are called Bior and the females Dior."}}, {"k": "succubus", "he": {"n": "סוקובוס ואינקובוס", "r": "צאצאים של לילית", "t": "חיים במסווה בין בני האדם. אינקובוס הוא השד הזכרי שמשפיע, מפתה ותוקף נשים, וסוקובוס היא השדה הנשית שמשפיעה, מפתה ותוקפת גברים. הם יונקים את האנרגייה מהקורבן במגע, מגע שמוביל לעייפות קיצונית, למחלות ואף למוות. הם יפים ומפתים, ומסתירים את טבעם המפלצתי בשינוי צורה. בצורתם האמיתית עורם בגוון סגול ורוד עד כחול והם בעלי קרניים."}, "en": {"n": "Succubus and incubus", "r": "Children of Lilith", "t": "They live disguised among humans. The incubus is the male demon who sways, seduces and preys on women; the succubus is the female who does the same to men. They draw energy from their victim through touch, which leaves extreme exhaustion, illness and sometimes death. They are beautiful and alluring, hiding a monstrous nature by changing shape. In their true form their skin runs from violet-pink to blue and they are horned."}}, {"k": "incubus", "he": {"n": "האינקובוס", "r": "הצורה הזכרית", "t": "בצורתו האמיתית הוא בעל קרניים ועור בגוון סגול ורוד עד כחול. הסוקובוסים והאינקובוסים חיים במסווה בין בני האדם, ובספרים הם קשורים לאחוזה שעל הר הכרמל."}, "en": {"n": "The incubus", "r": "The male form", "t": "In his true form he is horned, his skin between violet-pink and blue. Succubi and incubi live disguised among humans; in the books they are tied to the estate on Mount Carmel."}}, {"k": "ophrit", "he": {"n": "שדי עופרית", "r": "צאצאים של לילית", "t": "שדים שחיים במקומות שוממים כמו מדבריות, מעמקי יערות או מערות מתחת לאדמה. הם נמנעים ממגע גלוי עם בני האדם ויוצאים רק בסתר ובלילות. לעופרית יש יכולת להיכנס לחלומות של בני האדם ולהיזון מרגשות ומפחדים. הם מזוהים עם חופש פרוע ועם סכנה, והם חיים במונרכיות."}, "en": {"n": "Ophrit demons", "r": "Children of Lilith", "t": "Demons who live in desolate places: deserts, deep forest, caves beneath the ground. They avoid open contact with humans and come out only in secret, at night. An Ophrit can enter human dreams and feed on feeling and on fear. They stand for wild freedom and for danger, and they live in monarchies."}}];
+const LORE_DEMONS = [{"k": "satan", "he": {"n": "השטן - הילל בן שחר", "r": "אבי השדים", "t": "מלאך ממלאכי העליון. הוא ואחותו יופיאל היו היפים במלאכים, וצבע שערם בהק כשמש. הילל חטא בחטא היוהרה, ברצונו להיות אל, מרד וגורש מגן העדן. כעונש נלקח ממנו היופי: על גופו השרירי הולבש ראש עז, שערו הבוהק הפך לרעמה פרועה, וכנפיו הלבנות הפכו קירחות וקשות ככנפי עטלף. המלאך המגורש התאחד עם אשתו הראשונה של האדם, לילית, ובתמורה לחיי נצח ולכוחות ילדה לו מאה צאצאים, שמהם נוצרו כל השדים."}, "en": {"n": "Hillel ben Shachar - Satan, father of demons", "r": "Father of demons", "t": "One of the high angels. He and his sister Yofiel were the most beautiful of the angels, their hair as bright as the sun. Hillel sinned in pride, wanting to be a god, rebelled and was cast out of Eden. His beauty was taken from him as punishment: a goat's head set on his muscled body, his bright hair turned to a wild mane, his white wings made bald and hard as a bat's. The exiled angel joined with Lilith, Adam's first wife, and in exchange for eternal life and power she bore him a hundred offspring, from whom all demons came."}}, {"k": "shamdon", "he": {"n": "שמדון", "r": "אבי שושלת שדי שמדון", "t": "השד הראשון שנולד לשושלת השדים, צאצאו הראשון של הילל בן שחר. הוא ואשתר, שהייתה אשתו השנייה של אדם, יצרו את שושלת נסיכי השאול. הושמד במלחמה הראשונה בין המלאכים, בני האדם והשדים, מלחמה שבסופה, במבול הגדול, גורשו השדים לשאול."}, "en": {"n": "Shamdon", "r": "Father of the Shamdon line", "t": "The first demon born into the line, Hillel ben Shachar's firstborn. Together with Ashtar, Adam's second wife, he founded the dynasty of the princes of Sheol. He was destroyed in the first war between angels, humans and demons, the war that ended in the great flood, when the demons were banished to Sheol."}}, {"k": "ashmadai", "he": {"n": "אשמדאי", "r": "אבי מלך השדים", "t": "צאצאו הראשון של שמדון. צאצאי שושלתו נקראים אגרים ובעלי יכולת לשינוי צורה. שלושת צאצאיו הבולטים: לוקיאנתרו הבכור, אמדאוס השני והלבינדי השלישי."}, "en": {"n": "Ashmadai", "r": "Father of the demon king", "t": "Shamdon's firstborn. His descendants are called Agarim and can change shape. His three notable children: Lukiantro the eldest, Amadeus the second and Halevindi the third."}}, {"k": "lukiantro", "he": {"n": "לוקיאנתרו", "r": "מלך השאול · המדור השביעי, עיר החטאים", "t": "ארמונו נמצא במדור השביעי, המכונה גם עיר החטאים, ושם נמצאים רוב עדרי השאול. הוא שולט בעזרת דודיו נסיכי השאול, ובמדור השני בעזרת אחיו האגרתים, שדים משני צורה. הם כולאים את הנשמות המגיעות לשאול בבורות תחתית ומענים אותן בחזרה על הרגעים הגרועים בחייהן, אלה שהובילו אותן לשם, עד שנשמה מתוקנת זכאית לניסיון נוסף בעולם בני האדם. צאצאיו: הלני, בתו והמלאכית בנש, שהושמדה לפי התיעודים."}, "en": {"n": "Lukiantro", "r": "King of Sheol · the seventh circle, the City of Sinners", "t": "His palace stands in the seventh circle, the City of Sinners, where most of the herds of Sheol are kept. He rules with his uncles, the princes of Sheol, and holds the second circle through his shape-shifting Agarti brothers. Souls that reach Sheol are held in pits and made to relive the worst hours of their lives, the ones that sent them there, until a mended soul earns another attempt in the world of the living. His children: Helni, his daughter by the angel Benesh, destroyed according to the records."}}, {"k": "sagu", "he": {"n": "סאגו", "r": "שליט מדור צלמוות · המדור הראשון", "t": "צאצאו השני של שמדון, שליט המדור לחוטאים בכעס. צלמוות הוא המדור שמפריד בין עולם בני האדם למדורי השאול. סאגו הוא אבי שדי ענקי האש, שבסיפורי המלחמה האחרונה תוארו כשדים בגודל עצום ובעלי כוח אדיר יותר מרעידת אדמה, שיכולים להגיע לגובה של הר. גם לפני הגירוש נצפו רק מעט שדים כאלה, בעיקר בקרבת הרי געש. לרוב הם נמצאים תחת קליפת האדמה."}, "en": {"n": "Sagu", "r": "Ruler of Tzalmavet · the first circle", "t": "Shamdon's second son, ruler of the circle of wrath. Tzalmavet is the circle that separates the human world from the circles of Sheol. Sagu is the father of the fire giants, described in the tales of the last war as demons of enormous size, stronger than an earthquake, able to grow as tall as a mountain. Even before the banishment only a few were ever seen, mostly near volcanoes. Most of the time they lie beneath the earth's crust."}}, {"k": "samuel", "he": {"n": "סמואל", "r": "שליט מדור גולא · המדור השני", "t": "צאצאו החמישי של שמדון. מדור גולא הוא המדור לחוטאים בגרגרנות, ובו הם מעונים ברעב בלתי נגמר ובלתי נשלט. סמואל חולק את המדור עם שליט זוטר בשם בעל זבוב, והמדור מלא חרקים ומזיקים הניזונים מנשמות בני האדם. סמואל אינו בנה של אשתר כשאר אחיו, אלא צאצא של שמדון ומלאכית ששמה לא ידוע, ולכן מכונה גם 'מלאך המוות', בהיותו חצי שד וחצי מלאך. החיבה שלו לבני האדם הולידה לו שני צאצאים שהם חצי אדם וחצי שד."}, "en": {"n": "Samuel", "r": "Ruler of Gula · the second circle", "t": "Shamdon's fifth son. Gula is the circle of gluttony, where souls are tormented by a hunger that never ends and cannot be controlled. Samuel shares the circle with a lesser ruler named Ba'al Zvuv, and it swarms with insects and vermin that feed on human souls. Unlike his brothers Samuel is not Ashtar's son but the child of Shamdon and an angel whose name is unknown, which is why he is also called the Angel of Death, being half demon and half angel. His fondness for humans gave him two children who are half human, half demon."}}, {"k": "ghul", "he": {"n": "ע'ול", "r": "הצאצא הראשון של סמואל", "t": "אבי שדי הנזימבי, המוכרים בשמם הרווח זומבים. שדי הנזימבי אינם נולדים, אלא הם גופות של בני אדם שע'ול משתלט עליהן ומפעיל כמו בובות. כשהגופות אינן בשליטתו, הצורך היחיד שמניע אותן דומה לזה של הנשמות המעונות במדור השני: רעב בלתי נגמר ובלתי נשלט, והן יאכלו כל דבר שנקלע בדרכן."}, "en": {"n": "Ghul", "r": "Samuel's firstborn", "t": "Father of the Nzimbi demons, better known as zombies. Nzimbi are not born: they are human corpses that Ghul takes over and works like puppets. Out of his control, the only thing that drives them is the hunger of the second circle, endless and uncontrollable, and they will eat whatever crosses their path."}}, {"k": "gaotika", "he": {"n": "גאוטיקה", "r": "הצאצאית השנייה של סמואל", "t": "אם שדי הטוביקנה, המכונים גם אנשי זאב, שדים ממושמעים ויחסית ניתנים לשליטה, המשמשים מגינים ולוחמים של שושלת הנסיכים. בגלל דם האדם הזורם בגאוטיקה, אפשר להעביר את כוחות השד של שושלתה לבני אדם באמצעות נשיכה, דם או קיום יחסי מין."}, "en": {"n": "Gaotika", "r": "Samuel's second child", "t": "Mother of the Tovikana demons, also called wolf men: disciplined and relatively controllable, they serve as guards and fighters for the princes' line. Because human blood runs in Gaotika, the powers of her line can pass to humans through a bite, through blood, or through sex."}}, {"k": "abadon", "he": {"n": "אבדון", "r": "שליט מדור אבדון · המדור השלישי", "t": "צאצאו השלישי של שמדון, אבי שדי המאגוס המכונים מכשפים. המדור השלישי הוא מדור החמדנות: הנשמות מוחזקות בו בכלובים מזהב, נרדפות בתחושת חוסר הגשמה ונטרפות שוב ושוב על ידי שדיה של ממון, השליטה הזוטרה של המדור. גם שדי ההאנהגוארה חיים במדור הזה, ונשלטים בידי ממון ברמת תודעה של חיות טורפות."}, "en": {"n": "Abadon", "r": "Ruler of Abadon · the third circle", "t": "Shamdon's third son, father of the Magus demons, the sorcerers. The third circle is greed: souls are kept in cages of gold, hounded by a sense of never having enough, devoured again and again by the demons of Mammon, the circle's lesser ruler. The Hanhaguara demons also live here, ruled by Mammon at the awareness of predatory animals."}}, {"k": "belial", "he": {"n": "בלייעל", "r": "שליט מדור אסידיה · המדור הרביעי", "t": "צאצאו השני של הילל בן שחר. במדור אסידיה נענשים החוטאים בשקרים, בעצלנות ובניצול. זהו מדור שכולו מים, וכלואה בו גם השדה לוויתן. החוטאים שוקעים בו בים אין סופי של שקרים ואשמה. בלייעל ובנו הבכור אוסה, שהיה בן ארבע מאות שנה, הושמדו במלחמה הגדולה של השדים, אך בעזרת דמה של לילית הוחזר בלייעל לחיים, ומאז הוא וצאצאיו אינם יכולים למות. בלייעל ולילית יצרו את שושלת לוציפר, שדי הפמליירים המוכרים כערפדים."}, "en": {"n": "Belial", "r": "Ruler of Acedia · the fourth circle", "t": "The second son of Hillel ben Shachar. Acedia punishes lies, sloth and exploitation. It is a circle of water, and the demon Leviathan is imprisoned there too. Its sinners sink into an endless sea of lies and guilt. Belial and his firstborn Osa, who was four hundred years old, were destroyed in the great war of the demons, but Lilith's blood brought Belial back, and since then neither he nor his descendants can die. Belial and Lilith created the line of Lucifer, the Famelier demons known as vampires."}}, {"k": "elias", "he": {"n": "אליאס", "r": "שליט מדור שחט · המדור החמישי", "t": "צאצאו הרביעי של שמדון, אבי שדי הדראקון המכונים דרקונים. המדור שומם ויש בו בעיקר סלעים, והוא מיועד לחוטאים מתוך קנאה. נשמות האדם בו נרדפות בידי צאצאיו של אליאס שוב ושוב ואינן מוצאות מנוח."}, "en": {"n": "Elias", "r": "Ruler of Shachat · the fifth circle", "t": "Shamdon's fourth son, father of the Draconi demons, the dragons. The circle is barren and mostly rock, and it is meant for envy. The souls there are hunted by Elias's offspring again and again and find no rest."}}, {"k": "lucifer", "he": {"n": "לוציפר", "r": "שליט מדור אופליה · המדור השישי", "t": "צאצאו של בלייעל, אבי שדי הפמליירים המוכרים בשם ערפדים. אינם יכולים למות והם ניזונים מדם ומפחד. המדור של לוציפר שרוי בחשכה מוחלטת, ואליו נשלחים החוטאים בחטא הגאווה."}, "en": {"n": "Lucifer", "r": "Ruler of Ophelia · the sixth circle", "t": "Belial's son, father of the Famelier demons known as vampires. They cannot die and they feed on blood and on fear. Lucifer's circle lies in total darkness, and pride is what sends a soul there."}}, {"k": "lilith", "he": {"n": "לילית", "r": "אם השדים, השדה הראשונה", "t": "נועדה לשרת ולהיות זוגתו של אדם, אך במהרה התגלתה כלא ציתנית, מרדנית ופרועה, ואדם ביקש אישה אחרת במקומה. לאחר הגירוש פגשה לילית את הילל בן שחר, מלאך שגורש מגן העדן. הם התאחדו, ובתמורה לחיי נצח ולכוחות ילדה לו מאה צאצאים, השדים."}, "en": {"n": "Lilith", "r": "Mother of demons, the first she-demon", "t": "She was meant to serve Adam as his mate, but she was quickly found disobedient, rebellious and wild, and Adam asked for another woman in her place. After she was cast out Lilith met Hillel ben Shachar, an angel exiled from Eden. They joined, and in exchange for eternal life and power she bore him a hundred offspring: the demons."}}, {"k": "lilo", "he": {"n": "לילו", "r": "אבי שושלת שדי הלילית", "t": "צאצאם של לילית ובלייעל ואבי שדי הלילית, המכונים פיות ופיונים. לילית ולילו הולידו שתים עשרה בנות, שייסדו את שנים עשר שבטי הפיות. בני שבטי הפיות אינם יכולים ללדת צאצאים נוספים, ודרכם היחידה להמשיך את השושלת היא לחטוף ילדים אנושיים, לשתות את דמם ולהחליפו בדם פיות בשילוב עם כוח הטבע."}, "en": {"n": "Lilo", "r": "Father of the Lilith demon line", "t": "Child of Lilith and Belial and father of the Lilith demons, the fae. Lilith and Lilo had twelve daughters, who founded the twelve fae tribes. The fae cannot bear children of their own, and the only way they have to continue the line is to take human children, drink their blood and replace it with fae blood bound to the power of nature."}}, {"k": "balt", "he": {"n": "בלת-אילו", "r": "המלכה האם של שבט הפרחים", "t": "בתם הצעירה של לילית ולילו. צאצאיה נוצרים בשילוב של ילדי הלילית עם פרחים, פירות ועצים. בלת-אילו יצרה שתים עשרה גבירות, והן מפוזרות ברחבי העולם ומפיצות את שושלתה."}, "en": {"n": "Balt-Ilu", "r": "Queen mother of the flower tribe", "t": "The youngest daughter of Lilith and Lilo. Her offspring are made by binding Lilith's children to flowers, fruit and trees. Balt-Ilu created twelve ladies, scattered across the world, who carry her line onward."}}, {"k": "lilach", "he": {"n": "לילך", "r": "גבירת הפרחים", "t": "בתה הצעירה של בלת-אילו. לילך יצרה שנים עשר צאצאים. הצאצאים הזכרים של גבירת הפרחים מכונים ביור והנקבות מכונות דיור."}, "en": {"n": "Lilach", "r": "Lady of the flowers", "t": "The youngest daughter of Balt-Ilu. Lilach made twelve offspring. The males of a flower lady's line are called Bior and the females Dior."}}, {"k": "succubus", "he": {"n": "סוקובוס ואינקובוס", "r": "צאצאים של לילית", "t": "חיים במסווה בין בני האדם. אינקובוס הוא השד הזכרי שמשפיע, מפתה ותוקף נשים, וסוקובוס היא השדה הנשית שמשפיעה, מפתה ותוקפת גברים. הם יונקים את האנרגייה מהקורבן במגע, מגע שמוביל לעייפות קיצונית, למחלות ואף למוות. הם יפים ומפתים, ומסתירים את טבעם המפלצתי בשינוי צורה. בצורתם האמיתית עורם בגוון סגול ורוד עד כחול והם בעלי קרניים."}, "en": {"n": "Succubus and incubus", "r": "Children of Lilith", "t": "They live disguised among humans. The incubus is the male demon who sways, seduces and preys on women; the succubus is the female who does the same to men. They draw energy from their victim through touch, which leaves extreme exhaustion, illness and sometimes death. They are beautiful and alluring, hiding a monstrous nature by changing shape. In their true form their skin runs from violet-pink to blue and they are horned."}}, {"k": "incubus", "he": {"n": "האינקובוס", "r": "הצורה הזכרית", "t": "בצורתו האמיתית הוא בעל קרניים ועור בגוון סגול ורוד עד כחול. הסוקובוסים והאינקובוסים חיים במסווה בין בני האדם, ובספרים הם קשורים לאחוזה שעל הר הכרמל."}, "en": {"n": "The incubus", "r": "The male form", "t": "In his true form he is horned, his skin between violet-pink and blue. Succubi and incubi live disguised among humans; in the books they are tied to the estate on Mount Carmel."}}, {"k": "ophrit", "he": {"n": "שדי עופרית", "r": "צאצאים של לילית", "t": "שדים שחיים במקומות שוממים כמו מדבריות, מעמקי יערות או מערות מתחת לאדמה. הם נמנעים ממגע גלוי עם בני האדם ויוצאים רק בסתר ובלילות. לעופרית יש יכולת להיכנס לחלומות של בני האדם ולהיזון מרגשות ומפחדים. הם מזוהים עם חופש פרוע ועם סכנה, והם חיים במונרכיות."}, "en": {"n": "Ophrit demons", "r": "Children of Lilith", "t": "Demons who live in desolate places: deserts, deep forest, caves beneath the ground. They avoid open contact with humans and come out only in secret, at night. An Ophrit can enter human dreams and feed on feeling and on fear. They stand for wild freedom and for danger, and they live in monarchies."}}];
 const SHEOL       = [{"n": 1, "he": {"n": "צלמוות", "s": "כעס", "r": "סאגו"}, "en": {"n": "Tzalmavet", "s": "Wrath", "r": "Sagu"}}, {"n": 2, "he": {"n": "גולא", "s": "גרגרנות", "r": "סמואל"}, "en": {"n": "Gula", "s": "Gluttony", "r": "Samuel"}}, {"n": 3, "he": {"n": "אבדון", "s": "חמדנות", "r": "אבדון"}, "en": {"n": "Abadon", "s": "Greed", "r": "Abadon"}}, {"n": 4, "he": {"n": "אסידיה", "s": "שקרים, עצלנות וניצול", "r": "בלייעל"}, "en": {"n": "Acedia", "s": "Lies, sloth and exploitation", "r": "Belial"}}, {"n": 5, "he": {"n": "שחט", "s": "קנאה", "r": "אליאס"}, "en": {"n": "Shachat", "s": "Envy", "r": "Elias"}}, {"n": 6, "he": {"n": "אופליה", "s": "גאווה", "r": "לוציפר"}, "en": {"n": "Ophelia", "s": "Pride", "r": "Lucifer"}}, {"n": 7, "he": {"n": "עיר החטאים", "s": "מושב המלוכה", "r": "לוקיאנתרו"}, "en": {"n": "The City of Sinners", "s": "Seat of the crown", "r": "Lukiantro"}}];
 const LEGIONS     = [{"he": {"n": "מלאכי-עליון", "t": "הלגיון שבראשו עומדות ארבע מלאכיות העליון: מיקה, גבי, ריף ואור."}, "en": {"n": "The High Angels", "t": "The legion headed by the four archangel sisters: Mika, Gabi, Riff and Or."}}, {"he": {"n": "המועצה", "t": "בראשה עומדות מלאכיות העליון. מורכבת משמונה עשר נציגים, אחד מכל לגיון, ועוד ארבעים נציגים מקהילות המלאכים בעולם. רבים מהמקומות עוברים בתורשה בין משפחות מלאכים."}, "en": {"n": "The Council", "t": "Headed by the archangel sisters. Eighteen delegates, one from each legion, and forty more from angel communities around the world. Many of the seats pass down through angel families."}}, {"he": {"n": "לגיון התבל", "t": "מורכב מראשי שלושת לגיונות האזור: מלאכי ישראל, מלאכי המערב ומלאכי המזרח. המערב יושב בבריסטול שבאנגליה, המזרח בצ'יאנג מאי שבתאילנד."}, "en": {"n": "The World Legion", "t": "The heads of the three regional legions: the angels of Israel, of the West and of the East. The West sits in Bristol, England; the East in Chiang Mai, Thailand."}}, {"he": {"n": "לגיון הארבעה", "t": "מפקדו הוא ראש לגיון מלאכי ישראל, ולצידו שלושה מלאכים, כל אחד נצר לשושלת מלאכי העליון. ראש הלגיון נשאר בתפקידו עד מותו או עד שישוחרר, והאחריות למינוי מוטלת על מלאכיות העליון."}, "en": {"n": "The Legion of Four", "t": "Commanded by the head of the angels of Israel, with three angels beside him, each descended from an archangel line. Its head serves until death or release, and the archangel sisters appoint him."}}, {"he": {"n": "לגיון המבשרים", "t": "ממלאכי גבריאל, היושבים בראש ההר הגבוה בכל יבשת ומקיימים טקסים ותפילות כדי להיות קרובים לשמיים. הם מתחברים לקווי זמן ולזרמי אירועים הרי גורל, ובין שאר תפקידיהם אחראים לצפות התנהגות שדים."}, "en": {"n": "The Heralds", "t": "Gabriel's angels, who sit on the highest mountain of each continent and hold rites and prayers to stay close to the sky. They read timelines and currents of fateful events, and among other duties they forecast the movements of demons."}}, {"he": {"n": "לגיון החיילים", "t": "חיילי מיכאל, שמובלים בידי מלאכית העליון מיקה ולצידה ראש מלאכי ישראל. לוחמים מיומנים, חזקים וממושמעים, שנבחרים בקפידה."}, "en": {"n": "The Soldiers", "t": "Michael's soldiers, led by the archangel Mika with the head of the angels of Israel beside her. Skilled, strong, disciplined fighters, chosen with care."}}, {"he": {"n": "לגיון המרפאים", "t": "ממלאכי רפאל. מפעיל את מרפאות המלאכים, וחלקם פועלים גם בין בני האדם. הלגיון שולח נציג לכל קהילה ולכל מוסד. חאן המרפאים ממוקם בבריסטול שבאנגליה."}, "en": {"n": "The Healers", "t": "Raphael's angels. They run the angel clinics, and some work among humans as well. The legion sends a delegate to every community and institution. The healers' Khan is in Bristol, England."}}, {"he": {"n": "לגיון הרוקחים", "t": "ממלאכי גבריאל. רוקח שיקויים לטיפול בחולים, לחיזוק מלאכים ולגירוש שדים ממקומות קדושים, ושולח נציגים לקהילות המלאכים ולבני האדם."}, "en": {"n": "The Apothecaries", "t": "Gabriel's angels. They brew potions to treat the sick, to strengthen angels and to drive demons from holy places, and send delegates to angel communities and to humans."}}, {"he": {"n": "לגיון המצמיחים", "t": "מגדל את האוכל הטהור שהמלאכים אוכלים. בכל מדינה יש התיישבות של מצמיחים שאחראית למזון המלאכים באזור."}, "en": {"n": "The Growers", "t": "They raise the pure food the angels eat. Every country has a growers' settlement responsible for the angels' food in that region."}}, {"he": {"n": "לגיון המשלחות", "t": "עף ברחבי העולם ומאתר חפצי מלאכים וחפצים קדושים: ביצי מלאכים, ספרים, חפצים טהורים ועוד."}, "en": {"n": "The Expeditions", "t": "They fly the world locating angel relics and sacred objects: angel eggs, books, pure artefacts and more."}}, {"he": {"n": "לגיון השומרים הצפוני", "t": "מפעיל את כלא המלאכים בצפת, ואחראי לשמור ולהגן על קבוצת מלאכי צפת."}, "en": {"n": "The Northern Guard", "t": "They run the angel prison in Safed and protect the Safed angel group."}}, {"he": {"n": "לגיון השומרים הדרומי", "t": "מפעיל את כלא המלאכים במצפה רמון, ואחראי לשמור ולהגן על קבוצת מלאכי מצפה רמון."}, "en": {"n": "The Southern Guard", "t": "They run the angel prison in Mitzpe Ramon and protect the Mitzpe Ramon angel group."}}, {"he": {"n": "לגיון המלאכים המזרחי", "t": "מרכז את פעילות המלאכים במזרח ומפעיל את כלא המלאכים בצ'יאנג מאי, תאילנד."}, "en": {"n": "The Eastern Legion", "t": "They coordinate angel activity in the East and run the angel prison in Chiang Mai, Thailand."}}, {"he": {"n": "לגיון השומרים המערבי", "t": "מרכז את פעילות המלאכים במערב ומפעיל את כלא המלאכים בבריסטול, אנגליה."}, "en": {"n": "The Western Guard", "t": "They coordinate angel activity in the West and run the angel prison in Bristol, England."}}, {"he": {"n": "לגיון הספרנים", "t": "אחראי על מחקר ופיתוח: תיעוד היסטוריית המלאכים והשדים, ותיעוד עבודת הרוקחים, הרופאים, הקמעות, כלי הנשק ומשפטי המלאכים. מלאכיו אינם חיים בקהילה אלא עפים למרכזי מלאכים, ושם הם כותבים ספרי מחקר ומשמשים כתבים קיימים המבוססים על מורשת מלאכי העבר."}, "en": {"n": "The Librarians", "t": "Research and development: the history of angels and demons, and the record of the apothecaries, the physicians, the amulets, the weapons and angel law. Its angels do not live in a community but fly between angel centres, writing research and keeping the older texts, which rest on what past angels left behind."}}, {"he": {"n": "לגיון המטשטשים", "t": "אחראי על מחיקת הסימנים והעקבות שמשאירים מלאכים ושדים בעולם בני האדם. קהילה קטנה ומבודדת, שמלאכיה נעים בין מוקדי עימות."}, "en": {"n": "The Blurrers", "t": "They erase the marks and traces angels and demons leave in the human world. A small, isolated community whose angels move between flashpoints."}}, {"he": {"n": "לגיון הגשמיים", "t": "אחראי על המגע עם עולם בני האדם: שילוב מלאכים במשרות מפתח, רישום מלאכים צעירים לבתי ספר, וטיפול מול גורמים אנושיים כמו עיריות וגורמי רווחה. במידת הצורך הוא גם אחראי על הקשר עם הנפילים."}, "en": {"n": "The Worldly", "t": "They handle contact with the human world: placing angels in key jobs, enrolling young angels in schools, dealing with municipalities and welfare services. When needed, they also hold the line to the Nephilim."}}, {"he": {"n": "לגיון האוצר", "t": "אחראי על ניהול הכסף וההשקעות שמאפשרים לקהילות המלאכים להתקיים, ועובד ברציפות מול לגיון הגשמיים."}, "en": {"n": "The Treasury", "t": "They manage the money and investments that keep the angel communities running, working closely with the Worldly."}}, {"he": {"n": "לגיון המוארים", "t": "אחראי על כיוון העולם האנושי לטוב. מלאכיו לוחשים באוזני מנהיגים, לוחמים, מצביאים, אומנים והוגי דעות. הלגיון אינו עוסק בלחימה, ומלאכיו לא יפגעו באף בריה, אדם, מלאך או שד, גם במחיר הקרבת עצמם."}, "en": {"n": "The Illumined", "t": "They steer the human world toward good, whispering to leaders, fighters, commanders, artists and thinkers. The legion does not fight, and its angels will harm no creature, human, angel or demon, even at the cost of themselves."}}, {"he": {"n": "לגיון הכלא העמוק", "t": "מפעיל את כלא השדים הוותיק והגדול ביותר, הממוקם בירושלים. הכלא העמוק היה הראשון שיועד לשדים ולחצאי שדים, והלגיון מכונה גם לגיון העשרים."}, "en": {"n": "The Deep Prison", "t": "They run the oldest and largest demon prison, in Jerusalem. The Deep Prison was the first built for demons and half-demons, and the legion is also called the Twentieth."}}];
 const KHAN_ROOMS  = [{"he": {"n": "חדר הנצח", "t": "החדר החשוב ביותר, שסביבו נבנה החאן. במרכזו נמצא מעיין הנשמות. כחלק מטקס ההתבגרות, כל מלאך שמגיע לגיל עשר מטפטף טיפה מדמו למים ובכך מצרף חלק מנשמתו למעיין, מעשה שמחבר ומעצים את נשמות המלאכים."}, "en": {"n": "The Hall of Netzach", "t": "The most important room, the one the Khan was built around. At its centre lies the Spring of Souls. As part of the coming-of-age rite, every angel who turns ten lets a drop of blood fall into the water and joins part of their soul to the spring, an act that binds and strengthens the souls of the angels."}}, {"he": {"n": "היכל הכתר", "t": "החדר הגדול בחאן. על תקרתו ויטראז'ים מעוטרים של ארבעת מלאכי העליון. כאן מתקיימות הדרשות של ראש החאן והרצאות המלאכים האורחים."}, "en": {"n": "The Hall of Keter", "t": "The largest room in the Khan, its ceiling set with stained glass of the four archangels. Here the head of the Khan preaches and visiting angels give their talks."}}, {"he": {"n": "חדר החוכמה", "t": "חדרו של ראש החאן. הכניסה אליו היא מתוך היכל הכתר."}, "en": {"n": "The Room of Chochmah", "t": "The chamber of the head of the Khan, entered from the Hall of Keter."}}, {"he": {"n": "חדר הכבשן", "t": "החדר שבו חרוט על הקיר עץ השדים העתיק, המשקף את שושלת שדי השאול לדורותיהם. בחדר עומד שולחן עגול עתיק שסביבו המלאכים מתכננים מתקפות נגד שדים."}, "en": {"n": "The Furnace Room", "t": "Its wall is carved with the ancient demon tree, the line of the demons of Sheol through the generations. An old round table stands there, and around it the angels plan their strikes."}}, {"he": {"n": "חדר הגבורה", "t": "חדר גדול שבו המלאכים מתאמנים בלחימה. הריק שבו מאפשר להם להתאמן על הקרקע או בתעופה, עם כלי נשק או בידיים חשופות."}, "en": {"n": "The Hall of Gevurah", "t": "A large room where the angels train to fight. Its emptiness lets them work on the ground or in flight, armed or bare-handed."}}, {"he": {"n": "חדר המלכות", "t": "חדר האימונים של מלאכי רפאל, מאובזר בכלים ובחומרים להכנת קמעות ובכלי עזר לריפוי."}, "en": {"n": "The Room of Malchut", "t": "The training room of Raphael's angels, stocked for making amulets and for healing."}}, {"he": {"n": "חדר ההוד", "t": "חדר האימונים של מלאכי מיכאל, ובו קיר נשקים וכלים שונים לאימון בקרבות."}, "en": {"n": "The Room of Hod", "t": "The training room of Michael's angels, with a weapons wall and gear for combat drill."}}, {"he": {"n": "חדר התפארת", "t": "חדר האימון של מלאכי גבריאל, מאובזר לרקיחת שיקויים, להתמחות בציור ולהתמקצעות ביצירת חלונות מקום וזמן."}, "en": {"n": "The Room of Tiferet", "t": "The training room of Gabriel's angels, equipped for brewing, for painting, and for opening windows of place and time."}}, {"he": {"n": "מרפאת החסד", "t": "המרפאה של החאן, מנוהלת על ידי רפאל בכיר ומיומן ותחתיו שני מתלמדים, שבסיום הכשרתם יועברו ללגיונות או לקבוצות המלאכים השונות."}, "en": {"n": "The Chesed Clinic", "t": "The Khan's clinic, run by a senior Raphael angel with two apprentices, who move on to legions or angel groups when their training ends."}}, {"he": {"n": "מועדון הבינה", "t": "מועדון המלאכים: רגיעה ומנוחה, שיחות וזמן אישי. יש בו גם ספרייה זמינה למלאכים לשם העשרה וצבירת ידע."}, "en": {"n": "The Binah Club", "t": "The angels' club: rest, conversation and time alone. It holds a library open to the angels."}}, {"he": {"n": "מעונות", "t": "מקום השינה של המלאכיות והמלאכים."}, "en": {"n": "The Dormitories", "t": "Where the angels sleep."}}, {"he": {"n": "חדרי היסודות", "t": "החדרים של המורים, המנטורים והאורחים שמגיעים לחאן."}, "en": {"n": "The Yesod Rooms", "t": "Rooms for the teachers, the mentors and the guests who come to the Khan."}}, {"he": {"n": "רחבת החאן", "t": "המרחב שבין החדרים."}, "en": {"n": "The Khan Court", "t": "The space between the rooms."}}];
@@ -1378,6 +1404,9 @@ const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 /* Nav order follows the reader: what there is, how to buy it, then the world
    behind it. The author and the rest of the shelf come after. */
 const VIEWS = ["home","books","shop","worlds","lore","gallery","quiz","author","reviews","field","events","speaking","community","rights"];
+/* Reachable by address and from the footer, deliberately kept out of the nav row */
+const EXTRA_VIEWS = ["privacy","terms"];
+const ALL_VIEWS = VIEWS.concat(EXTRA_VIEWS);
 function go(v){ view=v; if(v==="quiz") qzLoaded=false; /* re-read the tally on every visit */
   setHash(v); unlockScroll();
 
@@ -1392,7 +1421,7 @@ function setHash(v){
 const viewUrl = v => location.origin + location.pathname + (v==="home" ? "" : "#"+v);
 function fromHash(){
   const h = (location.hash||"").replace(/^#/,"");
-  return VIEWS.includes(h) ? h : "home";
+  return ALL_VIEWS.includes(h) ? h : "home";
 }
 addEventListener("hashchange", ()=>{ const v=fromHash(); if(v!==view){ view=v; if(v==="quiz") qzLoaded=false; render(); } });
 function fitNav(){
@@ -1537,7 +1566,7 @@ function vHome(){
   <div class="hero">
     <canvas id="sky"></canvas>
     <div class="wrap hero-in">
-      <h1>${he?"מלאכים ושדים,<br>ממש כאן.":"Angels and demons,<br>right here."}</h1>
+      <h1>${he?"מלאכיות עליון.<br>ממש כאן.":"The Archangel Sisters.<br>Right here."}</h1>
       <p class="hero-kick">${he
         ? "מלאכים, שדים, מישלינגים ומלחמה בין העולם של מעלה ומטה."
         : "Angels, demons, Mishlingim, and a war between the world above and the world below."}</p>
@@ -1978,8 +2007,12 @@ function openFig(k){
   const prev=all[(i-1+all.length)%all.length].k, next=all[(i+1)%all.length].k;
   const f=FIGURES[k] || {he:{r:"",t:""},en:{r:"",t:""}};
   const c=L(f);
-  const body = c.t
-    ? `<p>${esc(c.t)}</p>`
+  const lore = f.lore ? LORE_DEMONS.find(d=>d.k===f.lore) : null;
+  const text = c.t || (lore ? L(lore).t : "");
+  const body = text
+    ? `<p>${esc(text)}</p>`
+      + (lore?`<div style="margin-block-start:.4rem"><button class="btn btn-sm btn-quiet"
+             onclick="closeBook();go('lore');setLore('demons')">${he?"לשושלות השדים":"To the demon dynasties"}</button></div>`:"")
     : `<p class="dim">${he?"התיאור של הדמות הזו עוד נכתב, ויעלה לכאן בקרוב.":"This character's entry is still being written, and will appear here soon."}</p>`;
   document.getElementById("bookPanel").innerHTML = `
     <button class="lb-close" onclick="closeBook()" aria-label="${he?"סגירה":"Close"}">✕</button>
@@ -2740,11 +2773,12 @@ function qzRun(){
   const he=lang==="he", Q=QUIZZES[qz.quiz], q=Q.qs[qz.i], n=Q.qs.length;
   const title = he ? (qz.gender==="f"?Q.he.t:Q.he.tm) : Q.en.t;
   return `<section class="band wrap narrow stack g-l" id="qzTop">
+    <button class="qexit" onclick="resetQuiz()">${he?"‹ יציאה מהחידון":"‹ Leave the quiz"}</button>
     <span class="eyebrow">${esc(title)}</span>
     <div class="qbar"><i style="inline-size:${Math.round((qz.i)/n*100)}%"></i></div>
     <div class="qhead">
       <span class="eyebrow num">${qz.i+1} / ${n}</span>
-      <button class="qback" onclick="backQuiz()">${he?"חזרה":"Back"}</button>
+      <button class="qback" onclick="backQuiz()">${he?"‹ לשאלה הקודמת":"‹ Previous question"}</button>
     </div>
     <h2 class="qq">${esc(qtext(q.q))}</h2>
     <div class="qopts">
@@ -2764,6 +2798,7 @@ function qzDone(){
     : `I got ${c.name} in N.B. Shira's ${quizLabel} quiz. Find out what you get:`;
   const shareText = share + " " + viewUrl("quiz");
   return `<section class="band wrap stack g-l" id="qzTop">
+    <button class="qexit" onclick="resetQuiz()">${he?"‹ חזרה לכל החידונים":"‹ Back to all the quizzes"}</button>
     <div class="qresult">
       <div class="qrimg ${qz.quiz==="demons"?"is-plate":""}"><img src="${qzResultImg(r)}" alt="${esc(c.name)}"></div>
       <div class="stack g-s">
@@ -2797,7 +2832,7 @@ function qzDone(){
         <div class="qacts">
           <button class="btn btn-sm btn-quiet" onclick="startQuiz('${qz.quiz}')">${he?"שוב":"Again"}</button>
           <button class="btn btn-sm btn-quiet" onclick="startQuiz('${qz.quiz==="angels"?"demons":"angels"}')">${he?(qz.quiz==="angels"?"ועכשיו השדים":"ועכשיו המלאכיות"):(qz.quiz==="angels"?"Now the demons":"Now the archangels")}</button>
-          <button class="btn btn-sm btn-quiet" onclick="resetQuiz()">${he?"לחידונים":"All quizzes"}</button>
+          <button class="btn btn-sm btn-quiet" onclick="resetQuiz()">${he?"לכל החידונים":"All the quizzes"}</button>
         </div>
       </div>
     </div>
@@ -3459,6 +3494,217 @@ function buildSkyline(w,h,css){
   return cv;
 }
 
+/* ---------- SEARCH ----------
+   The whole site is one HTML file, so a search engine sees one page unless we
+   tell it otherwise. Every view now sets its own title, description, canonical
+   address and share card, and the structured data below describes the author
+   and the books in a form Google reads directly. */
+const SITE = "https://nbshira.com";
+const SEO = {
+  home:{he:["נעמה בר שירה - פנטזיה ישראלית · מלאכיות עליון",
+            "האתר הרשמי של נעמה בר שירה, סופרת פנטזיה ישראלית זוכת פרס גפן. סדרת מלאכיות עליון, בין השמשות, מלאכיות בשערי השחר ואיזבלה מלכת ירושלים - לרכישה ישירה בעותקים חתומים."],
+        en:["N.B. Shira - Israeli fantasy · The Archangel Sisters",
+            "The official site of N.B. Shira, Geffen Award winning Israeli fantasy author. Signed copies direct from the author."]},
+  books:{he:["כל הספרים של נעמה בר שירה - תשעה ספרי פנטזיה",
+             "מעיין הנשמות, שער הצללים, שממת העדן, צבא המלכה, הבן האובד, זהר, ברק, סוקי ואיזבלה מלכת ירושלים - כל הספרים לפי סדרות, עם מדריך סדר קריאה."],
+         en:["All the books by N.B. Shira","Nine fantasy novels across four series, with a reading-order guide."]},
+  shop:{he:["חנות הספרים - קניית ספרי נעמה בר שירה בעותק חתום",
+            "רכישת ספרי פנטזיה ישירות מהסופרת, בעותקים חתומים עם הקדשה אישית ובלי תוספת תשלום. חבילות במחיר מוזל, משלוח לכל הארץ ותשלום בביט."],
+        en:["Shop - buy N.B. Shira's books signed","Order fantasy novels direct from the author, hand-signed, with bundle prices and shipping across Israel."]},
+  worlds:{he:["הסדרות של נעמה בר שירה - מאיפה מתחילים לקרוא",
+              "ארבע סדרות ביקום אחד: מלאכיות עליון, מלאכיות בשערי השחר, בין השמשות ואיזבלה מלכת ירושלים. מדריך סדר קריאה לקוראים חדשים."],
+          en:["The series - where to start reading","Four series in one universe, with a guide to the reading order."]},
+  lore:{he:["עולם מלאכיות עליון - שדים, מלאכים ושבעת מדורי השאול",
+            "הנספחים מתוך הספרים: תשע עשרה שושלות שדים מאוירות, עשרים לגיונות מלאכים, חדרי חאן המלאכים בירושלים ושלושים ושלושה דורות. פנטזיה על בסיס מיתולוגיה יהודית."],
+        en:["The world of The Archangel Sisters","Demon dynasties, angel legions and the circles of Sheol, from the appendices of the books."]},
+  gallery:{he:["הדמויות - הגלריה של מלאכיות עליון",
+               "ארבע האחיות מיקה, גבי, ריף ואור, ולצידן שאר תושבי היקום: מלאכים, שדים ומישלינגים, מאוירים."],
+           en:["The characters - gallery","The four archangel sisters and the rest of the cast, illustrated."]},
+  quiz:{he:["חידונים - לאיזו מלאכית או שד אתם שייכים",
+            "שני חידונים מתוך עולם מלאכיות עליון: חידון המלאכיות וחידון השדים. שתים עשרה שאלות, ותוצאה עם איור."],
+        en:["Quizzes - which archangel or demon are you","Two quizzes from the world of the books."]},
+  author:{he:["נעמה בר שירה - הסופרת","סופרת נוער ופנטזיה ישראלית, מחזאית ואשת חינוך. זוכת פרס גפן 2024, פרס קיפוד 2025 וספר השנה 2026."],
+          en:["About N.B. Shira","Israeli fantasy and YA author, playwright and educator."]},
+  reviews:{he:["ביקורות קוראים על ספרי נעמה בר שירה","מה קוראים כותבים על הספרים, ומקום להשאיר ביקורת משלכם או מכתב לסופרת."],
+           en:["Reader reviews","What readers say, and a place to add your own."]},
+  field:{he:["נעמה בר שירה בשטח - ירידים, כנסים והשקות","תמונות מירידי ספרים, כנסי פנטזיה, השקות וחתימות."],
+         en:["On tour - fairs, conventions and signings","Photographs from book fairs, conventions and launches."]},
+  events:{he:["אירועים קרובים - איפה פוגשים את נעמה בר שירה","כנסים, ירידים, השקות וחתימות."],
+          en:["Events - where to meet Naama","Conventions, fairs, launches and signings."]},
+  speaking:{he:["הרצאות וסדנאות כתיבה - מפגשי סופרת בבתי ספר וספריות",
+                "מפגשי סופרת לחטיבות ולתיכונים, סדנאות כתיבה ובניית עולם, והרצאות בספריות ובמועדוני קריאה. הפעילות מאושרת בגפ\"ן."],
+            en:["Speaking and workshops","School visits, writing workshops and library talks."]},
+  community:{he:["המישלינגים - קהילת הקוראים של נעמה בר שירה","קבוצת הקוראים שמקבלת עדכונים ראשונה, עותקים מוקדמים ומפגשים."],
+             en:["The readers' community","The reader group that hears everything first."]},
+  rights:{he:["Rights - זכויות תרגום לספרי נעמה בר שירה","Foreign rights information for N.B. Shira's novels."],
+          en:["Rights","Foreign rights information for N.B. Shira's novels."]},
+  privacy:{he:["מדיניות פרטיות - נעמה בר שירה","מה האתר אוסף, לאן זה מגיע, ואיך מבקשים למחוק."],
+           en:["Privacy","What this site collects and where it goes."]},
+  terms:{he:["תנאי שימוש - נעמה בר שירה","זכויות יוצרים, הזמנות ותנאי השימוש באתר."],
+         en:["Terms of use","Copyright, orders and the terms of using this site."]}
+};
+
+function applySeo(v){
+  const e = (SEO[v] || SEO.home)[lang] || SEO.home.he;
+  const [title, desc] = e;
+  document.title = title;
+  const set=(sel,attr,val)=>{ const n=document.querySelector(sel); if(n) n.setAttribute(attr,val); };
+  set('meta[name="description"]','content',desc);
+  set('meta[property="og:title"]','content',title);
+  set('meta[property="og:description"]','content',desc);
+  set('meta[property="og:url"]','content', SITE + (v==="home"?"/":"/#"+v));
+  set('link[rel="canonical"]','href', SITE + (v==="home"?"/":"/#"+v));
+  set('meta[property="og:locale"]','content', lang==="he" ? "he_IL" : "en_US");
+}
+
+/* One block of structured data describing the author and every book, so the
+   search engine has facts rather than guesses. Built from BOOKS, so it can
+   never drift out of step with the shelf. */
+function buildJsonLd(){
+  const el=document.getElementById("jsonld"); if(!el) return;
+  const author = {
+    "@type":"Person", "@id": SITE + "/#author",
+    name:"נעמה בר שירה", alternateName:["N.B. Shira","Naama Bar Shira"],
+    url:SITE, jobTitle:"סופרת", nationality:"IL",
+    description:"סופרת פנטזיה ישראלית, מחזאית ואשת חינוך. זוכת פרס גפן 2024.",
+    sameAs:[LINKS.instagram,LINKS.tiktok,LINKS.facebook].filter(Boolean)
+  };
+  const books = BOOKS.filter(b=>!b.edition).map(b=>({
+    "@type":"Book", name:b.he.t, alternateName:b.en.t, inLanguage:"he",
+    author:{"@id":SITE+"/#author"},
+    ...(b.he.s?{isPartOf:{"@type":"BookSeries",name:b.he.s}}:{}),
+    ...(b.year?{datePublished:String(b.year)}:{}),
+    ...(b.acc&&b.acc.length?{award:b.acc.map(a=>a.he)}:{}),
+    offers:{"@type":"Offer",price:String(b.sale),priceCurrency:"ILS",
+            availability:"https://schema.org/InStock",url:SITE+"/#shop"}
+  }));
+  el.textContent = JSON.stringify({
+    "@context":"https://schema.org",
+    "@graph":[
+      author,
+      {"@type":"WebSite","@id":SITE+"/#site",url:SITE,
+       name:"נעמה בר שירה · מלאכיות עליון",inLanguage:"he",
+       publisher:{"@id":SITE+"/#author"}},
+      ...books
+    ]
+  });
+}
+
+/* ---------- PRIVACY AND TERMS ---------- */
+/* Written from what the site actually does, not from a template: the three
+   forms, the WhatsApp order, the anonymous quiz counter and the two things
+   kept in the browser. If any of that changes, this page changes with it. */
+function legalPage(eyebrow,title,intro,blocks,foot){
+  return `<section class="band wrap narrow stack g-l">
+    <div class="stack g-s">
+      <span class="eyebrow">${esc(eyebrow)}</span>
+      <h2>${esc(title)}</h2>
+      <p class="lede">${esc(intro)}</p>
+    </div>
+    <div class="stack g-l">
+      ${blocks.map(([h,ps])=>`<div class="stack g-xs">
+        <h3 class="h3">${esc(h)}</h3>
+        ${ps.map(t=>`<p class="dim" style="line-height:1.75">${esc(t)}</p>`).join("")}
+      </div>`).join("")}
+    </div>
+    ${foot?`<p class="fnote">${esc(foot)}</p>`:""}
+  </section>`;
+}
+
+function vPrivacy(){
+  const he=lang==="he";
+  const updated = he ? "עודכן לאחרונה: אוגוסט 2026" : "Last updated: August 2026";
+  if(he) return legalPage("מדיניות פרטיות","מה נאסף כאן, ומה לא",
+    "האתר הזה קטן ופשוט, ואוסף רק את מה שאתם בוחרים למסור. אין בו פרסומות, אין מעקב אחרי גולשים, ואין העברת פרטים לצד שלישי.",
+    [
+      ["מה אתם מוסרים ביוזמתכם",[
+        "טופס ההרשמה לעדכונים: שם (לא חובה), כתובת מייל ומספר טלפון - לפחות אחד מהשניים. משמשים כדי לעדכן אתכם על ספרים חדשים, מבצעים וחידונים.",
+        "טופס הביקורת: שם, שם הספר, תוכן הביקורת ומייל אם בחרתם למסור. מבחר מהביקורות מתפרסם באתר בציון השם שכתבתם. אם אינכם רוצים שהביקורת תתפרסם, ציינו זאת בגוף הביקורת.",
+        "טופס המכתב האישי: שם, מייל ותוכן המכתב. אלה מגיעים לתיבת המייל של נעמה בלבד ואינם מתפרסמים לעולם."]],
+      ["לאן זה מגיע",[
+        "הפניות נשלחות לשירות של Google (Apps Script), נשמרות בגיליון Google פרטי שבבעלות נעמה, ונשלחות במקביל לשתי כתובות מייל שלה. אין להן יעד נוסף.",
+        "הזמנת ספרים אינה עוברת דרך האתר: כשלוחצים על שליחת ההזמנה, נפתחת אצלכם אפליקציית וואטסאפ עם ההודעה מוכנה, ואתם שולחים אותה. הפרטים שמילאתם בעגלה אינם נשמרים בשרת כלשהו - הם רק נכנסים לטקסט ההודעה שאתם שולחים."]],
+      ["מה נשמר בדפדפן שלכם",[
+        "הגדרות הנגישות שבחרתם (גודל טקסט, ניגודיות, עצירת תנועה), וספירה מקומית של תוצאות החידונים שעשיתם במכשיר הזה. הנתונים האלה נשארים אצלכם ואינם נשלחים לשום מקום. ניקוי נתוני הגלישה בדפדפן מוחק אותם.",
+        "האתר אינו משתמש בעוגיות מעקב, אינו מריץ כלי אנליטיקה, ואינו יודע מי אתם אלא אם מסרתם פרטים בטופס."]],
+      ["חידונים",[
+        "כשמסיימים חידון נשלח לספירה הכללית רק סוג החידון, התוצאה שיצאה, לשון הפנייה שנבחרה והשפה. אין בכך שום פרט מזהה."]],
+      ["שירותים חיצוניים",[
+        "הגופנים נטענים משרתי Google Fonts, ולכן כתובת ה-IP שלכם מגיעה לגוגל כחלק מבקשת הגופן. האתר מתארח ב-GitHub Pages, שמנהל יומני שרת משלו. אלה שירותים שאיננו שולטים במדיניות שלהם."]],
+      ["הזכויות שלכם",[
+        "אפשר לבקש בכל רגע לראות אילו פרטים שלכם שמורים, לתקן אותם, או להסיר אתכם לחלוטין. פנייה אחת במייל מספיקה, ואנחנו נטפל בה. הסרה מרשימת התפוצה אפשרית גם בתשובה לכל מייל שנשלח."]],
+      ["יצירת קשר",[
+        "בכל שאלה בנושא פרטיות: stageart.pnima@gmail.com, או וואטסאפ למספר " + PHONE_DISP + "."]]
+    ], updated);
+  return legalPage("Privacy","What is collected here, and what is not",
+    "This is a small, simple site. It collects only what you choose to give it. No advertising, no visitor tracking, and nothing passed to third parties.",
+    [
+      ["What you give us",[
+        "The updates form: name (optional), email and phone - at least one of the two. Used to tell you about new books, offers and quizzes.",
+        "The review form: name, book, the review itself, and an email if you choose to leave one. A selection of reviews is published on the site under the name you wrote. If you would rather yours was not published, say so in the review.",
+        "The letter form: name, email and the letter. These reach Naama's inbox only and are never published."]],
+      ["Where it goes",[
+        "Submissions are sent to a Google Apps Script, stored in a private Google Sheet owned by Naama, and emailed to two of her addresses. They have no other destination.",
+        "Book orders do not pass through the site: pressing send opens WhatsApp on your device with the message ready, and you send it. What you typed into the cart is never stored on any server - it only becomes the text of the message you send."]],
+      ["What stays in your browser",[
+        "Your accessibility settings, and a local count of the quizzes you took on this device. Neither is sent anywhere. Clearing your browsing data removes them.",
+        "The site sets no tracking cookies, runs no analytics, and does not know who you are unless you filled in a form."]],
+      ["Quizzes",[
+        "Finishing a quiz sends only the quiz name, the result, the chosen grammatical form and the language to a shared counter. Nothing identifying."]],
+      ["Third parties",[
+        "Fonts load from Google Fonts, so your IP address reaches Google as part of that request. The site is hosted on GitHub Pages, which keeps its own server logs. We do not control the policies of either."]],
+      ["Your rights",[
+        "You can ask at any time to see what is stored about you, to correct it, or to have it deleted. One email is enough. You can also leave the mailing list by replying to any message we send."]],
+      ["Contact",[
+        "For anything about privacy: stageart.pnima@gmail.com, or WhatsApp " + PHONE_DISP + "."]]
+    ], updated);
+}
+
+function vTerms(){
+  const he=lang==="he";
+  const updated = he ? "עודכן לאחרונה: אוגוסט 2026" : "Last updated: August 2026";
+  if(he) return legalPage("תנאי שימוש","הכללים הקצרים",
+    "האתר הוא הבית הרשמי של ספרי נעמה בר שירה. הכניסה אליו והשימוש בו כפופים לתנאים שלהלן.",
+    [
+      ["זכויות יוצרים",[
+        "כל התכנים באתר - הטקסטים, שמות הספרים והסדרות, שמות הדמויות, האיורים, הנספחים והעיצוב - הם קניינה הרוחני של נעמה בר שירה ושל היוצרים שעבדו איתה, ומוגנים בחוק זכות יוצרים.",
+        "מותר לקרוא, לצטט קטע קצר תוך ציון המקור, ולשתף קישורים לאתר. אסור להעתיק, לשכפל, לתרגם, למכור או לפרסם תכנים מהאתר, וכן אסור להשתמש בהם לאימון מודלים של בינה מלאכותית, ללא אישור מראש ובכתב.",
+        "האיורים של הדמויות והשדים הם יצירות מקור. שימוש בהם - כולל העלאה לרשתות חברתיות ללא קרדיט - טעון אישור."]],
+      ["הזמנות ותשלום",[
+        "ההזמנה נשלחת בוואטסאפ ואינה מהווה עסקה סגורה. היא נחשבת מאושרת רק לאחר שנחזור אליכם ונאשר מלאי, מחיר ומשלוח.",
+        "המחירים המוצגים באתר הם בשקלים וכוללים מע\"מ, ועשויים להתעדכן. המחיר הקובע הוא זה שסוכם איתכם בעת אישור ההזמנה.",
+        "ביטול עסקה ייעשה בהתאם לחוק הגנת הצרכן. אם הספר הגיע פגום, נחליף אותו על חשבוננו."]],
+      ["תוכן שאתם שולחים",[
+        "בשליחת ביקורת דרך האתר אתם מאשרים לנו לפרסם אותה, במלואה או בקיצור, לצד השם שכתבתם. אין חובה לפרסם כל ביקורת שמגיעה.",
+        "אין לשלוח דרך הטפסים תוכן פוגעני, מסחרי או כזה שמפר זכויות של אחרים."]],
+      ["אחריות",[
+        "האתר מוגש כפי שהוא. אנחנו משתדלים שהמידע יהיה מדויק ומעודכן, אך ייתכנו טעויות, ואין באמור באתר משום התחייבות.",
+        "האתר מכיל קישורים לאתרים ולשירותים חיצוניים. איננו אחראים לתוכן שלהם או למדיניות הפרטיות שלהם."]],
+      ["כללי",[
+        "על תנאים אלה יחולו דיני מדינת ישראל, וסמכות השיפוט הבלעדית נתונה לבתי המשפט המוסמכים בישראל."]]
+    ], updated);
+  return legalPage("Terms of use","The short rules",
+    "This is the official home of Naama Bar Shira's books. Using the site is subject to the terms below.",
+    [
+      ["Copyright",[
+        "Everything on this site - the texts, the book and series titles, the character names, the illustrations, the appendices and the design - is the intellectual property of Naama Bar Shira and the artists who worked with her, and is protected by copyright.",
+        "You may read it, quote a short passage with attribution, and share links to the site. You may not copy, reproduce, translate, sell or republish material from it, or use it to train artificial-intelligence models, without prior written permission.",
+        "The character and demon illustrations are original works. Any use of them, including posting to social media without credit, requires permission."]],
+      ["Orders and payment",[
+        "An order sent over WhatsApp is a request, not a completed sale. It is confirmed only once we come back to you and confirm stock, price and shipping.",
+        "Prices shown are in shekels, include VAT, and may change. The price that applies is the one agreed with you when the order is confirmed.",
+        "Cancellations follow Israeli consumer protection law. If a book arrives damaged, we replace it at our expense."]],
+      ["What you send us",[
+        "Sending a review through the site gives us permission to publish it, in full or shortened, next to the name you wrote. We are not obliged to publish everything that arrives.",
+        "Please do not send abusive or commercial content, or anything that infringes someone else's rights, through the forms."]],
+      ["Liability",[
+        "The site is provided as it is. We try to keep it accurate and current, but errors are possible and nothing here constitutes a binding commitment.",
+        "The site links to external sites and services. We are not responsible for their content or their privacy practices."]],
+      ["General",[
+        "These terms are governed by the laws of the State of Israel, and the competent courts in Israel have exclusive jurisdiction."]]
+    ], updated);
+}
+
 /* ---------- RENDER ---------- */
 function render(){
   const d=t();
@@ -3471,9 +3717,10 @@ function render(){
   document.getElementById("nav").innerHTML = VIEWS.map(v=>
     `<button onclick="go('${v}')" ${v===view?'aria-current="page"':""}>${esc(d.nav[v])}</button>`).join("");
 
-  const map={home:vHome,author:vAuthor,worlds:vWorlds,books:vBooks,lore:vLore,gallery:vGallery,quiz:vQuiz,field:vField,reviews:vReviews,shop:vShop,events:vEvents,speaking:vSpeaking,community:vCommunity,rights:vRights};
+  const map={home:vHome,author:vAuthor,worlds:vWorlds,books:vBooks,lore:vLore,gallery:vGallery,quiz:vQuiz,field:vField,reviews:vReviews,shop:vShop,events:vEvents,speaking:vSpeaking,community:vCommunity,rights:vRights,privacy:vPrivacy,terms:vTerms};
   const app=document.getElementById("app");
   app.innerHTML=`<div class="view">${(map[view]||vHome)()}</div>` + footEl();
+  applySeo(view);
   if(view==="home" && a11y.motion!=="off") startSky(); else if(skyRAF) cancelAnimationFrame(skyRAF);
   renderCart(); syncCount(); fitNav();
 }
@@ -3503,6 +3750,18 @@ function footEl(){
         </div>
       </div>
     </div>
+
+    <div class="footlegal">
+      <span>© ${new Date().getFullYear()} ${he?"נעמה בר שירה. כל הזכויות שמורות.":"Naama Bar Shira. All rights reserved."}</span>
+      <span class="dim">${he
+        ? "הטקסטים, האיורים והדמויות באתר מוגנים בזכויות יוצרים ואין לעשות בהם שימוש ללא אישור בכתב."
+        : "The texts, illustrations and characters on this site are protected by copyright and may not be used without written permission."}</span>
+      <span class="footlinks">
+        <button onclick="go('privacy')">${he?"מדיניות פרטיות":"Privacy"}</button>
+        <button onclick="go('terms')">${he?"תנאי שימוש":"Terms"}</button>
+        <button onclick="go('rights')">${he?"זכויות תרגום":"Rights"}</button>
+      </span>
+    </div>
   </footer>`;
 }
 
@@ -3511,6 +3770,7 @@ a11yLoad();      /* before the first paint, so nothing flashes at the wrong size
 startStars();
 render();
 a11yPanel();
+buildJsonLd();
 </script>
 </body>
 </html>
