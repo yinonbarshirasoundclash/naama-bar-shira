@@ -987,6 +987,15 @@ body[data-motion="off"] *{animation:none !important}
 .qnextimg img{width:100%;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--line-strong);background:var(--surface-2)}
 .qnext b{font-family:var(--f-display);font-size:1.25rem;color:var(--gold-soft)}
 [dir="ltr"] .qnext b{font-family:var(--f-display-lat);font-weight:600}
+.lqinvite{
+  border:1px solid var(--gold);background:var(--glow);padding:1.3rem;margin-block-start:2rem;
+  display:grid;grid-template-columns:1fr;gap:1.2rem;align-items:center;
+}
+@media (min-width:760px){.lqinvite{grid-template-columns:minmax(180px,260px) 1fr;gap:1.6rem}}
+.lqinviteimg{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem}
+.lqinviteimg img{width:100%;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--line-strong);background:var(--surface-2)}
+.lqinvite b{font-family:var(--f-display);font-size:1.25rem;color:var(--gold-soft)}
+[dir="ltr"] .lqinvite b{font-family:var(--f-display-lat);font-weight:600}
 </style>
 </head>
 <body>
@@ -2255,7 +2264,7 @@ function vLore(){
     ${loreTab==="demons"?loreDemons():""}
     ${loreTab==="legions"?loreList(LEGIONS, he?"עשרים הלגיונות":"The twenty legions",
         he?"כל מלאך משתייך ללגיון, וכל לגיון מחזיק חלק אחר של העולם: מי נלחם, מי מרפא, מי מגדל את האוכל, ומי מוחק את העקבות."
-          :"Every angel belongs to a legion, and each legion holds a different part of the world: who fights, who heals, who grows the food, who erases the traces.", "legions"):""}
+          :"Every angel belongs to a legion, and each legion holds a different part of the world: who fights, who heals, who grows the food, who erases the traces.", "legions")+lqInvite():""}
     ${loreTab==="rooms"?loreList(KHAN_ROOMS, he?"חאן המלאכים בירושלים":"The Khan of the Angels, Jerusalem",
         he?"החאן בנוי סביב מעיין הנשמות, וחדריו קרויים בשמות הספירות. הוא מופיע בכל הספרים."
           :"The Khan is built around the Spring of Souls, and its rooms carry the names of the sefirot. It appears in every one of the books.", "khan"):""}
@@ -3260,6 +3269,23 @@ function qzCopy(el){
                        setTimeout(()=>{ el.textContent = back; }, 1800); };
   try{ navigator.clipboard.writeText(el.dataset.share).then(said, said); }
   catch(e){ said(); }
+}
+
+/* Anyone who has just read all twenty is exactly the person who wants to know
+   which one is theirs, so the invitation sits at the foot of that list. */
+function lqInvite(){
+  const he=lang==="he";
+  return `<div class="lqinvite">
+    <div class="lqinviteimg">${["arbaa","matzmichim","metashteshim","muarim"].map(k=>`<img src="${lqSrc(k)}" alt="" loading="lazy">`).join("")}</div>
+    <div class="stack g-xs">
+      <span class="eyebrow">${he?"מבחן שיבוץ":"Placement examination"}</span>
+      <b>${esc(Gx(he?"ולאיזה לגיון {את שייכת|אתה שייך}?":"And which legion do you belong to?"))}</b>
+      <p class="dim">${he
+        ? "שתים עשרה שאלות בשני שלבים, בדיוק כמו שמשבצים בחאן: קודם הבחינה הכללית, ואז המקצועית. בסוף יש שיבוץ אחד מתוך עשרים."
+        : "Twelve questions in two stages, exactly the way the Khan places its angels: the general examination first, then the specialist one. At the end, one placement out of twenty."}</p>
+      <button class="btn btn-solid" style="align-self:start;margin-block-start:.5rem" onclick="go('quiz');lqIntro()">${he?"למבחן השיבוץ":"To the placement"}</button>
+    </div>
+  </div>`;
 }
 
 /* ---------- the placement, on screen ---------- */
