@@ -2272,17 +2272,19 @@ function openField(id){
    dissolved into the page ground, so it warms the section without ever
    competing with the text on top of it. */
 /* ---------- APPENDICES ---------- */
-let loreTab = "angels";
+let loreTab = "rooms";
 function setLore(k){ loreTab=k; render(); const t=document.getElementById("loreTop"); if(t) t.scrollIntoView({block:"start",behavior:"smooth"}); }
 
 function vLore(){
   const he=lang==="he";
-  /* the world above first, then the world below - the page reads as a descent */
-  const tabs=[{k:"angels",he:"מלאכים בוגרים",en:"The angels"},
-              {k:"rooms",he:"חדרי החאן",en:"Rooms of the Khan"},
+  /* The four illustrated tabs come first, because they are what a visitor should
+     find without hunting. The two text lists sit behind them - until they are
+     illustrated too, and then this order is worth revisiting. */
+  const tabs=[{k:"rooms",he:"חדרי החאן",en:"Rooms of the Khan"},
               {k:"legions",he:"לגיונות המלאכים",en:"Angel legions"},
-              {k:"demons",he:"שושלות השדים",en:"Demon dynasties"},
               {k:"sheol",he:"מדורי השאול",en:"The circles of Sheol"},
+              {k:"demons",he:"שושלות השדים",en:"Demon dynasties"},
+              {k:"angels",he:"מלאכים בוגרים",en:"The angels"},
               {k:"line",he:"33 הדורות",en:"33 generations"}];
   return `${pageHero("ברק עם סימניה מעוצבת מתנה",
       he?"עולם מלאכיות עליון":"The world of the Archangel Sisters",
