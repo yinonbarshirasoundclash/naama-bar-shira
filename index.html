@@ -217,13 +217,13 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .qbrow i,.qtrow i{display:block;block-size:5px;background:var(--line);position:relative}
 .qbrow b,.qtrow b{position:absolute;inset-block:0;inset-inline-start:0;background:var(--gold);display:block}
 .qtrow b{background:var(--gold-soft)}
+/* it sits above the cards now, so the rule belongs under it, not over it */
 .qgrand{
-  margin:0;border-block-start:1px solid var(--line);padding-block-start:1.6rem;
+  margin:0;border-block-end:1px solid var(--line);padding-block-end:1.1rem;
   font-family:var(--f-display);font-size:clamp(1.1rem,2.2vw,1.35rem);color:var(--gold-soft);
   font-variant-numeric:tabular-nums;
 }
 [dir="ltr"] .qgrand{font-family:var(--f-display-lat)}
-.qgrand + .qcounter{border-block-start:0;padding-block-start:1.1rem}
 .qcounter{display:grid;gap:1.6rem;border-block-start:1px solid var(--line);padding-block-start:1.6rem}
 @media (min-width:820px){.qcounter{grid-template-columns:1fr 1fr;gap:2.4rem}}
 .qcounter.is-one{grid-template-columns:1fr}
@@ -978,6 +978,15 @@ body[data-motion="off"] *{animation:none !important}
 .qshare b{font-family:var(--f-display);font-size:1.1rem;color:var(--gold-soft)}
 [dir="ltr"] .qshare b{font-family:var(--f-display-lat);font-weight:600}
 .qshare .btns{display:flex;gap:.6rem;flex-wrap:wrap}
+.qnext{
+  border:1px solid var(--gold);background:var(--glow);padding:1.3rem;
+  display:grid;grid-template-columns:1fr;gap:1.2rem;align-items:center;
+}
+@media (min-width:760px){.qnext{grid-template-columns:minmax(180px,260px) 1fr;gap:1.6rem}}
+.qnextimg{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem}
+.qnextimg img{width:100%;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--line-strong);background:var(--surface-2)}
+.qnext b{font-family:var(--f-display);font-size:1.25rem;color:var(--gold-soft)}
+[dir="ltr"] .qnext b{font-family:var(--f-display-lat);font-weight:600}
 </style>
 </head>
 <body>
@@ -2558,7 +2567,7 @@ function sendLead(){
   /* the placement keeps its own state, so read the result from whichever ran */
   const isLeg = qz.quiz==="legions";
   const out = isLeg ? lq.out : qz.out;
-  const Q = (!isLeg && qz.quiz) ? QUIZZES[qz.quiz] : null;
+  const Q = (!isLeg && qz.quiz) ? (QUIZZES[qz.quiz]||null) : null;
   const res = isLeg
     ? (out ? Gx(lang==="he" ? lqRes(out.win).he.name : lqRes(out.win).en.name) : "")
     : ((Q && out) ? qzResultCopy(Q.results.find(x=>x.k===out.win)).name : "");
@@ -2897,9 +2906,9 @@ function rememberResult(quiz,k){
 
 function startLegion(line){
   lq={phase:"a", line:line||null, i:0, ansA:[], ansB:[], fam:null, out:null};
-  qz.quiz="legions"; qz.stage="legion"; render(); goTop();
+  qz.quiz="legions"; qz.out=null; qz.stage="legion"; render(); goTop();
 }
-function lqIntro(){ lq.phase="intro"; qz.quiz="legions"; qz.stage="legion"; render(); goTop(); }
+function lqIntro(){ lq.phase="intro"; qz.quiz="legions"; qz.out=null; qz.stage="legion"; render(); goTop(); }
 
 function lqAnswer(oi){
   if(lq.phase==="a"){
@@ -3018,6 +3027,8 @@ function vQuiz(){
       <button class="otab" data-on="${qz.gender==="m"}" onclick="setGender('m')">בלשון זכר</button>
     </div>`:""}
 
+    ${qzGrand()}
+
     <div class="qcards">
       ${["angels","demons"].map(q=>{
         const Q=QUIZZES[q], t=he ? (qz.gender==="f"?Q.he.t:Q.he.tm) : Q.en.t;
@@ -3102,22 +3113,143 @@ function qzDone(){
               : "Send your result to the group and see who comes out as what."}</span>
           </div>
           <div class="btns">
-            <a class="btn btn-solid" href="https://wa.me/?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">${he?"שיתוף בוואטסאפ":"Share on WhatsApp"}</a>
+            <button id="waBtn" class="btn btn-solid" data-wa="https://wa.me/?text=${encodeURIComponent(shareText)}" data-share="${esc(shareText)}" onclick="shareResult(this)">${he?"שיתוף בוואטסאפ":"Share on WhatsApp"}</button>
             <button class="btn btn-quiet" data-share="${esc(shareText)}" onclick="qzCopy(this)">${he?"העתקת הקישור":"Copy the link"}</button>
           </div>
         </div>
 
         <div class="qacts">
           <button class="btn btn-sm btn-quiet" onclick="startQuiz('${qz.quiz}')">${he?"שוב":"Again"}</button>
-          <button class="btn btn-sm btn-quiet" onclick="startQuiz('${qz.quiz==="angels"?"demons":"angels"}')">${he?(qz.quiz==="angels"?"ועכשיו השדים":"ועכשיו המלאכיות"):(qz.quiz==="angels"?"Now the demons":"Now the archangels")}</button>
+          <button class="btn btn-sm btn-quiet" onclick="startQuiz('${qz.quiz==="angels"?"demons":"angels"}')">${he?(qz.quiz==="angels"?"ואפשר גם את השדים":"ועכשיו המלאכיות"):(qz.quiz==="angels"?"Or the demons":"Now the archangels")}</button>
           <button class="btn btn-sm btn-quiet" onclick="resetQuiz()">${he?"לכל החידונים":"All the quizzes"}</button>
         </div>
       </div>
     </div>
 
+    ${qzNext()}
     ${leadForm()}
     ${qzCounter(qz.quiz)}
   </section>`;
+}
+
+/* The archangel quiz hands you a line, and the placement is the one thing that
+   takes that line and does something with it - so it gets the whole block, and
+   the demon quiz stays a small button in the row above. The demon result has no
+   such sequel: from there the archangels are the natural next thing. */
+function qzNext(){
+  if(qz.quiz!=="angels" || !qz.out) return "";
+  const he=lang==="he";
+  const r=QUIZZES.angels.results.find(x=>x.k===qz.out.win);
+  const name=r?qzResultCopy(r).name:"";
+  return `<div class="qnext">
+    <div class="qnextimg">${["hayalim","mevasrim","marpeim","muarim"].map(k=>`<img src="${lqSrc(k)}" alt="" loading="lazy">`).join("")}</div>
+    <div class="stack g-xs">
+      <span class="eyebrow">${he?"ההמשך":"What comes next"}</span>
+      <b>${esc(he?"ועכשיו - לאיזה לגיון?":"And now - which legion?")}</b>
+      <p class="dim">${he
+        ? `השושלת היא רק חצי מהתשובה. בחאן משבצים כל מלאך ללגיון, ומבחן השיבוץ ייקח את ${esc(name)} בחשבון - עשרים לגיונות, שני שלבים.`
+        : `The line is only half the answer. At the Khan every angel is placed in a legion, and the placement takes ${esc(name)} into account - twenty legions, two stages.`}</p>
+      <button class="btn btn-solid" style="align-self:start;margin-block-start:.4rem" onclick="startLegion('${qz.out.win}')">${he
+        ? `למבחן השיבוץ - להתחיל כ${esc(name)}` : "To the placement - begin from your line"}</button>
+    </div>
+  </div>`;
+}
+
+/* ============ SHARING THE RESULT AS A PICTURE ============
+   WhatsApp shows a preview image only for a URL whose own page carries it, and
+   every result here lives behind the same address - so a link can never show
+   Gabi. What CAN carry the picture is the share sheet itself: navigator.share
+   accepts real files, and on a phone - which is where WhatsApp actually is -
+   that puts the plate straight into the message. The card is drawn here on a
+   canvas so it arrives titled and branded rather than as a bare crop, and it is
+   built the moment the result appears, because iOS refuses a share that was not
+   started by the tap itself. Desktop, where files are not shareable, falls back
+   to the plain wa.me link exactly as before. */
+const SHARE_W=1080, SHARE_H=1350;
+let shareCard = {sig:null, file:null, url:null, building:false};
+
+function shareSig(){
+  const l=lang+"|"+qz.gender;
+  if(qz.quiz==="legions" && lq.out) return "legions|"+lq.out.win+"|"+l;
+  if(qz.out && qz.quiz && QUIZZES[qz.quiz]) return qz.quiz+"|"+qz.out.win+"|"+l;
+  return null;
+}
+function shareSubject(){
+  if(qz.quiz==="legions" && lq.out){
+    const r=lqRes(lq.out.win);
+    return {src:lqSrc(r.k), name:Gx(lang==="he"?r.he.name:r.en.name),
+            kick:Gx(lang==="he"?r.he.kick:r.en.kick),
+            tag:lang==="he"?"מבחן השיבוץ ללגיונות":"The legion placement"};
+  }
+  if(!qz.out || !qz.quiz || !QUIZZES[qz.quiz]) return null;
+  const r=QUIZZES[qz.quiz].results.find(x=>x.k===qz.out.win); if(!r) return null;
+  const c=qzResultCopy(r);
+  return {src:qzResultImg(r), name:c.name, kick:c.kick,
+          tag: lang==="he" ? (qz.quiz==="angels"?"חידון המלאכיות":"חידון השדים")
+                           : (qz.quiz==="angels"?"The archangel quiz":"The demon quiz")};
+}
+function loadImg(src){
+  return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; });
+}
+async function buildShareCard(){
+  const sig=shareSig(); if(!sig || shareCard.sig===sig || shareCard.building) return;
+  const subj=shareSubject(); if(!subj) return;
+  shareCard.building=true;
+  try{
+    const img=await loadImg(subj.src);
+    const c=document.createElement("canvas"); c.width=SHARE_W; c.height=SHARE_H;
+    const x=c.getContext("2d");
+    x.fillStyle="#100E0C"; x.fillRect(0,0,SHARE_W,SHARE_H);
+
+    /* the plate, contained inside the upper area, never cropped */
+    const box={x:70,y:70,w:SHARE_W-140,h:SHARE_H-400};
+    const sc=Math.min(box.w/img.width, box.h/img.height);
+    const w=img.width*sc, h=img.height*sc;
+    const ix=box.x+(box.w-w)/2, iy=box.y+(box.h-h)/2;
+    x.drawImage(img, ix, iy, w, h);
+    x.strokeStyle="rgba(198,164,92,.55)"; x.lineWidth=2;
+    x.strokeRect(ix+1, iy+1, w-2, h-2);
+
+    const rtl = lang==="he";
+    x.textAlign = rtl ? "right" : "left";
+    x.direction  = rtl ? "rtl" : "ltr";
+    const tx = rtl ? SHARE_W-70 : 70;
+    let ty = box.y+box.h+95;
+
+    x.fillStyle="#C6A45C";
+    x.font=`600 40px ${rtl?'"Frank Ruhl Libre",':''}"Cormorant Garamond",Georgia,serif`;
+    x.fillText(subj.tag, tx, ty); ty+=86;
+
+    x.fillStyle="#EFE9DE";
+    x.font=`700 78px ${rtl?'"Frank Ruhl Libre",':''}"Cormorant Garamond",Georgia,serif`;
+    x.fillText(subj.name, tx, ty); ty+=62;
+
+    x.fillStyle="#A8A190";
+    x.font=`400 34px "Assistant",system-ui,sans-serif`;
+    x.fillText(subj.kick, tx, ty);
+
+    x.textAlign = rtl ? "left" : "right";
+    x.fillStyle="#C6A45C"; x.font=`600 34px "Assistant",system-ui,sans-serif`;
+    x.fillText("nbshira.com", rtl?70:SHARE_W-70, SHARE_H-58);
+
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.9));
+    if(!blob) throw 0;
+    if(shareCard.url) URL.revokeObjectURL(shareCard.url);
+    shareCard.file=new File([blob], "nbshira.jpg", {type:"image/jpeg"});
+    shareCard.url=URL.createObjectURL(blob);
+    shareCard.sig=sig;
+    const b=document.getElementById("waBtn"); if(b) b.dataset.card="1";
+  }catch(e){ /* no card - the link still works */ }
+  shareCard.building=false;
+}
+async function shareResult(el){
+  const wa=el.dataset.wa;
+  const f=shareCard.file;
+  if(f && navigator.canShare && navigator.canShare({files:[f]})){
+    try{ await navigator.share({files:[f], text:el.dataset.share}); return; }
+    catch(e){ if(e && e.name==="AbortError") return; }
+  }
+  window.open(wa,"_blank","noopener");
 }
 
 /* Copying is the quiet second option next to WhatsApp - for anyone who wants
@@ -3257,7 +3389,7 @@ function lqDoneView(){
               : "Send your placement to the group and see who lands where."}</span>
           </div>
           <div class="btns">
-            <a class="btn btn-solid" href="https://wa.me/?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">${he?"שיתוף בוואטסאפ":"Share on WhatsApp"}</a>
+            <button id="waBtn" class="btn btn-solid" data-wa="https://wa.me/?text=${encodeURIComponent(shareText)}" data-share="${esc(shareText)}" onclick="shareResult(this)">${he?"שיתוף בוואטסאפ":"Share on WhatsApp"}</button>
             <button class="btn btn-quiet" data-share="${esc(shareText)}" onclick="qzCopy(this)">${he?"העתקת הקישור":"Copy the link"}</button>
           </div>
         </div>
@@ -3325,24 +3457,25 @@ function qzCounter(only){
     </div>`;}).filter(Boolean).join("");
   if(!blocks) return "";
 
-  /* On the hub, the two columns each carry their own count and the eye reads them
-     as two small numbers. The line above adds them up - it is the number people
-     actually want, and it is the honest one: quizzes answered, not heads counted,
-     because plenty of readers do both. */
-  let grand = "";
-  if(!only){
-    const all = QZ_ALL.reduce((s,q)=>{
-      const tal=t[q]||{};
-      return s + qzRows(q).reduce((n,r)=>n+(tal[r.k]||0),0);
-    },0);
-    if(all){
-      const txt = he
-        ? (shared ? `עד עכשיו נענו כאן ${all} חידונים` : `${all} חידונים במכשיר הזה`)
-        : (shared ? `${all} quizzes answered here so far` : `${all} quizzes on this device`);
-      grand = `<p class="qgrand">${esc(txt)}</p>`;
-    }
-  }
-  return `${grand}<div class="qcounter${quizzes.length===1?" is-one":""}">${blocks}</div>`;
+  return `<div class="qcounter${quizzes.length===1?" is-one":""}">${blocks}</div>`;
+}
+
+/* The running total sits at the top of the quiz page, not buried under the
+   breakdown - it is the number people actually want, and seeing that a few
+   hundred readers already went through is itself the invitation. It counts
+   quizzes answered rather than heads, because plenty of readers do all three. */
+function qzGrand(){
+  const he=lang==="he", t=qzTally; if(!t) return "";
+  const shared=!!QUIZ_API;
+  const all = QZ_ALL.reduce((s,q)=>{
+    const tal=t[q]||{};
+    return s + qzRows(q).reduce((n,r)=>n+(tal[r.k]||0),0);
+  },0);
+  if(!all) return "";
+  const txt = he
+    ? (shared ? `עד עכשיו נענו כאן ${all} חידונים` : `${all} חידונים במכשיר הזה`)
+    : (shared ? `${all} quizzes answered here so far` : `${all} quizzes on this device`);
+  return `<p class="qgrand">${esc(txt)}</p>`;
 }
 
 function pageHero(photoName, eyebrow, title, lede, pos, op){
@@ -4246,6 +4379,7 @@ function render(){
   applySeo(view);
   if(view==="home" && a11y.motion!=="off") startSky(); else if(skyRAF) cancelAnimationFrame(skyRAF);
   renderCart(); syncCount(); fitNav();
+  if(view==="quiz") buildShareCard();
 }
 function footEl(){
   const he=lang==="he";
