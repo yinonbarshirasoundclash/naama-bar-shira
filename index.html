@@ -161,6 +161,17 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .qfaces{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;width:100%}
 .qfaces img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 22%;border:1px solid var(--line-strong);background:var(--cover-b)}
 .qfaces.is-plate img{object-fit:contain;background:#E9DFC9}
+.qfaces.is-leg img{object-fit:cover;object-position:center;background:var(--surface-2)}
+/* the placement is the long one, so it gets the full width under the other two */
+@media (min-width:820px){.qcard.is-lq{grid-column:1 / -1}}
+.lqline,.lqgate{
+  border:1px solid var(--line-strong);background:color-mix(in oklab,var(--surface) 55%,transparent);
+  padding:1.4rem;display:flex;flex-direction:column;gap:.8rem;align-items:flex-start;
+}
+.lqline p,.lqgate p{margin:0}
+.lqbtns{display:flex;flex-wrap:wrap;gap:.6rem}
+.lqgate{border-color:var(--gold);background:var(--glow);gap:1rem}
+.lqgate h2{margin:0;font-size:clamp(1.5rem,3.2vw,2rem)}
 
 .qbar{block-size:2px;background:var(--line);position:relative}
 .qbar i{position:absolute;inset-block:0;inset-inline-start:0;background:var(--gold);transition:inline-size .3s}
@@ -192,6 +203,7 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 @media (min-width:800px){.qresult{grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:2.2rem}}
 .qrimg img{width:100%;height:auto;display:block;border:1px solid var(--line-strong);background:var(--cover-b)}
 .qrimg.is-plate img{background:#E9DFC9}
+.qrimg.is-leg img{background:var(--surface-2)}
 .qrkick{color:var(--gold-soft);font-size:.82rem;letter-spacing:.1em}
 .qchips{display:flex;flex-wrap:wrap;gap:.4rem;margin-block-start:.3rem}
 .qchip{border:1px solid var(--line-strong);border-radius:999px;padding:.28rem .75rem;font-size:.82rem;color:var(--text-dim)}
@@ -205,6 +217,13 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .qbrow i,.qtrow i{display:block;block-size:5px;background:var(--line);position:relative}
 .qbrow b,.qtrow b{position:absolute;inset-block:0;inset-inline-start:0;background:var(--gold);display:block}
 .qtrow b{background:var(--gold-soft)}
+.qgrand{
+  margin:0;border-block-start:1px solid var(--line);padding-block-start:1.6rem;
+  font-family:var(--f-display);font-size:clamp(1.1rem,2.2vw,1.35rem);color:var(--gold-soft);
+  font-variant-numeric:tabular-nums;
+}
+[dir="ltr"] .qgrand{font-family:var(--f-display-lat)}
+.qgrand + .qcounter{border-block-start:0;padding-block-start:1.1rem}
 .qcounter{display:grid;gap:1.6rem;border-block-start:1px solid var(--line);padding-block-start:1.6rem}
 @media (min-width:820px){.qcounter{grid-template-columns:1fr 1fr;gap:2.4rem}}
 .qcounter.is-one{grid-template-columns:1fr}
@@ -1256,6 +1275,7 @@ const loreSrc = k => IMG["lore:"+k] || `assets/lore/${k}.webp`;
 /* Paste the Apps Script web-app URL here to switch the counter from this
    browser only to a shared tally across every visitor. */
 const QUIZ_API = "https://script.google.com/macros/s/AKfycbzQkIDnaFAaZUuoCjzU3_mDHGhzC4tO4ufKUIZQr3YS8dVp7lX96KibwRinTgdKaAtcGQ/exec";
+const LEGION_QUIZ = {"he":{"t":"לאיזה לגיון {את שייכת|אתה שייך}","l":"עשרים לגיונות, ומבחן שיבוץ בשני שלבים - בדיוק כמו בחאן. קודם הבחינה הכללית, ואז המקצועית."},"en":{"t":"Which legion do you belong to","l":"Twenty legions, and a placement examination in two stages - exactly as it is done at the Khan. The general examination first, then the specialist one."},"fams":[{"k":"harev","legions":["hayalim","kele","north","south","east","west"],"elite":"arbaa","he":{"n":"משפחת החרב","t":"מי שנכנס בין הסכנה לבין מי שמאחוריו. לחימה, שמירה, וכלא."},"en":{"n":"The family of the sword","t":"Those who step between the danger and whoever stands behind them. Fighting, guarding, and the prisons."}},{"k":"kaf","legions":["marpeim","rokchim","matzmichim"],"elite":"moatza","he":{"n":"משפחת הכף","t":"מי שמחזיק בידיים. ריפוי, רקיחה, וגידול."},"en":{"n":"The family of the hand","t":"Those who hold things in their hands. Healing, brewing, and growing."}},{"k":"ayin","legions":["mevasrim","safranim","muarim"],"elite":"tevel","he":{"n":"משפחת העין","t":"מי שרואה קודם. חיזוי, תיעוד, והכוונה."},"en":{"n":"The family of the eye","t":"Those who see first. Foresight, record, and guidance."}},{"k":"tzel","legions":["mishlachot","metashteshim","gashmiim","otzar"],"elite":"moatza","he":{"n":"משפחת הצל","t":"מי שעובד בעולם בני האדם, ובלי שיראו אותו."},"en":{"n":"The family of the shadow","t":"Those who work inside the human world, unseen."}}],"qsA":[{"q":{"he":"החאן שקט אחרי ארוחת ערב. איפה {את|אתה}?","en":"The Khan is quiet after supper. Where are you?"},"o":[{"t":{"he":"בחדר הגבורה. {נשארתי|נשארתי} להתאמן עוד קצת.","en":"In the Hall of Gevurah. You stayed to train a little longer."},"w":{"harev":3}},{"t":{"he":"במרפאה. יש שם מישהו ש{לא בא לי|לא בא לי} להשאיר לבד.","en":"In the infirmary. There is someone there you would rather not leave alone."},"w":{"kaf":3}},{"t":{"he":"במועדון הבינה, עם ספר שאף אחד לא ביקש {ממני|ממני} לקרוא.","en":"In the club, with a book nobody asked you to read."},"w":{"ayin":3}},{"t":{"he":"בחוץ. בעיר. בין בני אדם, איפה שקורים דברים.","en":"Outside. In the city. Among humans, where things happen."},"w":{"tzel":3}}]},{"q":{"he":"משהו השתבש, ומהר. מה הדבר הראשון ש{את עושה|אתה עושה}?","en":"Something has gone wrong, fast. What do you do first?"},"o":[{"t":{"he":"{נכנסת|נכנס} בין הסכנה לבין מי שמאחוריך.","en":"You put yourself between the danger and whoever is behind you."},"w":{"harev":3}},{"t":{"he":"{מחפשת|מחפש} מי נפגע, ומטפל{ת|} בו.","en":"You look for whoever is hurt, and treat them."},"w":{"kaf":3}},{"t":{"he":"{עוצרת|עוצר} שנייה כדי להבין למה זה קרה.","en":"You stop for a second to understand why it happened."},"w":{"ayin":3}},{"t":{"he":"{דואגת|דואג} שאף בן אדם לא יראה מה קרה כאן.","en":"You make sure no human sees what happened here."},"w":{"tzel":3}}]},{"q":{"he":"מה הכי מרגיז {אותך|אותך}?","en":"What angers you most?"},"o":[{"t":{"he":"שמישהו חזק מרשה לעצמו לפגוע במישהו חלש.","en":"Someone strong allowing themselves to hurt someone weak."},"w":{"harev":3}},{"t":{"he":"כאב שאפשר היה למנוע, ואף אחד לא טרח.","en":"Pain that could have been prevented, and nobody bothered."},"w":{"kaf":3}},{"t":{"he":"שאלה שכולם עקפו כי לא היה נעים לשאול אותה.","en":"A question everyone walked around because it was uncomfortable."},"w":{"ayin":3}},{"t":{"he":"בלגן שמישהו השאיר אחריו ומישהו אחר ינקה.","en":"A mess someone left behind for someone else to clean."},"w":{"tzel":3}}]},{"q":{"he":"איך {את לומדת|אתה לומד} הכי טוב?","en":"How do you learn best?"},"o":[{"t":{"he":"בגוף. {עושה|עושה} את זה שוב ושוב עד שזה נכנס.","en":"In the body. You do it again and again until it sticks."},"w":{"harev":3}},{"t":{"he":"בידיים. {מרכיבה|מרכיב}, {מערבבת|מערבב}, {מנסה|מנסה} שוב.","en":"In the hands. You assemble, you mix, you try again."},"w":{"kaf":3}},{"t":{"he":"בקריאה. {אוהבת|אוהב} להגיע {מוכנה|מוכן}.","en":"By reading. You like arriving prepared."},"w":{"ayin":3}},{"t":{"he":"באנשים. {מסתכלת|מסתכל} איך מי שיודע עושה את זה.","en":"From people. You watch how someone who knows does it."},"w":{"tzel":3}}]},{"q":{"he":"מה {את רוצה|אתה רוצה} שיישאר אחרייך?","en":"What do you want left behind you?"},"o":[{"t":{"he":"שהיה שם מישהו שעמד, כשזה היה צריך.","en":"That someone stood there, when it was needed."},"w":{"harev":3}},{"t":{"he":"מישהו שממשיך לחיות בגלל משהו ש{עשית|עשית}.","en":"Someone still alive because of something you did."},"w":{"kaf":3}},{"t":{"he":"משהו כתוב, שמישהו יקרא בעוד מאה שנה.","en":"Something written, that someone will read in a hundred years."},"w":{"ayin":3}},{"t":{"he":"עולם שממשיך להסתובב בלי שירגיש ש{היית|היית} שם.","en":"A world that keeps turning without noticing you were there."},"w":{"tzel":3}}]},{"q":{"he":"ראש הלגיון אומר {לך|לך} שהוא רואה {בך|בך} את מי שיחליף אותו. מה {את מרגישה|אתה מרגיש}?","en":"The head of your legion says they see you as their replacement. What do you feel?"},"o":[{"t":{"he":"שלזה {חיכיתי|חיכיתי}. {אני מוכנה|אני מוכן}.","en":"That this is what you have been waiting for. You are ready."},"w":{},"e":1},{"t":{"he":"ש{אני מעדיפה|אני מעדיף} לעשות את העבודה עצמה.","en":"That you would rather do the work itself."},"w":{}},{"t":{"he":"ש{אני צריכה|אני צריך} עוד הרבה זמן.","en":"That you need a great deal more time."},"w":{}},{"t":{"he":"שזו בכלל לא שאלה שלי להחליט עליה.","en":"That it is not your question to decide."},"w":{}}]}],"qsB":{"harev":[{"q":{"he":"קרב. איפה {את|אתה} בשורה?","en":"A battle. Where are you in the line?"},"o":[{"t":{"he":"בחזית, ראשונ{ה|}.","en":"At the front, first."},"w":{"hayalim":3}},{"t":{"he":"בשער, ששום דבר לא יעבור אותו.","en":"At the gate, so that nothing gets through it."},"w":{"north":2,"south":2,"east":2,"west":2}},{"t":{"he":"למטה, איפה שמחזיקים את מה שכבר נתפס.","en":"Below, where what has already been caught is held."},"w":{"kele":3}}]},{"q":{"he":"מה עדיף {לך|לך}?","en":"Which would you rather?"},"o":[{"t":{"he":"משימה קצרה וחדה, ואז הביתה.","en":"A short, sharp mission, then home."},"w":{"hayalim":3}},{"t":{"he":"משמרת ארוכה במקום אחד, שנים.","en":"A long watch in one place, for years."},"w":{"north":2,"south":2,"east":2,"west":2}},{"t":{"he":"להיות היחיד{ה|} שיודע{ת|} מה יש מאחורי הדלת.","en":"To be the only one who knows what is behind the door."},"w":{"kele":3}}]},{"q":{"he":"מישהו שהיה {חבר שלך|חבר שלך} עבר צד. מה {את עושה|אתה עושה}?","en":"Someone who was your friend has crossed over. What do you do?"},"o":[{"t":{"he":"{נלחמת|נלחם} בו כמו בכל אחד אחר.","en":"You fight them like anyone else."},"w":{"hayalim":3}},{"t":{"he":"{מוודאת|מוודא} שהוא לא יגיע לאף אחד אחר.","en":"You make sure they reach no one else."},"w":{"north":2,"south":2,"east":2,"west":2}},{"t":{"he":"{שומרת|שומר} עליו בעצמך, ולא נותנ{ת|} לאף אחד להתקרב.","en":"You guard them yourself, and let no one near."},"w":{"kele":3}}]},{"q":{"he":"מה {מפחיד אותך|מפחיד אותך} יותר?","en":"Which frightens you more?"},"o":[{"t":{"he":"להגיע מאוחר מדי.","en":"Arriving too late."},"w":{"hayalim":3}},{"t":{"he":"להירדם במשמרת.","en":"Falling asleep on watch."},"w":{"north":2,"south":2,"east":2,"west":2}},{"t":{"he":"שמשהו ייצא החוצה בגללי.","en":"That something gets out because of you."},"w":{"kele":3}}]},{"q":{"he":"מה {את מחזיקה|אתה מחזיק} בכיס?","en":"What do you carry in your pocket?"},"o":[{"t":{"he":"להב קטן, למקרה.","en":"A small blade, just in case."},"w":{"hayalim":3}},{"t":{"he":"מפתח.","en":"A key."},"w":{"north":2,"south":2,"east":2,"west":2,"kele":2}},{"t":{"he":"רשימה של שמות.","en":"A list of names."},"w":{"kele":3}}]}],"kaf":[{"q":{"he":"מישהו מגיע {אלייך|אליך} שבור. מה {את עושה|אתה עושה} קודם?","en":"Someone comes to you broken. What do you do first?"},"o":[{"t":{"he":"{מטפלת|מטפל} בפצע. עכשיו.","en":"You treat the wound. Now."},"w":{"marpeim":3}},{"t":{"he":"{מכינה|מכין} לו משהו שישתה, ומחכ{ה|ה}.","en":"You make them something to drink, and wait."},"w":{"rokchim":3}},{"t":{"he":"{מושיבה|מושיב} אותו לאכול קודם.","en":"You sit them down to eat first."},"w":{"matzmichim":3}}]},{"q":{"he":"איזה ריח {את הכי אוהבת|אתה הכי אוהב}?","en":"Which smell do you love most?"},"o":[{"t":{"he":"אלכוהול ופשתן נקי.","en":"Alcohol and clean linen."},"w":{"marpeim":3}},{"t":{"he":"עשבים שנשרפים לאט.","en":"Herbs burning slowly."},"w":{"rokchim":3}},{"t":{"he":"אדמה אחרי גשם.","en":"Earth after rain."},"w":{"matzmichim":3}}]},{"q":{"he":"מה {מספק אותך|מספק אותך} יותר?","en":"Which satisfies you more?"},"o":[{"t":{"he":"שהחום ירד.","en":"That the fever broke."},"w":{"marpeim":3}},{"t":{"he":"שהתערובת סוף סוף יצאה נכון.","en":"That the mixture finally came out right."},"w":{"rokchim":3}},{"t":{"he":"שהעונה הזאת הצליחה.","en":"That this season came in well."},"w":{"matzmichim":3}}]},{"q":{"he":"כמה אנשים {את רוצה|אתה רוצה} סביבך ביום רגיל?","en":"How many people do you want around you on an ordinary day?"},"o":[{"t":{"he":"הרבה. {אני|אני} במקום שאליו באים.","en":"Many. You are where people come."},"w":{"marpeim":3}},{"t":{"he":"שניים־שלושה, ושקט.","en":"Two or three, and quiet."},"w":{"rokchim":3}},{"t":{"he":"אף אחד, ושדה.","en":"Nobody, and a field."},"w":{"matzmichim":3}}]},{"q":{"he":"מה {את לא סובלת|אתה לא סובל}?","en":"What can you not stand?"},"o":[{"t":{"he":"שמישהו סובל ואין סיבה.","en":"Someone suffering for no reason."},"w":{"marpeim":3}},{"t":{"he":"עבודה מרושלת.","en":"Sloppy work."},"w":{"rokchim":3}},{"t":{"he":"בזבוז.","en":"Waste."},"w":{"matzmichim":3}}]}],"ayin":[{"q":{"he":"{את יודעת|אתה יודע} משהו שאף אחד עוד לא יודע. מה {את עושה|אתה עושה} איתו?","en":"You know something nobody else knows yet. What do you do with it?"},"o":[{"t":{"he":"{שומרת|שומר} אותו. עוד לא הזמן.","en":"You keep it. It is not time yet."},"w":{"mevasrim":3}},{"t":{"he":"{כותבת|כותב} אותו, במדויק.","en":"You write it down, precisely."},"w":{"safranim":3}},{"t":{"he":"{מוצאת|מוצא} את האדם האחד שצריך לשמוע אותו.","en":"You find the one person who needs to hear it."},"w":{"muarim":3}}]},{"q":{"he":"איפה {את מרגישה|אתה מרגיש} בבית?","en":"Where do you feel at home?"},"o":[{"t":{"he":"בראש הר, לבד.","en":"On a mountaintop, alone."},"w":{"mevasrim":3}},{"t":{"he":"בין מדפים.","en":"Between shelves."},"w":{"safranim":3}},{"t":{"he":"בחדר שבו מקבלים החלטות.","en":"In a room where decisions are made."},"w":{"muarim":3}}]},{"q":{"he":"מה {מעניין אותך|מעניין אותך} יותר?","en":"Which interests you more?"},"o":[{"t":{"he":"מה יקרה.","en":"What will happen."},"w":{"mevasrim":3}},{"t":{"he":"מה קרה, בדיוק.","en":"What happened, exactly."},"w":{"safranim":3}},{"t":{"he":"מה אנשים יבחרו לעשות.","en":"What people will choose to do."},"w":{"muarim":3}}]},{"q":{"he":"מישהו עומד לעשות טעות גדולה. {את|אתה}...","en":"Someone is about to make a large mistake. You…"},"o":[{"t":{"he":"כבר {ידעת|ידעת}. {מסתכלת|מסתכל} איך זה מתגלגל.","en":"Already knew. You watch it unfold."},"w":{"mevasrim":3}},{"t":{"he":"{רושמת|רושם} מה קרה, שיילמד ממנו.","en":"Write down what happened, so it can be learned from."},"w":{"safranim":3}},{"t":{"he":"{אומרת|אומר} משפט אחד קטן, ומקו{ה|ה}.","en":"Say one small sentence, and hope."},"w":{"muarim":3}}]},{"q":{"he":"מה {היית מוותרת|היית מוותר} עליו כדי לדעת?","en":"What would you give up in order to know?"},"o":[{"t":{"he":"על החיים כאן ועכשיו.","en":"Life here and now."},"w":{"mevasrim":3}},{"t":{"he":"על השינה.","en":"Sleep."},"w":{"safranim":3}},{"t":{"he":"על הקרדיט.","en":"The credit."},"w":{"muarim":3}}]}],"tzel":[{"q":{"he":"{מצאת|מצאת} חפץ ישן שלא צריך להיות בעולם הזה. מה {את עושה|אתה עושה}?","en":"You have found an old object that should not be in this world. What do you do?"},"o":[{"t":{"he":"{לוקחת|לוקח} אותו, וממשיכ{ה|} לחפש את הבא.","en":"Take it, and go looking for the next one."},"w":{"mishlachot":3}},{"t":{"he":"{דואגת|דואג} שאף אחד לא יזכור שהוא היה שם.","en":"Make sure nobody remembers it was there."},"w":{"metashteshim":3}},{"t":{"he":"{מסדרת|מסדר} לו ניירות, שיהיה חוקי.","en":"Get papers for it, so it is legal."},"w":{"gashmiim":3}},{"t":{"he":"{בודקת|בודק} כמה הוא שווה.","en":"Check what it is worth."},"w":{"otzar":3}}]},{"q":{"he":"איך {את נראית|אתה נראה} כשאת/ה בין בני אדם?","en":"How do you look when you are among humans?"},"o":[{"t":{"he":"כמו מישהו שרק עובר.","en":"Like someone just passing through."},"w":{"mishlachot":3}},{"t":{"he":"כמו אף אחד. זו הנקודה.","en":"Like nobody. That is the point."},"w":{"metashteshim":3}},{"t":{"he":"כמו מישהו עם תפקיד.","en":"Like someone with a job."},"w":{"gashmiim":3}},{"t":{"he":"כמו מישהו שלא כדאי לרמות.","en":"Like someone it would be unwise to cheat."},"w":{"otzar":3}}]},{"q":{"he":"מה {מפחיד אותך|מפחיד אותך}?","en":"What frightens you?"},"o":[{"t":{"he":"להישאר במקום אחד.","en":"Staying in one place."},"w":{"mishlachot":3}},{"t":{"he":"שמישהו יזכור אותי.","en":"That someone will remember you."},"w":{"metashteshim":3}},{"t":{"he":"שהמערכת תיפול.","en":"That the system falls."},"w":{"gashmiim":3}},{"t":{"he":"שייגמר הכסף.","en":"That the money runs out."},"w":{"otzar":3}}]},{"q":{"he":"מה {את עושה|אתה עושה} טוב יותר מכולם?","en":"What do you do better than anyone?"},"o":[{"t":{"he":"למצוא.","en":"Finding."},"w":{"mishlachot":3}},{"t":{"he":"למחוק.","en":"Erasing."},"w":{"metashteshim":3}},{"t":{"he":"לדבר עם מי שצריך.","en":"Talking to whoever needs talking to."},"w":{"gashmiim":3}},{"t":{"he":"לחשב קדימה.","en":"Counting ahead."},"w":{"otzar":3}}]},{"q":{"he":"מה {היית מבקשת|היית מבקש} לעצמך?","en":"What would you ask for yourself?"},"o":[{"t":{"he":"עוד מפה.","en":"One more map."},"w":{"mishlachot":3}},{"t":{"he":"עוד לילה שקט.","en":"One more quiet night."},"w":{"metashteshim":3}},{"t":{"he":"עוד דלת פתוחה.","en":"One more open door."},"w":{"gashmiim":3}},{"t":{"he":"עוד שנה של ביטחון.","en":"One more secure year."},"w":{"otzar":3}}]}]},"eliteB":{"q":{"he":"ומה אם ראש הלגיון ייפול מחר, ויצטרכו מישהו במקומו?","en":"And if the head of the legion falls tomorrow, and someone is needed in their place?"},"o":[{"t":{"he":"{אקח|אקח} את זה. גם אם {אני עדיין לא מוכנה|אני עדיין לא מוכן}.","en":"You would take it. Even not being ready."},"w":{},"e":1},{"t":{"he":"{אעזור|אעזור} למי שיקח.","en":"You would help whoever takes it."},"w":{}},{"t":{"he":"{אמשיך|אמשיך} לעשות את מה ש{אני עושה|אני עושה}.","en":"You would go on doing what you do."},"w":{}},{"t":{"he":"{אבקש|אבקש} שיבחרו מישהו אחר.","en":"You would ask them to choose someone else."},"w":{}}]},"guardQ":{"q":{"he":"אחרון. איזה מקום קורא {לך|לך}?","en":"Last one. Which place calls you?"},"o":[{"t":{"he":"הרים, אבן ישנה, וקור בלילה.","en":"Mountains, old stone, and cold at night."},"w":{"north":9}},{"t":{"he":"מדבר פתוח ושקט שאין בו קצה.","en":"Open desert and a silence with no edge."},"w":{"south":9}},{"t":{"he":"חום, ירוק סמיך, ורחוק מכאן.","en":"Heat, thick green, and far from here."},"w":{"east":9}},{"t":{"he":"גשם, ים אפור, ועיר שלא מפסיקה.","en":"Rain, a grey sea, and a city that never stops."},"w":{"west":9}}]},"results":[{"k":"hayalim","he":{"name":"לגיון החיילים","kick":"חיילי מיכאל · אבן שהם","body":"{שובצת|שובצת} ללגיון שמגיע ראשון. חיילי מיכאל נבחרים בקפידה, מאומנים עד שהגוף זוכר לבד, וממושמעים בצורה שקשה להסביר למי שלא היה שם. {את|אתה} לא הכי חזק{ה|} בחדר בהכרח - {את|אתה} מי שזז{ה|} כשכולם עוד חושבים.","traits":["מהיר{ה|}","ממושמע{ת|}","נלחמ{ת|} על מי שמאחור","לא {מהססת|מהסס}"]},"en":{"name":"The Legion of Soldiers","kick":"Michael's soldiers · brown onyx","body":"You are placed in the legion that arrives first. Michael's soldiers are chosen with care, trained until the body remembers on its own, and disciplined in a way that is hard to explain to anyone who has not been there. You are not necessarily the strongest in the room - you are the one who moves while everyone is still thinking.","traits":["Fast","Disciplined","Fights for whoever is behind","Does not hesitate"]}},{"k":"kele","he":{"name":"לגיון הכלא העמוק","kick":"הכלא הוותיק בירושלים · לגיון העשרים","body":"{שובצת|שובצת} ללגיון שמחזיק את מה שאסור שייצא. הכלא העמוק הוא הראשון שנבנה לשדים ולחצאי שדים, והוא עדיין הגדול ביותר. זו עבודה שאין בה תהילה ואין בה קהל, ומי שעושה אותה יודע{ת|} בדיוק כמה הכול תלוי בה.","traits":["{אחראית|אחראי}","לא {נבהלת|נבהל}","{סובלת|סובל} שגרה","{שומרת|שומר} סוד"]},"en":{"name":"The Legion of the Deep Prison","kick":"The old prison in Jerusalem · the twentieth legion","body":"You are placed in the legion that holds what must not get out. The Deep Prison was the first built for demons and half-demons, and it is still the largest. It is work with no glory and no audience, and whoever does it knows exactly how much rests on it.","traits":["Responsible","Unshakeable","Can bear routine","Keeps a secret"]}},{"k":"north","he":{"name":"לגיון השומרים הצפוני","kick":"כלא המלאכים בצפת","body":"{שובצת|שובצת} לצפון. הלגיון מפעיל את כלא המלאכים בצפת ושומר על הקהילה שסביבו. אבן ישנה, הרים, וקור שנכנס לעצמות - ומשמרת שנמדדת בשנים ולא בלילות.","traits":["{סבלנית|סבלן}","{נאמנה|נאמן} למקום","{ערנית|ערני}","{אוהבת|אוהב} שקט"]},"en":{"name":"The Northern Watch","kick":"The angel prison at Safed","body":"You are placed in the north. The legion runs the angel prison at Safed and guards the community around it. Old stone, mountains, and a cold that gets into the bones - and a watch measured in years rather than nights.","traits":["Patient","Loyal to a place","Alert","Likes quiet"]}},{"k":"south","he":{"name":"לגיון השומרים הדרומי","kick":"כלא המלאכים במצפה רמון","body":"{שובצת|שובצת} לדרום. הלגיון מפעיל את כלא המלאכים במצפה רמון, ולידו יושבת התיישבות המצמיחים שמאכילה את כולם. מדבר פתוח, שקט שאין בו קצה, ואופק שרואים בו כל דבר שמתקרב.","traits":["{עצמאית|עצמאי}","{עמידה|עמיד}","{רואה|רואה} רחוק","לא {מתלוננת|מתלונן}"]},"en":{"name":"The Southern Watch","kick":"The angel prison at Mitzpe Ramon","body":"You are placed in the south. The legion runs the angel prison at Mitzpe Ramon, beside the growers' settlement that feeds everyone. Open desert, a silence with no edge, and a horizon on which anything approaching can be seen.","traits":["Self-reliant","Durable","Sees far","Does not complain"]}},{"k":"east","he":{"name":"לגיון המלאכים המזרחי","kick":"צ'יאנג מאי, תאילנד","body":"{שובצת|שובצת} למזרח. הלגיון מרכז את פעילות המלאכים בכל מה שמצידו השני של העולם, ומפעיל את הכלא בצ'יאנג מאי. רחוק מהחאן, רחוק מהבית, ובעיקר - רחוק מכל מי שיכול להגיע מהר.","traits":["{עצמאית|עצמאי}","{מסתגלת|מסתגל}","{סקרנית|סקרן}","לא {זקוקה|זקוק} לאישור"]},"en":{"name":"The Eastern Legion","kick":"Chiang Mai, Thailand","body":"You are placed in the east. The legion holds together everything on the far side of the world, and runs the prison at Chiang Mai. Far from the Khan, far from home, and above all far from anyone who could arrive quickly.","traits":["Self-reliant","Adaptable","Curious","Needs no permission"]}},{"k":"west","he":{"name":"לגיון השומרים המערבי","kick":"בריסטול, אנגליה","body":"{שובצת|שובצת} למערב. הלגיון מרכז את פעילות המלאכים במערב ומפעיל את הכלא בבריסטול - שם יושב גם חאן המרפאים. גשם, ים אפור, ועיר שלא מפסיקה. מקום שבו קורים הרבה דברים בבת אחת.","traits":["{מאורגנת|מאורגן}","{מתפקדת|מתפקד} בעומס","{מגשרת|מגשר}","לא {נשברת|נשבר}"]},"en":{"name":"The Western Watch","kick":"Bristol, England","body":"You are placed in the west. The legion holds the west together and runs the prison at Bristol, where the healers' Khan also sits. Rain, a grey sea, and a city that never stops. A place where a great many things happen at once.","traits":["Organised","Works under load","Bridges","Does not break"]}},{"k":"marpeim","he":{"name":"לגיון המרפאים","kick":"ממלאכי רפאל · אבן אוניקס","body":"{שובצת|שובצת} ללגיון שנמצא בכל מקום. לכל קהילה ולכל מוסד של מלאכים יש נציג מרפאים, והמרכז שבו לומדים את התורה הזאת נמצא בבריסטול. זה לגיון של אנשים שאליהם באים - ולכן גם לגיון שקשה מאוד לצאת ממנו בסוף היום.","traits":["{נוכחת|נוכח}","{רגועה|רגוע} בחירום","{נותנת|נותן} הרבה","{נשארת|נשאר} עד הסוף"]},"en":{"name":"The Legion of Healers","kick":"Of Raphael's line · onyx","body":"You are placed in the legion that is everywhere. Every angel community and every institution has a healer representative, and the centre where the craft is learned sits in Bristol. It is a legion of people others come to - and therefore one that is very hard to walk away from at the end of a day.","traits":["Present","Calm in emergency","Gives a great deal","Stays to the end"]}},{"k":"rokchim","he":{"name":"לגיון הרוקחים","kick":"ממלאכי גבריאל · אבן ענבר","body":"{שובצת|שובצת} ללגיון של השיקויים. רוקחים מכינים את מה שמטפל בחולים, מחזק מלאכים ומגרש שדים ממקומות קדושים, ושולחים נציגים לקהילות ולבני האדם. עבודה מדויקת, שקטה, ולא סלחנית - מידה אחת לא נכונה והכול נזרק.","traits":["{מדייקת|מדייק}","{סבלנית|סבלן}","{עובדת|עובד} לבד","{אוהבת|אוהב} תהליך"]},"en":{"name":"The Legion of Apothecaries","kick":"Of Gabriel's line · amber","body":"You are placed in the legion of potions. Apothecaries brew what treats the sick, strengthens angels and drives demons from holy places, and they send representatives to the communities and to humans. Precise, quiet, unforgiving work - one measure wrong and the whole batch is thrown out.","traits":["Precise","Patient","Works alone","Loves the process"]}},{"k":"matzmichim","he":{"name":"לגיון המצמיחים","kick":"המזון הטהור · אבן תרשיש","body":"{שובצת|שובצת} ללגיון שמאכיל את כולם. בכל מדינה יש התיישבות של מצמיחים שאחראית על המזון הטהור של המלאכים באזור, ושלנו יושבת ליד הקהילה במצפה רמון. אף אחד לא מדבר על הלגיון הזה, וכל אחד תלוי בו שלוש פעמים ביום.","traits":["{עקשנית|עקשן}","{סבלנית|סבלן}","{מחוברת|מחובר} לאדמה","לא {צריכה|צריך} תשומת לב"]},"en":{"name":"The Legion of Growers","kick":"The pure food · chrysolite","body":"You are placed in the legion that feeds everyone. Every country has a growers' settlement responsible for the angels' pure food in its region; ours sits beside the community at Mitzpe Ramon. Nobody talks about this legion, and everyone depends on it three times a day.","traits":["Stubborn","Patient","Rooted","Needs no attention"]}},{"k":"mevasrim","he":{"name":"לגיון המבשרים","kick":"ממלאכי גבריאל · אבן אקוומרין","body":"{שובצת|שובצת} ללגיון שיושב בראש ההר הגבוה בכל יבשת. המבשרים מקיימים טקסים ותפילות כדי להיות קרובים לשמיים, מתחברים לקווי זמן וזרמי אירועים, וצופים מראש התנהגות שדים. זה הלגיון הבטוח ביותר וגם הדורשני ביותר - ילדיו לא לומדים בחאן, והמאתיים הראשונות של חייהם עוברות בבידוד כמעט מוחלט.","traits":["{רואה|רואה} קדימה","{מבודדת|מבודד}","{שקועה|שקוע}","לא {חיה|חי} בהווה"]},"en":{"name":"The Legion of Heralds","kick":"Of Gabriel's line · aquamarine","body":"You are placed in the legion that sits on the highest mountain of every continent. The heralds hold rites and prayers to stay close to the heavens, connect to lines of time and currents of events, and foresee the movements of demons. It is the safest legion and the most demanding - its children do not study at the Khan, and their first two centuries pass in near-total isolation.","traits":["Sees ahead","Isolated","Absorbed","Does not live in the present"]}},{"k":"safranim","he":{"name":"לגיון הספרנים","kick":"מחקר ותיעוד · אבן טופז","body":"{שובצת|שובצת} ללגיון שכותב הכול. הספרנים מתעדים את ההיסטוריה של המלאכים והשדים, את עבודת הרוקחים והרופאים, את הקמעות, כלי הנשק והמשפטים. הם לא חיים בקהילה אחת: חלקם עפים בעולם ומנסים דברים חדשים, וחלקם יושבים על הכתבים הישנים. שני הפלגים מתווכחים כל הזמן, וזה בסדר.","traits":["{מדייקת|מדייק}","{סקרנית|סקרן}","{מתווכחת|מתווכח}","{זוכרת|זוכר} הכול"]},"en":{"name":"The Legion of Librarians","kick":"Research and record · topaz","body":"You are placed in the legion that writes it all down. The librarians record the history of angels and demons, the work of the apothecaries and physicians, the amulets, the weapons and the trials. They do not live in one community: some fly the world trying new things, some sit with the old texts. The two wings argue constantly, and that is as it should be.","traits":["Precise","Curious","Argues","Remembers everything"]}},{"k":"muarim","he":{"name":"לגיון המוארים","kick":"המלאך הלבן · אבן לשם","body":"{שובצת|שובצת} ללגיון שלא נלחם. המוארים מכוונים את פני העולם האנושי לטוב - לוחשים באוזני מנהיגים, לוחמים, אמנים והוגי דעות. תפקידם במלחמה נגד השדים קריטי, והם לא יפגעו באף בריה, אדם, מלאך או שד, גם במחיר עצמם.","traits":["{משפיעה|משפיע} בשקט","{מוותרת|מוותר} על קרדיט","{עקרונית|עקרוני}","לא {פוגעת|פוגע}"]},"en":{"name":"The Legion of the Illumined","kick":"The white angel · jacinth","body":"You are placed in the legion that does not fight. The illumined turn the human world toward the good - whispering in the ears of leaders, fighters, artists and thinkers. Their part in the war against the demons is critical, and they will harm no creature, human, angel or demon, even at the cost of themselves.","traits":["Quietly influential","Gives up credit","Principled","Harms no one"]}},{"k":"mishlachot","he":{"name":"לגיון המשלחות","kick":"המאתרים · אבן ג'ספר","body":"{שובצת|שובצת} ללגיון שלא עוצר. המשלחות עפות ברחבי העולם ומאתרות ביצי מלאכים, ספרים, חפצים קדושים וטהורים - כל מה שאבד ואסור שיישאר אבוד. זה לגיון של אנשים שקשה להם במקום אחד, ושמוצאים דברים שאחרים עברו לידם.","traits":["{נודדת|נודד}","{עקשנית|עקשן}","{מוצאת|מוצא}","לא {נקשרת|נקשר} למקום"]},"en":{"name":"The Legion of Expeditions","kick":"The finders · jasper","body":"You are placed in the legion that does not stop. The expeditions fly the world locating angel eggs, books, holy and pure objects - everything lost that must not stay lost. It is a legion of people who cannot bear one place, and who find what others walked straight past.","traits":["Wanderer","Stubborn","Finds things","Does not settle"]}},{"k":"metashteshim","he":{"name":"לגיון המטשטשים","kick":"המוחקים · אבן קריסטל","body":"{שובצת|שובצת} ללגיון שאף אחד לא רואה. המטשטשים מוחקים את הסימנים והעקבות שמלאכים ושדים משאירים בעולם בני האדם. קהילה קטנה, סגורה ומבודדת, שנעה בין מוקדי עימות - ואם הם עשו את העבודה נכון, אף אחד לא ידע שהם היו שם.","traits":["{דיסקרטית|דיסקרטי}","{נעה|נע} מהר","{מנותקת|מנותק}","{מוחקת|מוחק} גם את עצמו"]},"en":{"name":"The Legion of the Blurrers","kick":"The erasers · clear crystal","body":"You are placed in the legion nobody sees. The blurrers erase the signs and traces angels and demons leave in the human world. A small, closed, isolated community that moves between flashpoints - and if they did the work well, nobody knows they were there.","traits":["Discreet","Moves fast","Detached","Erases themselves too"]}},{"k":"gashmiim","he":{"name":"לגיון הגשמיים","kick":"המגע עם בני האדם · פנינה","body":"{שובצת|שובצת} ללגיון שמדבר עם העולם. הגשמיים משלבים מלאכים במשרות מפתח, רושמים ילדים לבתי ספר, מטפלים מול עיריות ורווחה, ואם צריך - גם מול הנפילים. בלעדיהם אף מלאך לא היה יכול לחיות כאן בכלל.","traits":["{מדברת|מדבר} עם כולם","{מסתדרת|מסתדר}","{מבינה|מבין} אנשים","{פותחת|פותח} דלתות"]},"en":{"name":"The Legion of the Corporeal","kick":"Contact with humans · pearl","body":"You are placed in the legion that talks to the world. The corporeal place angels in key positions, enrol children in schools, handle municipalities and welfare offices, and when necessary the Nephilim as well. Without them no angel could live here at all.","traits":["Talks to anyone","Gets things done","Reads people","Opens doors"]}},{"k":"otzar","he":{"name":"לגיון האוצר","kick":"הכסף שמחזיק הכול · יהלום","body":"{שובצת|שובצת} ללגיון שאף אחד לא חושב עליו עד שנגמר. האוצר מנהל את הכסף וההשקעות שמאפשרים לקהילות המלאכים להתקיים בעולם בני האדם, ועובד ברציפות מול הגשמיים. עבודה של מאה שנה קדימה, לא של חודש.","traits":["{חושבת|חושב} רחוק","{זהירה|זהיר}","{מדייקת|מדייק}","{נושאת|נושא} באחריות"]},"en":{"name":"The Legion of the Treasury","kick":"The money that holds it up · diamond","body":"You are placed in the legion nobody thinks about until it runs out. The treasury manages the money and investments that let the angel communities exist inside the human world, working continuously with the corporeal. Work measured in a hundred years, not a month.","traits":["Thinks far ahead","Careful","Precise","Carries the weight"]}},{"k":"arbaa","he":{"name":"לגיון הארבעה","kick":"נדיר · שלושה לוחמים וראש מלאכי ישראל","body":"לא {שובצת|שובצת}. {נבחרת|נבחרת}. לגיון הארבעה בנוי מראש לגיון מלאכי ישראל ומשלושה לוחמים, אחד מכל שושלת מלאכי עליון, והם החזקים שיש. מי שמקבל{ת|} את התפקיד נשאר{ת|} בו עד מותו או עד ששחררו אותו ממנו. לכל אחד מהשלושה יש חניך שמוכן להחליף אותו - וזה אומר בדיוק מה שזה נשמע.","traits":["נדיר","{החזקה|החזק} שיש","{נבחרת|נבחר}","עד הסוף"]},"en":{"name":"The Legion of the Four","kick":"Rare · three warriors and the head of the angels of Israel","body":"You were not placed. You were chosen. The Legion of the Four is built from the head of the angels of Israel and three warriors, one from each archangel line, and they are the strongest there are. Whoever takes the post holds it until death or until they are released from it. Each of the three has a trainee ready to replace them - which means exactly what it sounds like.","traits":["Rare","The strongest there is","Chosen","To the end"]}},{"k":"tevel","he":{"name":"לגיון התבל","kick":"נדיר · שלושת ראשי האזורים","body":"לא {שובצת|שובצת}. {הגעת|הגעת}. לגיון התבל מורכב משלושת ראשי לגיונות האזור - מלאכי ישראל, מלאכי המערב ומלאכי המזרח. המערב יושב בבריסטול, המזרח בצ'יאנג מאי, ובאמצע, איפשהו, ירושלים. שלושה מלאכים שמחזיקים ביניהם את כל העולם.","traits":["נדיר","{רואה|רואה} את התמונה כולה","{מנהיגה|מנהיג}","{מחזיקה|מחזיק} עולם"]},"en":{"name":"The World Legion","kick":"Rare · the three regional heads","body":"You were not placed. You arrived. The World Legion is made of the three regional heads - the angels of Israel, of the West and of the East. The West sits in Bristol, the East in Chiang Mai, and somewhere in the middle, Jerusalem. Three angels who hold the whole world between them.","traits":["Rare","Sees the whole picture","Leads","Holds a world"]}},{"k":"moatza","he":{"name":"המועצה","kick":"נדיר · שמונה עשר נציגים וארבעים קהילות","body":"לא {שובצת|שובצת}. {קיבלת|קיבלת} כיסא. המועצה מורכבת מנציג אחד מכל לגיון ומארבעים נציגים של קהילות המלאכים בעולם, ובראשה עומדות מלאכיות העליון. הרבה מהמקומות עוברים בירושה בין משפחות מלאכים במשך דורות. לכל נציג יש קמע מאבן אודם, וכשצריך לזמן את המועצה - האבן היא שקוראת.","traits":["נדיר","{נציגה|נציג}","{מקשיבה|מקשיב}","אבן אודם"]},"en":{"name":"The Council","kick":"Rare · eighteen representatives and forty communities","body":"You were not placed. You were given a seat. The Council is made of one representative from every legion and forty from the angel communities of the world, headed by the archangels themselves. Many of the seats pass by inheritance between angel families across generations. Every representative carries a ruby amulet, and when the Council must be summoned, it is the stone that calls.","traits":["Rare","Representative","Listens","Ruby"]}}],"lines":{"mika":{"hayalim":2,"arbaa":1},"gabi":{"mevasrim":2,"rokchim":2},"rif":{"marpeim":3},"or":{"metashteshim":1,"mishlachot":1}}};
 const QUIZZES = {"angels": {"art": "gal", "he": {"t": "לאיזו מלאכית את שייכת", "tm": "לאיזו שושלת מלאכים אתה שייך", "l": "ארבע אחיות, ארבעה מלאכים ראשיים, ארבע דרכים להיות בעולם. שתים עשרה שאלות."}, "en": {"t": "Which archangel line are you", "tm": "Which archangel line are you", "l": "Four sisters, four archangels, four ways of being in the world. Twelve questions."}, "results": [{"k": "mika", "img": "ang_brown", "he": {"f": {"name": "מיקה", "kick": "מלאכית העליון מיכאל", "body": "את מחליטה ואז זזים. מיקה מובילה את לגיון החיילים, והכוח שלה הוא לא הכי חזקה בחדר אלא הכי ברורה בו: היא יודעת מה צריך לקרות, ואנשים הולכים אחריה בלי שביקשה. מהירה, אמיצה, ומחוברת למטרה עד הסוף.", "traits": ["מנהיגה", "מהירה", "אמיצה", "מחליטה מהר", "מחויבת למטרה"]}, "m": {"name": "שושלת מיכאל", "kick": "מלאכי מיכאל · לגיון החיילים", "body": "אתה מחליט ואז זזים. שושלת מיכאל היא שושלת הלוחמים, וכוחה הוא לא להיות החזקה בחדר אלא הברורה בו: לדעת מה צריך לקרות, ושאנשים ילכו אחריך בלי שביקשת. מהיר, אמיץ, ומחובר למטרה עד הסוף.", "traits": ["מנהיג", "מהיר", "אמיץ", "מחליט מהר", "מחויב למטרה"]}}, "en": {"name": "The line of Michael", "kick": "Mika · the soldiers' legion", "body": "You decide, and then things move. Michael's line is the line of soldiers, and its power is not being the strongest in the room but the clearest in it: knowing what has to happen, and having people follow without being asked.", "traits": ["Leader", "Fast", "Brave", "Decides quickly", "Committed to the goal"]}}, {"k": "gabi", "img": "ang_red", "he": {"f": {"name": "גבי", "kick": "מלאכית העליון גבריאל", "body": "גבי מחזיקה את מאזני הצדק, ואת מרגישה בפנים מה נכון לפני שמישהו הספיק להסביר לך. את מזהה כל שקר, אין לך סבלנות לבולשיט, והכעס שלך מגיע מהר, בוער, ועובר. מאותו מקום בדיוק יוצאות גם השירה והציור: הקול שלך יכול להרוס ולבנות.", "traits": ["חדת צדק", "מזהה שקרים", "פתיל קצר", "יוצרת", "שולטת בזמן"]}, "m": {"name": "שושלת גבריאל", "kick": "מלאכי גבריאל · מאזני הצדק", "body": "שושלת גבריאל מחזיקה את מאזני הצדק, ואתה מרגיש בפנים מה נכון לפני שמישהו הספיק להסביר לך. אתה מזהה כל שקר, אין לך סבלנות לבולשיט, והכעס שלך מגיע מהר, בוער, ועובר. מאותו מקום בדיוק יוצאים גם השירה והציור: הקול שלך יכול להרוס ולבנות.", "traits": ["חד צדק", "מזהה שקרים", "פתיל קצר", "יוצר", "שולט בזמן"]}}, "en": {"name": "The line of Gabriel", "kick": "Gabi · the scales of justice", "body": "Gabriel's line holds the scales of justice: you feel what is right before anyone has explained it to you. You catch every lie, you have no patience for nonsense, and your anger arrives fast, burns and passes. The same place gives you song and painting - your voice can tear down and build.", "traits": ["Sharp sense of justice", "Detects lies", "Short fuse", "A maker", "Commands time"]}}, {"k": "rif", "img": "ang_bob", "he": {"f": {"name": "ריף", "kick": "מלאכית העליון רפאל", "body": "את זו שאליה באים כשקשה. ריף מרפאת גוף ונפש, שומרת על הנשמות האבודות, ויודעת לעמוד עם מישהו ברגע שבו הוא נפרד ממי שאהב. מלאת חמלה, ובידיים שלך נאצרות התרופות, הסגולות והתפילות.", "traits": ["מרפאה", "מלאת חמלה", "נשארת עד הסוף", "שומרת על האבודים"]}, "m": {"name": "שושלת רפאל", "kick": "מלאכי רפאל · לגיון המרפאים", "body": "אתה זה שאליו באים כשקשה. שושלת רפאל מרפאת גוף ונפש, שומרת על הנשמות האבודות, ויודעת לעמוד עם מישהו ברגע שבו הוא נפרד ממי שאהב. מלא חמלה, ובידיים שלך נאצרות התרופות, הסגולות והתפילות.", "traits": ["מרפא", "מלא חמלה", "נשאר עד הסוף", "שומר על האבודים"]}}, "en": {"name": "The line of Raphael", "kick": "Riff · the healers' legion", "body": "You are the one people come to when it hurts. Raphael's line heals body and mind, watches over lost souls, and knows how to stand beside someone at the moment of parting. Full of compassion, and keeper of the medicines, the remedies and the prayers.", "traits": ["A healer", "Full of compassion", "Stays to the end", "Guards the lost"]}}, {"k": "or", "img": "ang_white", "he": {"f": {"name": "אור", "kick": "מלאכית העליון אוריאל", "body": "את שולטת באיתני הטבע ומחוברת לחיות עד כדי הבנת שפתן, ודווקא בין בני אדם קשה לך למצוא את המקום שלך. אור היא הכי חזקה והכי לבד בו זמנית, וזה בדיוק מה שהופך אותה למי שהיא.", "traits": ["שולטת בטבע", "מבינה חיות", "זרה בחברה", "עוצמה שקטה"]}, "m": {"name": "שושלת אוריאל", "kick": "מלאכי אוריאל · איתני הטבע", "body": "אתה שולט באיתני הטבע ומחובר לחיות עד כדי הבנת שפתן, ודווקא בין בני אדם קשה לך למצוא את המקום שלך. שושלת אוריאל היא הכי חזקה והכי לבד בו זמנית, וזה בדיוק מה שהופך אותה למה שהיא.", "traits": ["שולט בטבע", "מבין חיות", "זר בחברה", "עוצמה שקטה"]}}, "en": {"name": "The line of Uriel", "kick": "Or · the forces of nature", "body": "You command the elements and are close enough to animals to understand them, and it is among people that you struggle to find your place. Uriel's line is the strongest and the loneliest at once, and that is exactly what makes it what it is.", "traits": ["Commands nature", "Understands animals", "A stranger in company", "Quiet power"]}}], "qs": [{"q": {"he": "משהו לא צודק קורה מולך ברחוב. מה {את עושה|אתה עושה}?", "en": "Something unjust happens in front of you in the street. What do you do?"}, "o": [{"t": {"he": "{נכנסת|נכנס} באמצע. מישהו צריך להגיד שזה לא בסדר, ועכשיו.", "en": "Step in. Someone has to say this is wrong, right now."}, "w": {"gabi": 3, "mika": 1}}, {"t": {"he": "{מארגנת|מארגן} את כל מי שעומד שם ו{מובילה|מוביל} מהלך.", "en": "Organise everyone standing there and lead a move."}, "w": {"mika": 3}}, {"t": {"he": "{ניגשת|ניגש} קודם כל למי שנפגע.", "en": "Go first to whoever got hurt."}, "w": {"rif": 3}}, {"t": {"he": "{קופאת|קופא}. הגוף מגיב לפני שהראש מבין.", "en": "Freeze. Your body reacts before your head catches up."}, "w": {"or": 3}}]}, {"q": {"he": "מישהו משקר לך בפנים.", "en": "Someone lies to your face."}, "o": [{"t": {"he": "{את יודעת|אתה יודע} מיד. משהו בפנים נדלק אדום.", "en": "You know instantly. Something inside turns red."}, "w": {"gabi": 3}}, {"t": {"he": "{מחליטה|מחליט} בשנייה אם להתעמת או להוריד מהשולחן.", "en": "Decide in a second whether to confront it or drop it."}, "w": {"mika": 3}}, {"t": {"he": "{שואלת|שואל} את עצמך למה הוא היה צריך לשקר.", "en": "Ask yourself why he needed to lie."}, "w": {"rif": 3}}, {"t": {"he": "{מרגישה|מרגיש} שמשהו לא נכון, גם בלי לדעת מה.", "en": "Feel something is off, without knowing what."}, "w": {"or": 3, "gabi": 1}}]}, {"q": {"he": "סוף שבוע פנוי לגמרי. איפה {את|אתה}?", "en": "A completely free weekend. Where are you?"}, "o": [{"t": {"he": "ביער, בים, במקום בלי קליטה.", "en": "In a forest, at the sea, somewhere with no reception."}, "w": {"or": 3}}, {"t": {"he": "אצל מישהו שעובר תקופה קשה.", "en": "With someone who is going through a hard time."}, "w": {"rif": 3}}, {"t": {"he": "עם גיטרה, מכחול או מחברת. משהו צריך לצאת החוצה.", "en": "With a guitar, a brush or a notebook. Something needs to come out."}, "w": {"gabi": 3}}, {"t": {"he": "{מארגנת|מארגן} משהו לכולם: אירוע, טיול, פרויקט.", "en": "Organising something for everyone: an event, a trip, a project."}, "w": {"mika": 3}}]}, {"q": {"he": "איך אנשים מתארים {אותך|אותך} כש{את לא|אתה לא} בחדר?", "en": "How do people describe you when you are not in the room?"}, "o": [{"t": {"he": "\"אם {היא אמרה|הוא אמר} שזה יקרה, זה יקרה.\"", "en": "\"If they said it would happen, it will happen.\""}, "w": {"mika": 3}}, {"t": {"he": "\"אל תשקר {לה|לו}. פשוט אל.\"", "en": "\"Don't lie to them. Just don't.\""}, "w": {"gabi": 3}}, {"t": {"he": "\"{אליה|אליו} הולכים כשקשה.\"", "en": "\"They're who you go to when it's bad.\""}, "w": {"rif": 3}}, {"t": {"he": "\"{היא קצת|הוא קצת} מעולם אחר.\"", "en": "\"They're a bit from another world.\""}, "w": {"or": 3}}]}, {"q": {"he": "איזו יכולת {היית בוחרת|היית בוחר}?", "en": "Which ability would you choose?"}, "o": [{"t": {"he": "לעצור את הזמן לרגע ולחשוב.", "en": "To stop time for a moment and think."}, "w": {"gabi": 3}}, {"t": {"he": "שכולם ילכו {אחרייך|אחריך} בלי להתווכח.", "en": "That everyone follows you without arguing."}, "w": {"mika": 3}}, {"t": {"he": "לרפא בנגיעה.", "en": "To heal with a touch."}, "w": {"rif": 3}}, {"t": {"he": "לדבר עם חיות.", "en": "To speak with animals."}, "w": {"or": 3}}]}, {"q": {"he": "מה הכי מעצבן {אותך|אותך}?", "en": "What annoys you most?"}, "o": [{"t": {"he": "צביעות. אנשים שאומרים דבר אחד ועושים אחר.", "en": "Hypocrisy. People who say one thing and do another."}, "w": {"gabi": 3}}, {"t": {"he": "חוסר החלטיות. שעה של דיבורים בלי החלטה.", "en": "Indecision. An hour of talk with no decision."}, "w": {"mika": 3}}, {"t": {"he": "אכזריות. גם קטנה, גם \"סתם צחוק\".", "en": "Cruelty. Even small, even \"just a joke\"."}, "w": {"rif": 3}}, {"t": {"he": "רעש. יותר מדי אנשים, יותר מדי גירויים.", "en": "Noise. Too many people, too much of everything."}, "w": {"or": 3}}]}, {"q": {"he": "יש ריב בקבוצה שלך. מה התפקיד {שלך|שלך} בו?", "en": "There is a fight in your group. What is your role in it?"}, "o": [{"t": {"he": "{מכריעה|מכריע}. מישהו צריך לקחת אחריות.", "en": "You settle it. Someone has to take responsibility."}, "w": {"mika": 3}}, {"t": {"he": "{אומרת|אומר} בקול את מה שכולם חושבים ולא מעזים.", "en": "You say out loud what everyone thinks and no one dares."}, "w": {"gabi": 3}}, {"t": {"he": "{מדברת|מדבר} עם כל אחד בנפרד אחר כך.", "en": "You talk to each of them separately afterwards."}, "w": {"rif": 3}}, {"t": {"he": "{יוצאת|יוצא} החוצה עד שזה נגמר.", "en": "You step outside until it is over."}, "w": {"or": 3}}]}, {"q": {"he": "מתי {את מרגישה|אתה מרגיש} הכי במקום {שלך|שלך}?", "en": "When do you feel most in your place?"}, "o": [{"t": {"he": "כשיש משימה ולוח זמנים.", "en": "When there is a task and a deadline."}, "w": {"mika": 3}}, {"t": {"he": "כשמישהו {לידך|לידך} מרגיש טוב יותר בגללך.", "en": "When someone next to you feels better because of you."}, "w": {"rif": 3}}, {"t": {"he": "כשמשהו ש{יצרת|יצרת} עובד: שיר, ציור, טקסט.", "en": "When something you made works: a song, a painting, a text."}, "w": {"gabi": 3}}, {"t": {"he": "כשאף אחד לא צריך ממך כלום.", "en": "When nobody needs anything from you."}, "w": {"or": 3}}]}, {"q": {"he": "הכעס {שלך|שלך} נראה...", "en": "Your anger looks like..."}, "o": [{"t": {"he": "מיד, חזק, ועובר מהר.", "en": "Immediate, hot, and gone quickly."}, "w": {"gabi": 3}}, {"t": {"he": "שקט, ממוקד ומדויק.", "en": "Quiet, focused and precise."}, "w": {"mika": 3}}, {"t": {"he": "כמעט אף פעם. {את בולעת|אתה בולע}.", "en": "Almost never. You swallow it."}, "w": {"rif": 3}}, {"t": {"he": "כמו מזג אוויר. פתאום כל החדר מרגיש אותו.", "en": "Like weather. Suddenly the whole room feels it."}, "w": {"or": 3}}]}, {"q": {"he": "מישהו קרוב עומד לעשות טעות גדולה.", "en": "Someone close to you is about to make a big mistake."}, "o": [{"t": {"he": "{אומרת|אומר} לו בדיוק מה {את חושבת|אתה חושב}.", "en": "You tell them exactly what you think."}, "w": {"gabi": 3}}, {"t": {"he": "{לוקחת|לוקח} פיקוד ו{מסדרת|מסדר} את זה בשבילו.", "en": "You take charge and sort it out for them."}, "w": {"mika": 3}}, {"t": {"he": "{נשארת|נשאר} לידו, גם אם יעשה את זה בכל זאת.", "en": "You stay beside them, even if they do it anyway."}, "w": {"rif": 3}}, {"t": {"he": "{שותקת|שותק}. הוא צריך ללמוד את זה לבד.", "en": "You say nothing. They have to learn this themselves."}, "w": {"or": 3}}]}, {"q": {"he": "מה מפחיד {אותך|אותך} יותר?", "en": "Which frightens you more?"}, "o": [{"t": {"he": "לאבד מישהו.", "en": "Losing someone."}, "w": {"rif": 3}}, {"t": {"he": "להיכשל בדבר ש{הבטחת|הבטחת}.", "en": "Failing at something you promised."}, "w": {"mika": 3}}, {"t": {"he": "שיצליחו לשקר לך ולא {תדעי|תדע}.", "en": "That someone lies to you and you never know."}, "w": {"gabi": 3}}, {"t": {"he": "להיות בין אנשים שלא רואים {אותך|אותך}.", "en": "Being among people who do not see you."}, "w": {"or": 3}}]}, {"q": {"he": "בסוף היום, מה {את רוצה|אתה רוצה} שיישאר {אחרייך|אחריך}?", "en": "At the end of the day, what do you want to leave behind?"}, "o": [{"t": {"he": "שהובלתי אנשים למקום טוב יותר.", "en": "That I led people somewhere better."}, "w": {"mika": 3}}, {"t": {"he": "שאמרתי את האמת גם כשזה עלה לי.", "en": "That I told the truth even when it cost me."}, "w": {"gabi": 3}}, {"t": {"he": "שהיה מי שירפא כשכאב.", "en": "That there was someone to heal what hurt."}, "w": {"rif": 3}}, {"t": {"he": "שהעולם עצמו נשאר קצת יותר שלם.", "en": "That the world itself was left a little more whole."}, "w": {"or": 3}}]}]}, "demons": {"art": "lore", "he": {"t": "איזו שדה את", "tm": "איזה שד אתה", "l": "חמש שושלות מעולם מטה. שתים עשרה שאלות, ואל תתאמצי לענות יפה.", "lm": "חמש שושלות מעולם מטה. שתים עשרה שאלות, ואל תתאמץ לענות יפה."}, "en": {"t": "Which demon are you", "tm": "Which demon are you", "l": "Five lines from the world below. Twelve questions, and do not try to answer nicely."}, "results": [{"k": "famelier", "img": "lucifer", "he": {"f": {"name": "פמליירית", "kick": "שושלת לוציפר · הערפדים", "body": "את יצרית, חלקלקה כשצריך, ולא מתנצלת על זה. הפמליירים יודעים להשיג את מה שהם רוצים, גם בדרך הלא נעימה, והשליטה בדחפים היא הדבר שהכי קשה להם. את הכי {את עצמך|עצמך} אחרי חצות, כשהעיר נרגעת ואת מתעוררת.", "traits": ["יצרית", "תוקפנית", "משיגה את שלה", "לילית"]}, "m": {"name": "פמלייר", "kick": "שושלת לוציפר · הערפדים", "body": "אתה יצרי, חלקלק כשצריך, ולא מתנצל על זה. הפמליירים יודעים להשיג את מה שהם רוצים, גם בדרך הלא נעימה, והשליטה בדחפים היא הדבר שהכי קשה להם. אתה הכי עצמך אחרי חצות, כשהעיר נרגעת ואתה מתעורר.", "traits": ["יצרי", "תוקפני", "משיג את שלו", "לילי"]}}, "en": {"name": "Famelier", "kick": "Lucifer's line · the vampires", "body": "Driven, slippery when it serves you, and unapologetic about it. The Fameliers know how to get what they want, including the ugly way, and holding back an impulse is the hardest thing they do. You are most yourself after midnight, when the city settles and you wake up.", "traits": ["Driven", "Aggressive", "Gets what they want", "Nocturnal"]}}, {"k": "fire", "img": "sagu", "he": {"f": {"name": "ענקי האש", "kick": "שושלת סאגו · המדור הראשון", "body": "חזקה מעל הממוצע, ולא צריכה שיאשרו לך את זה. ענקי האש נמשכים למקומות מבודדים שאף אחד לא מגיע אליהם, ולאש: להסתכל בה, להתקרב אליה, ולפעמים גם להצית משהו רק כדי לראות מה קורה. את לא בורחת מאנשים, פשוט לא צריכה אותם.", "traits": ["חזקה", "מבודדת", "נמשכת לאש", "עומדת לבד"]}, "m": {"name": "ענקי האש", "kick": "שושלת סאגו · המדור הראשון", "body": "חזק מעל הממוצע, ולא צריך שיאשרו לך את זה. ענקי האש נמשכים למקומות מבודדים שאף אחד לא מגיע אליהם, ולאש: להסתכל בה, להתקרב אליה, ולפעמים גם להצית משהו רק כדי לראות מה קורה. אתה לא בורח מאנשים, פשוט לא צריך אותם.", "traits": ["חזק", "מבודד", "נמשך לאש", "עומד לבד"]}}, "en": {"name": "The fire giants", "kick": "Sagu's line · the first circle", "body": "Stronger than average, and you do not need anyone to confirm it. The fire giants are drawn to isolated places nobody reaches, and to fire: to watch it, to get close, sometimes to set something alight just to see. You are not running from people, you simply do not need them.", "traits": ["Strong", "Solitary", "Drawn to fire", "Stands alone"]}}, {"k": "succubus", "img": "succubus", "he": {"f": {"name": "סוקובוס", "kick": "צאצאי לילית", "body": "אנשים נמשכים אלייך, גם כשאת לא עושה כלום. את שואבת אנרגייה מהחדר ומחזירה לו אותה, גורמת לאנשים לאבד קצת שליטה, ואוהבת את החיים ומרגישה אותם בכל מקום שאת נמצאת בו. המחיר הוא שקשה לך לייצר קשר אמיתי, כי רבים מדי רואים בך אובייקט לפני שהם רואים בן אדם.", "traits": ["מפתה", "שואבת אנרגייה", "אוהבת חיים", "נראית ולא נראית"]}, "m": {"name": "אינקובוס", "kick": "צאצאי לילית", "body": "אנשים נמשכים אליך, גם כשאתה לא עושה כלום. אתה שואב אנרגייה מהחדר ומחזיר לו אותה, גורם לאנשים לאבד קצת שליטה, ואוהב את החיים ומרגיש אותם בכל מקום שאתה נמצא בו. המחיר הוא שקשה לך לייצר קשר אמיתי, כי רבים מדי רואים בך אובייקט לפני שהם רואים בן אדם.", "traits": ["מפתה", "שואב אנרגייה", "אוהב חיים", "נראה ולא נראה"]}}, "en": {"name": "Succubus and incubus", "kick": "Children of Lilith", "body": "People are drawn to you even when you do nothing. You draw energy from a room and hand it back, you make people lose a little control, and you love life and feel it wherever you are. The price is how hard real connection is, because too many see an object before they see a person.", "traits": ["Alluring", "Draws energy", "Loves life", "Seen and unseen"]}, "imgM": "incubus"}, {"k": "agarti", "img": "ashmadai", "he": {"f": {"name": "אגרתית", "kick": "שושלת אשמדאי · משני הצורה", "body": "את קוראת אנשים מהר, יודעת בדיוק איפה כואב להם, ויודעת גם להעמיד פנים כשזה משרת אותך. האגרתים משני צורה, נמשכים להנאות מהירות, ומצטיינים בלגרום למישהו לפקפק במה שהוא בעצמו זוכר. הכוח והסכנה שלך הם אותו כישרון בדיוק.", "traits": ["קוראת רגשות", "מניפולטיבית", "משנה צורה", "צעד קדימה"]}, "m": {"name": "אגרתי", "kick": "שושלת אשמדאי · משני הצורה", "body": "אתה קורא אנשים מהר, יודע בדיוק איפה כואב להם, ויודע גם להעמיד פנים כשזה משרת אותך. האגרתים משני צורה, נמשכים להנאות מהירות, ומצטיינים בלגרום למישהו לפקפק במה שהוא בעצמו זוכר. הכוח והסכנה שלך הם אותו כישרון בדיוק.", "traits": ["קורא רגשות", "מניפולטיבי", "משנה צורה", "צעד קדימה"]}}, "en": {"name": "Agarti", "kick": "Ashmadai's line · the shapeshifters", "body": "You read people fast, you know exactly where it hurts, and you can play a part when it serves you. The Agarti change shape, chase quick pleasures, and excel at making someone doubt what they themselves remember. Your gift and your danger are the same talent.", "traits": ["Reads emotions", "Manipulative", "Changes shape", "A step ahead"]}}, {"k": "tovikana", "img": "gaotika", "he": {"f": {"name": "טוביקנה", "kick": "שושלת גאוטיקה · אנשי הזאב", "body": "הכעס שלך מגיע מהר וההתפרצות אמיתית, אבל מתחת לה יש דבר אחד פשוט: המשפחה. הטוביקנה שומרים על שלהם, אוהבים מרחב פתוח ולא סובלים גדרות, וחזקים במיוחד כשהם בקבוצה. חוסר הסבלנות הוא המחיר, הנאמנות היא הרווח.", "traits": ["מתפרצת", "חסרת סבלנות", "נאמנה למשפחה", "חזקה בלהקה"]}, "m": {"name": "טוביקנה", "kick": "שושלת גאוטיקה · אנשי הזאב", "body": "הכעס שלך מגיע מהר וההתפרצות אמיתית, אבל מתחת לה יש דבר אחד פשוט: המשפחה. הטוביקנה שומרים על שלהם, אוהבים מרחב פתוח ולא סובלים גדרות, וחזקים במיוחד כשהם בקבוצה. חוסר הסבלנות הוא המחיר, הנאמנות היא הרווח.", "traits": ["מתפרץ", "חסר סבלנות", "נאמן למשפחה", "חזק בלהקה"]}}, "en": {"name": "Tovikana", "kick": "Gaotika's line · the wolf people", "body": "Your anger comes fast and the outburst is real, but underneath it sits one simple thing: family. The Tovikana protect their own, love open ground and cannot stand fences, and are at their strongest inside a group. Impatience is the cost, loyalty is the return.", "traits": ["Explosive", "Impatient", "Loyal to family", "Strong in a pack"]}}], "qs": [{"q": {"he": "שלוש לפנות בוקר. מה {את עושה|אתה עושה}?", "en": "Three in the morning. What are you doing?"}, "o": [{"t": {"he": "{ערה|ער} לגמרי. הלילה הוא הזמן שבו הכול נהיה מעניין.", "en": "Wide awake. Night is when things get interesting."}, "w": {"famelier": 3}}, {"t": {"he": "בחוץ, במקום שאין בו אף אחד.", "en": "Outside, somewhere with nobody in it."}, "w": {"fire": 3}}, {"t": {"he": "עדיין במסיבה, ועדיין בכיף.", "en": "Still at the party, still enjoying it."}, "w": {"succubus": 3}}, {"t": {"he": "בשיחה עם מישהו ש{פגשת|פגשת} לפני שעה, ו{יודעת|יודע} עליו כבר הכול.", "en": "Talking to someone you met an hour ago, and you already know everything about them."}, "w": {"agarti": 3}}, {"t": {"he": "{ישנה|ישן}. אבל אם מישהו מהמשפחה יתקשר, {את קמה|אתה קם} בשנייה.", "en": "Asleep. But if family calls, you are up in a second."}, "w": {"tovikana": 3}}]}, {"q": {"he": "מישהו עומד בדרך {שלך|שלך}. מה קורה?", "en": "Someone is standing in your way. What happens?"}, "o": [{"t": {"he": "{את מוצאת|אתה מוצא} דרך לעקוף, ולא תמיד יפה.", "en": "You find a way around, not always a pretty one."}, "w": {"famelier": 3}}, {"t": {"he": "{מתפרצת|מתפרץ}, ואחר כך {מתחרטת|מתחרט}.", "en": "You blow up, and regret it after."}, "w": {"tovikana": 3}}, {"t": {"he": "{מוצאת|מוצא} מה חשוב לו, ו{משתמשת|משתמש} בזה.", "en": "You find what matters to them, and use it."}, "w": {"agarti": 3}}, {"t": {"he": "{מחייכת|מחייך}. תוך חמש דקות הוא רוצה לעזור לך.", "en": "You smile. Within five minutes they want to help you."}, "w": {"succubus": 3}}, {"t": {"he": "פשוט {עוברת|עובר}. {את חזקה|אתה חזק} ממנו.", "en": "You simply go through. You are stronger than them."}, "w": {"fire": 3}}]}, {"q": {"he": "מה מושך {אותך|אותך} במדורה?", "en": "What draws you to a bonfire?"}, "o": [{"t": {"he": "האש עצמה. אפשר להסתכל בה שעות.", "en": "The fire itself. You could watch it for hours."}, "w": {"fire": 3}}, {"t": {"he": "החושך שמסביב.", "en": "The dark around it."}, "w": {"famelier": 3}}, {"t": {"he": "האנשים סביבה.", "en": "The people around it."}, "w": {"succubus": 3}}, {"t": {"he": "השטח הפתוח.", "en": "The open ground."}, "w": {"tovikana": 3}}, {"t": {"he": "השיחות שאנשים מנהלים כשהם עייפים ולא שומרים על עצמם.", "en": "The way people talk when they are tired and stop guarding themselves."}, "w": {"agarti": 3}}]}, {"q": {"he": "איך אנשים מגיבים {אלייך|אליך} בפעם הראשונה?", "en": "How do people react to you the first time?"}, "o": [{"t": {"he": "נמשכים. תמיד.", "en": "They are drawn in. Always."}, "w": {"succubus": 3}}, {"t": {"he": "מרגישים ש{הם מכירים אותך|הם מכירים אותך} שנים.", "en": "They feel like they have known you for years."}, "w": {"agarti": 3}}, {"t": {"he": "קצת נזהרים.", "en": "They are a little careful."}, "w": {"famelier": 3}}, {"t": {"he": "מבינים ש{איתך|איתך} לא מתעסקים.", "en": "They understand you are not to be messed with."}, "w": {"tovikana": 3}}, {"t": {"he": "לא בטוחים מה לעשות {איתך|איתך}.", "en": "They are not sure what to do with you."}, "w": {"fire": 3}}]}, {"q": {"he": "איזה דחף הכי קשה לך לרסן?", "en": "Which impulse is hardest to hold back?"}, "o": [{"t": {"he": "לקחת את מה ש{את רוצה|אתה רוצה} עכשיו.", "en": "To take what you want, now."}, "w": {"famelier": 3}}, {"t": {"he": "להרים את הקול.", "en": "To raise your voice."}, "w": {"tovikana": 3}}, {"t": {"he": "להצית משהו רק כדי לראות מה יקרה.", "en": "To set something alight just to see what happens."}, "w": {"fire": 3}}, {"t": {"he": "לעקם קצת את הסיפור כדי שייצא {לטובתך|לטובתך}.", "en": "To bend the story a little in your favour."}, "w": {"agarti": 3}}, {"t": {"he": "להגיד כן לכל דבר שמרגיש טוב.", "en": "To say yes to anything that feels good."}, "w": {"succubus": 3}}]}, {"q": {"he": "איפה {את מרגישה|אתה מרגיש} הכי {חופשייה|חופשי}?", "en": "Where do you feel most free?"}, "o": [{"t": {"he": "בשדה פתוח, בלי גדרות.", "en": "In an open field, no fences."}, "w": {"tovikana": 3}}, {"t": {"he": "במקום מבודד שאף אחד לא מגיע אליו.", "en": "Somewhere isolated that nobody reaches."}, "w": {"fire": 3}}, {"t": {"he": "בעיר, בשתיים בלילה.", "en": "In the city, at two in the morning."}, "w": {"famelier": 3}}, {"t": {"he": "בחדר מלא אנשים.", "en": "In a room full of people."}, "w": {"succubus": 3}}, {"t": {"he": "בכל מקום שבו אפשר להיות מישהו אחר קצת.", "en": "Anywhere you can be someone slightly else."}, "w": {"agarti": 3}}]}, {"q": {"he": "מריבה עם מישהו קרוב. איך זה נגמר?", "en": "A fight with someone close. How does it end?"}, "o": [{"t": {"he": "{את משכנעת|אתה משכנע} אותו שהוא זוכר את זה לא נכון.", "en": "You convince them they are remembering it wrong."}, "w": {"agarti": 3}}, {"t": {"he": "בצעקות, ואז בחיבוק.", "en": "In shouting, and then a hug."}, "w": {"tovikana": 3}}, {"t": {"he": "{את נעלמת|אתה נעלם} ליומיים.", "en": "You disappear for two days."}, "w": {"famelier": 3}}, {"t": {"he": "{את מפרקת|אתה מפרק} את זה בקסם, ואף אחד לא חוזר לזה.", "en": "You charm it away, and nobody comes back to it."}, "w": {"succubus": 3}}, {"t": {"he": "{את שותקת|אתה שותק} שבוע.", "en": "You go quiet for a week."}, "w": {"fire": 3}}]}, {"q": {"he": "מה {את קוראת|אתה קורא} אצל אנשים הכי מהר?", "en": "What do you read fastest in people?"}, "o": [{"t": {"he": "איפה כואב להם.", "en": "Where it hurts them."}, "w": {"agarti": 3}}, {"t": {"he": "מה הם רוצים.", "en": "What they want."}, "w": {"succubus": 3}}, {"t": {"he": "מי מהם חלש.", "en": "Which of them is weak."}, "w": {"famelier": 3}}, {"t": {"he": "מי מסכן את מי ש{את אוהבת|אתה אוהב}.", "en": "Who is a danger to the people you love."}, "w": {"tovikana": 3}}, {"t": {"he": "כלום. אנשים זה לא ההתמחות {שלך|שלך}.", "en": "Nothing. People are not your specialty."}, "w": {"fire": 3}}]}, {"q": {"he": "מה המקום של המשפחה {אצלך|אצלך}?", "en": "Where does family sit for you?"}, "o": [{"t": {"he": "היא הקו האדום. הכול עוצר בשבילה.", "en": "It is the red line. Everything stops for it."}, "w": {"tovikana": 3}}, {"t": {"he": "{שומרת|שומר} מרחק, ו{מגיעה|מגיע} כשצריך.", "en": "You keep your distance, and show up when it counts."}, "w": {"famelier": 3}}, {"t": {"he": "{אוהבת|אוהב} אותם, אבל צריך גם אוויר.", "en": "You love them, but you need air too."}, "w": {"succubus": 3}}, {"t": {"he": "{יודעת|יודע} בדיוק איך לדבר עם כל אחד מהם.", "en": "You know exactly how to handle each of them."}, "w": {"agarti": 3}}, {"t": {"he": "{מתגעגעת|מתגעגע} אליהם דווקא כש{את לבד|אתה לבד}.", "en": "You miss them precisely when you are alone."}, "w": {"fire": 3}}]}, {"q": {"he": "מה הסכנה הכי גדולה {שלך|שלך}?", "en": "What is your biggest danger?"}, "o": [{"t": {"he": "שאנשים יראו {בך|בך} אובייקט ולא בן אדם.", "en": "That people see an object in you and not a person."}, "w": {"succubus": 3}}, {"t": {"he": "שהדחף ינצח לפני שהראש יספיק.", "en": "That the impulse wins before your head catches up."}, "w": {"famelier": 3}}, {"t": {"he": "ששכחת מה האמת {שלך|שלך}.", "en": "That you forget what your own truth is."}, "w": {"agarti": 3}}, {"t": {"he": "שההתפרצות תגיע לכתובת הלא נכונה.", "en": "That the outburst lands on the wrong person."}, "w": {"tovikana": 3}}, {"t": {"he": "ש{תישארי|תישאר} לבד יותר מדי זמן.", "en": "That you stay alone for too long."}, "w": {"fire": 3}}]}, {"q": {"he": "איך {את משיגה|אתה משיג} את מה ש{את רוצה|אתה רוצה}?", "en": "How do you get what you want?"}, "o": [{"t": {"he": "בסבלנות, בשכנוע, ובלי שיבינו.", "en": "Patiently, persuasively, without anyone noticing."}, "w": {"agarti": 3}}, {"t": {"he": "{לוקחת|לוקח}.", "en": "You take it."}, "w": {"famelier": 3}}, {"t": {"he": "אנשים פשוט נותנים.", "en": "People simply give it."}, "w": {"succubus": 3}}, {"t": {"he": "בכוח, ומהר.", "en": "By force, and fast."}, "w": {"tovikana": 3}}, {"t": {"he": "{עובדת|עובד} על זה לבד עד שזה קורה.", "en": "You work at it alone until it happens."}, "w": {"fire": 3}}]}, {"q": {"he": "מה {את הכי אוהבת|אתה הכי אוהב} בעצמך?", "en": "What do you like most about yourself?"}, "o": [{"t": {"he": "ש{את מרגישה|אתה מרגיש} את החיים בעוצמה.", "en": "That you feel life at full volume."}, "w": {"succubus": 3}}, {"t": {"he": "שיש {לך|לך} אנשים ש{תלכי|תלך} בשבילם עד הסוף.", "en": "That there are people you would go all the way for."}, "w": {"tovikana": 3}}, {"t": {"he": "ש{את לא צריכה|אתה לא צריך} אף אחד.", "en": "That you need no one."}, "w": {"fire": 3}}, {"t": {"he": "ש{את תמיד|אתה תמיד} צעד אחד קדימה.", "en": "That you are always a step ahead."}, "w": {"agarti": 3}}, {"t": {"he": "ש{את לא מתנצלת|אתה לא מתנצל} על מה ש{את|אתה}.", "en": "That you do not apologise for what you are."}, "w": {"famelier": 3}}]}]}};
 
 /* ---------- JACKET COPY ---------- */
@@ -2535,12 +2555,18 @@ function sendLead(){
     FORM_ERR.lead = he ? "כתובת המייל לא נראית תקינה." : "That email address doesn't look right.";
     render(); return;
   }
-  const Q = qz.quiz ? QUIZZES[qz.quiz] : null;
-  const res = (Q && qz.out) ? qzResultCopy(Q.results.find(x=>x.k===qz.out.win)).name : "";
+  /* the placement keeps its own state, so read the result from whichever ran */
+  const isLeg = qz.quiz==="legions";
+  const out = isLeg ? lq.out : qz.out;
+  const Q = (!isLeg && qz.quiz) ? QUIZZES[qz.quiz] : null;
+  const res = isLeg
+    ? (out ? Gx(lang==="he" ? lqRes(out.win).he.name : lqRes(out.win).en.name) : "")
+    : ((Q && out) ? qzResultCopy(Q.results.find(x=>x.k===out.win)).name : "");
   const quizName = qz.quiz==="angels" ? (he?"חידון המלאכיות":"Archangel quiz")
-                 : qz.quiz==="demons" ? (he?"חידון השדים":"Demon quiz") : "";
+                 : qz.quiz==="demons" ? (he?"חידון השדים":"Demon quiz")
+                 : isLeg ? (he?"מבחן השיבוץ ללגיונות":"Legion placement") : "";
   formSubmit("lead",
-    {name, email:mail, phone:tel, quiz:qz.quiz||"", result:qz.out?qz.out.win:"", resultName:res},
+    {name, email:mail, phone:tel, quiz:qz.quiz||"", result:out?out.win:"", resultName:res},
     he?"הרשמה לעדכונים מהאתר":"New sign-up from the site",
     [ (he?"שם: ":"Name: ")+(name||"-"),
       (he?"מייל: ":"Email: ")+(mail||"-"),
@@ -2823,11 +2849,13 @@ function startQuiz(q){ qz.quiz=q; qz.i=0; qz.ans=[]; qz.out=null; qz.stage="run"
 function answerQuiz(oi){
   qz.ans[qz.i]=oi;
   if(qz.i < QUIZZES[qz.quiz].qs.length-1){ qz.i++; render(); }
-  else { qz.out=qzScore(qz.quiz); qz.stage="done"; render(); reportResult(qz.quiz, qz.out.win); }
+  else { qz.out=qzScore(qz.quiz); qz.stage="done"; render(); reportResult(qz.quiz, qz.out.win); rememberResult(qz.quiz, qz.out.win); }
   goTop();
 }
 function backQuiz(){ if(qz.i>0){ qz.i--; render(); goTop(); } else { qz.stage="menu"; render(); } }
-function resetQuiz(){ qz.stage="menu"; qz.quiz=null; qz.out=null; render(); goTop(); }
+function resetQuiz(){ qz.stage="menu"; qz.quiz=null; qz.out=null;
+  lq={phase:"intro", line:null, i:0, ansA:[], ansB:[], fam:null, out:null};
+  render(); goTop(); }
 function goTop(){ const e=document.getElementById("qzTop"); if(e) e.scrollIntoView({block:"start",behavior:"instant"}); }
 
 function qzResultImg(r){
@@ -2839,18 +2867,148 @@ function qzResultCopy(r){
   return {name:Gx(c.name), kick:Gx(c.kick), body:Gx(c.body), traits:c.traits.map(Gx)};
 }
 
+/* ============ THE LEGION PLACEMENT (two stages) ============
+   Twenty outcomes will not separate on twelve flat questions - the winner ends up
+   decided by one answer. So this runs the way the Khan itself would: a general
+   examination that assigns a family, then a specialist one inside that family
+   only. Every answer does real work, and the reader sits an exam instead of
+   filling a form. The four leadership bodies are not assignments in the books -
+   they are made of the heads of other legions - so they are reachable only by a
+   rare, consistent, deliberately-chosen path.                                   */
+const LQ = LEGION_QUIZ;
+const lqFam = k => LQ.fams.find(f=>f.k===k);
+const lqRes = k => LQ.results.find(r=>r.k===k);
+const lqTxt = o => Gx(lang==="he" ? o.he : o.en);
+/* families and the quiz itself carry objects, not strings - name them explicitly */
+const lqName = o => Gx(lang==="he" ? o.he.n : o.en.n);
+const lqTitle = () => Gx(lang==="he" ? LQ.he.t : LQ.en.t);
+const lqSrc = k => IMG["legions:"+k] || `assets/legions/${k}.webp`;
+
+let lq = {phase:"intro", line:null, i:0, ansA:[], ansB:[], fam:null, out:null};
+
+/* the reader's own last result per quiz - so the placement can start from the
+   archangel line they already got, instead of asking them to remember it */
+function myResults(){
+  try{ return JSON.parse(localStorage.getItem("nbs_quiz_me")||"{}"); }catch(e){ return {}; }
+}
+function rememberResult(quiz,k){
+  try{ const m=myResults(); m[quiz]=k; localStorage.setItem("nbs_quiz_me", JSON.stringify(m)); }catch(e){}
+}
+
+function startLegion(line){
+  lq={phase:"a", line:line||null, i:0, ansA:[], ansB:[], fam:null, out:null};
+  qz.quiz="legions"; qz.stage="legion"; render(); goTop();
+}
+function lqIntro(){ lq.phase="intro"; qz.quiz="legions"; qz.stage="legion"; render(); goTop(); }
+
+function lqAnswer(oi){
+  if(lq.phase==="a"){
+    lq.ansA[lq.i]=oi;
+    if(lq.i < LQ.qsA.length-1){ lq.i++; }
+    else { lq.fam = lqFamWin(); lq.phase="gate"; lq.i=0; }
+  } else {
+    lq.ansB[lq.i]=oi;
+    const n = lqQsB().length;
+    if(lq.i < n-1){ lq.i++; }
+    else { lq.out = lqScore(); lq.phase="done"; reportResult("legions", lq.out.win); rememberResult("legions", lq.out.win); }
+  }
+  render(); goTop();
+}
+function lqBack(){
+  if(lq.phase==="b" && lq.i===0){ lq.phase="gate"; render(); goTop(); return; }
+  if(lq.phase==="gate"){ lq.phase="a"; lq.i=LQ.qsA.length-1; render(); goTop(); return; }
+  if(lq.i>0){ lq.i--; render(); goTop(); return; }
+  lqIntro();
+}
+function lqGo(){ lq.phase="b"; lq.i=0; lq.ansB=[]; render(); goTop(); }
+
+function lqFamWin(){
+  const sc={}; LQ.fams.forEach(f=>sc[f.k]=0);
+  LQ.qsA.forEach((q,i)=>{
+    const o=q.o[lq.ansA[i]]; if(!o) return;
+    for(const k in (o.w||{})) sc[k]=(sc[k]||0)+o.w[k];
+  });
+  /* the archangel line the reader already has tilts, it does not decide */
+  const bonus = lq.line && LQ.lines[lq.line];
+  if(bonus) LQ.fams.forEach(f=>{ f.legions.forEach(l=>{ if(bonus[l]) sc[f.k]+=bonus[l]*0.4; }); });
+  let best=LQ.fams[0].k, bv=-1;
+  LQ.fams.forEach(f=>{ if(sc[f.k]>bv){ bv=sc[f.k]; best=f.k; } });
+  lq.famScore=sc; lq.famTop=bv;
+  return best;
+}
+/* the specialist paper: the family's own questions, plus the leadership question,
+   plus - only when the guards actually won - the one question that decides where */
+function lqQsB(){
+  const base = LQ.qsB[lq.fam].slice();
+  base.push(LQ.eliteB);
+  if(lq.fam==="harev" && lq.ansB.length>=LQ.qsB.harev.length){
+    const g=lqGuardLead(); if(g) base.push(LQ.guardQ);
+  }
+  return base;
+}
+/* are the four regional watches leading, before the region question is asked? */
+function lqGuardLead(){
+  const sc=lqLegionScores(false);
+  const guards=["north","south","east","west"];
+  const gTop=Math.max(...guards.map(k=>sc[k]||0));
+  const others=Math.max(...["hayalim","kele"].map(k=>sc[k]||0));
+  return gTop>=others;
+}
+function lqLegionScores(withGuardQ){
+  const fam=lqFam(lq.fam), sc={}; fam.legions.forEach(k=>sc[k]=0);
+  const qs=LQ.qsB[lq.fam];
+  qs.forEach((q,i)=>{
+    const o=q.o[lq.ansB[i]]; if(!o) return;
+    for(const k in (o.w||{})) if(k in sc) sc[k]+=o.w[k];
+  });
+  if(withGuardQ){
+    const idx=qs.length+1;                        /* after the leadership question */
+    const o=LQ.guardQ.o[lq.ansB[idx]];
+    if(o) for(const k in o.w) if(k in sc) sc[k]+=o.w[k];
+  }
+  return sc;
+}
+function lqEliteCount(){
+  let n=0;
+  LQ.qsA.forEach((q,i)=>{ const o=q.o[lq.ansA[i]]; if(o&&o.e) n++; });
+  const qs=LQ.qsB[lq.fam];
+  const o=LQ.eliteB.o[lq.ansB[qs.length]];
+  if(o&&o.e) n+=2;                                 /* the second one weighs double */
+  return n;
+}
+function lqScore(){
+  const sc=lqLegionScores(true);
+  const fam=lqFam(lq.fam);
+  const keys=fam.legions.slice();
+  /* the guards share their weights, so without the region question they tie -
+     resolve to the one the region question chose, or the first if it never ran */
+  let order=keys.slice().sort((a,b)=>(sc[b]||0)-(sc[a]||0));
+  let win=order[0];
+
+  /* the rare path: a consistent family AND the leadership answers, twice */
+  const famTotal=Object.values(lq.famScore||{}).reduce((s,v)=>s+v,0)||1;
+  const share=(lq.famTop||0)/famTotal;
+  const rare = lqEliteCount()>=3 && share>=0.5;
+  if(rare) win=fam.elite;
+
+  const max=Math.max(...keys.map(k=>sc[k]||0))||1;
+  const norm={}; keys.forEach(k=> norm[k]=(sc[k]||0)/max);
+  return {win, keys:order, norm, rare, fam:lq.fam};
+}
+
 let qzLoaded=false;
 function vQuiz(){
   const he=lang==="he";
   if(!qzLoaded){ qzLoaded=true; loadTally().then(()=>{ if(view==="quiz") render(); }); }
+  if(qz.stage==="legion") return lqView();
   if(qz.stage==="run")  return qzRun();
   if(qz.stage==="done") return qzDone();
 
   return `${pageHero("נעמה מלאכית",
       he?"חידונים":"Quizzes",
       he?"של מי הכנפיים":"Whose wings are these",
-      he?"שני חידונים מתוך העולם: אחד למעלה ואחד למטה. התוצאה נשמרת במונה של האתר, כדי שנדע מי בעצם מסתובב כאן."
-        :"Two quizzes from inside the world, one above and one below. Every result joins the site's counter, so we know who is actually walking around here.",
+      he?"שלושה חידונים מתוך העולם: אחד למעלה, אחד למטה, ומבחן שיבוץ לעשרים לגיונות החאן. כל תוצאה נשמרת במונה של האתר, כדי שנדע מי בעצם מסתובב כאן."
+        :"Three quizzes from inside the world: one above, one below, and a placement examination for the twenty legions of the Khan. Every result joins the site's counter, so we know who is actually walking around here.",
       "center 30%", .34)}
 
   <section class="band wrap stack g-l" id="qzTop">
@@ -2873,6 +3031,16 @@ function vQuiz(){
           </div>
           <button class="btn btn-solid btn-sm" onclick="startQuiz('${q}')">${he?"מתחילים":"Start"}</button>
         </div>`;}).join("")}
+
+      <div class="qcard is-lq">
+        <div class="qfaces is-leg">${["hayalim","marpeim","safranim","otzar"].map(k=>`<img src="${lqSrc(k)}" alt="" loading="lazy">`).join("")}</div>
+        <div class="stack g-xs">
+          <span class="eyebrow">${he?"ובחאן":"And at the Khan"}</span>
+          <h3 class="h3">${esc(lqTitle())}</h3>
+          <p class="dim">${esc(he?LQ.he.l:LQ.en.l)}</p>
+        </div>
+        <button class="btn btn-solid btn-sm" onclick="lqIntro()">${he?"למבחן השיבוץ":"To the placement"}</button>
+      </div>
     </div>
 
     ${qzCounter()}
@@ -2962,14 +3130,167 @@ function qzCopy(el){
   catch(e){ said(); }
 }
 
+/* ---------- the placement, on screen ---------- */
+function lqView(){
+  if(lq.phase==="intro") return lqIntroView();
+  if(lq.phase==="gate")  return lqGateView();
+  if(lq.phase==="done")  return lqDoneView();
+  return lqRunView();
+}
+
+function lqIntroView(){
+  const he=lang==="he";
+  const mine=myResults().angels;
+  const lineName = k => {
+    const r=QUIZZES.angels.results.find(x=>x.k===k);
+    if(!r) return k;
+    const c = lang==="he" ? r.he[qz.gender] : r.en;
+    return Gx(c.name);
+  };
+  const lines=["mika","gabi","rif","or"];
+  return `<section class="band wrap narrow stack g-l" id="qzTop">
+    <button class="qexit" onclick="resetQuiz()">${he?"‹ חזרה לכל החידונים":"‹ Back to all the quizzes"}</button>
+    <div class="stack g-s">
+      <span class="eyebrow">${he?"מבחן שיבוץ":"Placement examination"}</span>
+      <h2>${esc(lqTitle())}</h2>
+      <p class="lede">${esc(he?LQ.he.l:LQ.en.l)}</p>
+    </div>
+    <div class="lqline">
+      <span class="eyebrow">${he?"השושלת שלך":"Your line"}</span>
+      ${mine?`<p>${he
+          ? `בחידון המלאכיות יצא ${esc(lineName(mine))}. השושלת לא קובעת את הלגיון, אבל היא נשקלת - בדיוק כמו בחאן.`
+          : `In the archangel quiz you got ${esc(lineName(mine))}. The line does not decide the legion, but it is weighed - exactly as at the Khan.`}</p>
+        <div class="lqbtns">
+          <button class="btn btn-solid btn-sm" onclick="startLegion('${mine}')">${he?`להתחיל כ${esc(lineName(mine))}`:`Begin as ${esc(lineName(mine))}`}</button>
+          <button class="btn btn-sm btn-quiet" onclick="startLegion(null)">${he?"בלי שושלת":"Without a line"}</button>
+        </div>`
+       :`<p class="dim">${he
+          ? "עוד לא עשית את חידון המלאכיות, אז אין לנו שושלת רשומה. אפשר לבחור אחת, או פשוט להתחיל."
+          : "You have not taken the archangel quiz, so we have no line on record. Pick one, or simply begin."}</p>
+         <div class="lqbtns">
+           ${lines.map(k=>`<button class="btn btn-sm btn-quiet" onclick="startLegion('${k}')">${esc(lineName(k))}</button>`).join("")}
+           <button class="btn btn-solid btn-sm" onclick="startLegion(null)">${he?"להתחיל בלי":"Begin without"}</button>
+         </div>`}
+    </div>
+  </section>`;
+}
+
+function lqRunView(){
+  const he=lang==="he";
+  const isA = lq.phase==="a";
+  const qs = isA ? LQ.qsA : lqQsB();
+  const q = qs[lq.i], n = qs.length;
+  const head = isA ? (he?"הבחינה הכללית":"The general examination")
+                   : (he?"הבחינה המקצועית":"The specialist examination");
+  const sub = isA ? "" : ` · ${esc(lqName(lqFam(lq.fam)))}`;
+  return `<section class="band wrap narrow stack g-l" id="qzTop">
+    <button class="qexit" onclick="resetQuiz()">${he?"‹ יציאה מהמבחן":"‹ Leave the examination"}</button>
+    <span class="eyebrow">${esc(head)}${sub}</span>
+    <div class="qbar"><i style="inline-size:${Math.round(lq.i/n*100)}%"></i></div>
+    <div class="qhead">
+      <span class="eyebrow num">${lq.i+1} / ${n}</span>
+      <button class="qback" onclick="lqBack()">${he?"‹ לשאלה הקודמת":"‹ Previous question"}</button>
+    </div>
+    <h2 class="qq">${esc(lqTxt(q.q))}</h2>
+    <div class="qopts">
+      ${q.o.map((o,i)=>`<button class="qopt${(isA?lq.ansA:lq.ansB)[lq.i]===i?" is-on":""}" onclick="lqAnswer(${i})">${esc(lqTxt(o.t))}</button>`).join("")}
+    </div>
+  </section>`;
+}
+
+function lqGateView(){
+  const he=lang==="he", f=lqFam(lq.fam);
+  /* the four watches differ only by where they stand, and the last question is
+     what decides that - so the gate names them as one, and keeps the surprise */
+  const GUARDS=["north","south","east","west"];
+  const shown = f.legions.filter(k=>!GUARDS.includes(k));
+  const hasGuards = f.legions.some(k=>GUARDS.includes(k));
+  const names = shown.map(k=>Gx(lang==="he"?lqRes(k).he.name:lqRes(k).en.name))
+    .concat(hasGuards ? [lang==="he"?"לגיונות השומרים":"the watch legions"] : []);
+  const count = shown.length + (hasGuards?1:0);
+  return `<section class="band wrap narrow stack g-l" id="qzTop">
+    <button class="qexit" onclick="lqBack()">${he?"‹ לשאלה הקודמת":"‹ Previous question"}</button>
+    <div class="lqgate">
+      <span class="eyebrow">${he?"עברת את הבחינה הכללית":"You have passed the general examination"}</span>
+      <h2>${esc(lqName(f))}</h2>
+      <p class="lede">${esc(lang==="he"?f.he.t:f.en.t)}</p>
+      <p class="dim">${he
+        ? `נשארו ${count}: ${esc(names.join(" · "))}. עוד כמה שאלות, והשיבוץ ייסגר.`
+        : `${count} remain: ${esc(names.join(" · "))}. A few more questions, and the placement closes.`}</p>
+      <button class="btn btn-solid" onclick="lqGo()">${he?"לבחינה המקצועית":"To the specialist examination"}</button>
+    </div>
+  </section>`;
+}
+
+function lqDoneView(){
+  const he=lang==="he", r=lqRes(lq.out.win);
+  const c = lang==="he" ? r.he : r.en;
+  const name=Gx(c.name);
+  const share = he
+    ? `${lq.out.rare?"נבחרתי ל":"שובצתי ל"}${name} במבחן השיבוץ של נעמה בר שירה. תגלו לאיזה לגיון אתם שייכים:`
+    : `I was placed in ${name} in N.B. Shira's legion examination. Find out which legion you belong to:`;
+  const shareText = share + " " + viewUrl("quiz");
+  /* the four watches score identically, so listing the other three as "also close"
+     says nothing - drop them when a watch won */
+  const GUARDS=["north","south","east","west"];
+  const others = lq.out.keys
+    .filter(k=>k!==lq.out.win)
+    .filter(k=>!(GUARDS.includes(lq.out.win) && GUARDS.includes(k)))
+    .slice(0,3);
+  return `<section class="band wrap stack g-l" id="qzTop">
+    <button class="qexit" onclick="resetQuiz()">${he?"‹ חזרה לכל החידונים":"‹ Back to all the quizzes"}</button>
+    <div class="qresult">
+      <div class="qrimg is-leg"><img src="${lqSrc(r.k)}" alt="${esc(name)}"></div>
+      <div class="stack g-s">
+        <span class="eyebrow">${esc(lq.out.rare?(he?"תוצאה נדירה":"A rare result"):(he?"השיבוץ שלך":"Your placement"))}</span>
+        <h2>${esc(name)}</h2>
+        <span class="qrkick">${esc(Gx(c.kick))}</span>
+        <p class="lede">${esc(Gx(c.body))}</p>
+        <div class="qchips">${c.traits.map(t=>`<span class="qchip">${esc(Gx(t))}</span>`).join("")}</div>
+        ${others.length?`<p class="dim" style="font-size:.9rem">${he?"קרוב גם ל":"Also close to"}: ${esc(others.map(k=>Gx(lang==="he"?lqRes(k).he.name:lqRes(k).en.name)).join(" · "))}</p>`:""}
+
+        <div class="qshare">
+          <div class="stack g-xs">
+            <b>${esc(he?`${lq.out.rare?"נבחרתי":"שובצתי"} ל${name}. ואתם?`:`I got ${name}. And you?`)}</b>
+            <span class="dim" style="font-size:.88rem">${he
+              ? "שלחו את השיבוץ לקבוצה ותראו מי נופל איפה."
+              : "Send your placement to the group and see who lands where."}</span>
+          </div>
+          <div class="btns">
+            <a class="btn btn-solid" href="https://wa.me/?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">${he?"שיתוף בוואטסאפ":"Share on WhatsApp"}</a>
+            <button class="btn btn-quiet" data-share="${esc(shareText)}" onclick="qzCopy(this)">${he?"העתקת הקישור":"Copy the link"}</button>
+          </div>
+        </div>
+
+        <div class="qacts">
+          <button class="btn btn-sm btn-quiet" onclick="lqIntro()">${he?"שוב":"Again"}</button>
+          <button class="btn btn-sm btn-quiet" onclick="go('lore');setLore('legions')">${he?"כל עשרים הלגיונות":"All twenty legions"}</button>
+          <button class="btn btn-sm btn-quiet" onclick="resetQuiz()">${he?"לכל החידונים":"All the quizzes"}</button>
+        </div>
+      </div>
+    </div>
+
+    ${leadForm()}
+    ${qzCounter("legions")}
+  </section>`;
+}
+
+/* the three quizzes report into one tally; the placement keeps its results in
+   LEGION_QUIZ rather than QUIZZES, so the counter asks for names through here */
+function qzRows(q){
+  if(q==="legions") return LQ.results.map(r=>({k:r.k, name:Gx(lang==="he"?r.he.name:r.en.name)}));
+  return QUIZZES[q].results.map(r=>({k:r.k, name:qzResultCopy(r).name}));
+}
+const QZ_ALL = ["angels","demons","legions"];
+
 function qzCounter(only){
   const he=lang==="he";
   const t=qzTally; if(!t) return "";
-  const quizzes = only ? [only] : ["angels","demons"];
+  const quizzes = only ? [only] : QZ_ALL;
   const shared = !!QUIZ_API;          /* a live tally from everyone, or just this browser */
   const blocks = quizzes.map(q=>{
-    const Q=QUIZZES[q], tal=t[q]||{};
-    const total=Q.results.reduce((s,r)=>s+(tal[r.k]||0),0);
+    const rows=qzRows(q), tal=t[q]||{};
+    const total=rows.reduce((s,r)=>s+(tal[r.k]||0),0);
     if(!total) return "";
 
     /* say plainly whose results these are - a small sample reads as "only me" otherwise */
@@ -2984,15 +3305,17 @@ function qzCounter(only){
             : "Early days. The split will settle as more people finish.")
       : "";
 
+    const eyebrow = q==="angels" ? (he?"מי עבר כאן מלמעלה":"Who came through from above")
+                  : q==="demons" ? (he?"ומי מלמטה":"And from below")
+                  : (he?"ואיך נפלו השיבוצים":"And how the placements fell");
     return `<div class="stack g-xs">
-      <span class="eyebrow">${esc(q==="angels"?(he?"מי עבר כאן מלמעלה":"Who came through from above"):(he?"ומי מלמטה":"And from below"))}</span>
+      <span class="eyebrow">${esc(eyebrow)}</span>
       <b class="qtotal">${esc(head)}</b>
       <div class="qtal">
-        ${Q.results.map(r=>{
+        ${rows.map(r=>{
           const n=tal[r.k]||0, p=total?Math.round(n/total*100):0;
-          const cc=qzResultCopy(r);
           return `<div class="qtrow">
-            <span>${esc(cc.name)}</span>
+            <span>${esc(r.name)}</span>
             <i><b style="inline-size:${p}%"></b></i>
             <span class="qtn num">${n}</span>
           </div>`;
@@ -3001,7 +3324,25 @@ function qzCounter(only){
       ${early?`<span class="dim" style="font-size:.78rem">${esc(early)}</span>`:""}
     </div>`;}).filter(Boolean).join("");
   if(!blocks) return "";
-  return `<div class="qcounter${quizzes.length===1?" is-one":""}">${blocks}</div>`;
+
+  /* On the hub, the two columns each carry their own count and the eye reads them
+     as two small numbers. The line above adds them up - it is the number people
+     actually want, and it is the honest one: quizzes answered, not heads counted,
+     because plenty of readers do both. */
+  let grand = "";
+  if(!only){
+    const all = QZ_ALL.reduce((s,q)=>{
+      const tal=t[q]||{};
+      return s + qzRows(q).reduce((n,r)=>n+(tal[r.k]||0),0);
+    },0);
+    if(all){
+      const txt = he
+        ? (shared ? `עד עכשיו נענו כאן ${all} חידונים` : `${all} חידונים במכשיר הזה`)
+        : (shared ? `${all} quizzes answered here so far` : `${all} quizzes on this device`);
+      grand = `<p class="qgrand">${esc(txt)}</p>`;
+    }
+  }
+  return `${grand}<div class="qcounter${quizzes.length===1?" is-one":""}">${blocks}</div>`;
 }
 
 function pageHero(photoName, eyebrow, title, lede, pos, op){
