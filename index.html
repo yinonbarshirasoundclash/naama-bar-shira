@@ -2901,7 +2901,8 @@ function letterForm(){
 
 /* ---------- QUIZ ENGINE ---------- */
 let qz = {stage:"menu", quiz:null, gender:"f", i:0, ans:[], out:null};
-let qzTally = null;                      /* {angels:{k:n}, demons:{k:n}} */
+let qzTally  = null;   /* what the counter shows: the server's numbers, plus this device's for any quiz the server does not know */
+let qzServer = null;   /* only what the server actually returned, so we never call a local count "people" */
 
 /* {נקבה|זכר} inside a Hebrew string picks a side by the chosen gender */
 function Gx(s){ return String(s).replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (_,f,m)=> qz.gender==="f" ? f : m); }
@@ -2912,19 +2913,31 @@ function localTally(){
 }
 function bumpLocal(quiz,k){
   try{
-    const t=localTally()||{angels:{},demons:{}};
+    const t=localTally()||{};
     t[quiz]=t[quiz]||{}; t[quiz][k]=(t[quiz][k]||0)+1;
     localStorage.setItem("nbs_quiz_tally", JSON.stringify(t));
     return t;
   }catch(e){ return null; }
 }
+/* The server's numbers win for every quiz it knows about, but a quiz it has never
+   heard of - a new one, added to the site before the counter script was updated -
+   keeps this device's own count instead of vanishing. qzShared() then makes sure
+   those are never described as "people", only as results on this device. */
+function mergeTally(local, server){
+  const out = {};
+  Object.keys(local||{}).forEach(q => out[q] = local[q]);
+  Object.keys(server||{}).forEach(q => out[q] = server[q]);
+  return out;
+}
+const qzShared = q => !!(QUIZ_API && qzServer && qzServer[q]);
+
 async function loadTally(){
   if(!QUIZ_API){ qzTally = localTally(); return; }
   try{
     const r = await fetch(QUIZ_API, {method:"GET"});
-    if(r.ok) qzTally = await r.json();
+    if(r.ok) qzServer = await r.json();
   }catch(e){ /* fall through to the local count */ }
-  if(!qzTally) qzTally = localTally();      /* offline, or the counter is down */
+  qzTally = mergeTally(localTally(), qzServer);
 }
 async function reportResult(quiz, k){
   const local = bumpLocal(quiz,k);
@@ -2933,9 +2946,9 @@ async function reportResult(quiz, k){
     const r = await fetch(QUIZ_API, {method:"POST",
       headers:{"Content-Type":"text/plain;charset=utf-8"},   /* text/plain avoids a CORS preflight Apps Script cannot answer */
       body: JSON.stringify({quiz, result:k, gender:qz.gender, lang})});
-    if(r.ok){ qzTally = await r.json(); render(); return; }
+    if(r.ok){ qzServer = await r.json(); qzTally = mergeTally(local, qzServer); render(); return; }
   }catch(e){ /* the quiz still works without the counter */ }
-  qzTally = local; render();                /* show this device's own count instead */
+  qzTally = mergeTally(local, qzServer); render();   /* keep whatever the server did give us */
 }
 
 /* Answers decide the result; the tally only breaks the tie toward whoever is rare.
@@ -3561,11 +3574,11 @@ function qzCounter(only){
   const he=lang==="he";
   const t=qzTally; if(!t) return "";
   const quizzes = only ? [only] : QZ_ALL;
-  const shared = !!QUIZ_API;          /* a live tally from everyone, or just this browser */
   const blocks = quizzes.map(q=>{
     const rows=qzRows(q), tal=t[q]||{};
     const total=rows.reduce((s,r)=>s+(tal[r.k]||0),0);
     if(!total) return "";
+    const shared = qzShared(q);       /* everyone's tally, or only this browser's */
 
     /* say plainly whose results these are - a small sample reads as "only me" otherwise */
     const head = he
@@ -3608,15 +3621,20 @@ function qzCounter(only){
    quizzes answered rather than heads, because plenty of readers do all three. */
 function qzGrand(){
   const he=lang==="he", t=qzTally; if(!t) return "";
-  const shared=!!QUIZ_API;
-  const all = QZ_ALL.reduce((s,q)=>{
-    const tal=t[q]||{};
-    return s + qzRows(q).reduce((n,r)=>n+(tal[r.k]||0),0);
-  },0);
+  const count = q => { const tal=t[q]||{}; return qzRows(q).reduce((n,r)=>n+(tal[r.k]||0),0); };
+  const all = QZ_ALL.reduce((s,q)=>s+count(q),0);
   if(!all) return "";
+  /* only call it everyone's number when every quiz in the total really came from the
+     server; one local-only quiz in the mix and the whole sentence would be a lie */
+  const shared = QZ_ALL.every(q => count(q)===0 || qzShared(q));
+  const mixed  = !shared && QZ_ALL.some(q => count(q)>0 && qzShared(q));
   const txt = he
-    ? (shared ? `עד עכשיו נענו כאן ${all} חידונים` : `${all} חידונים במכשיר הזה`)
-    : (shared ? `${all} quizzes answered here so far` : `${all} quizzes on this device`);
+    ? (shared ? `עד עכשיו נענו כאן ${all} חידונים`
+      : mixed  ? `${all} חידונים נענו עד עכשיו`
+               : `${all} חידונים במכשיר הזה`)
+    : (shared ? `${all} quizzes answered here so far`
+      : mixed  ? `${all} quizzes answered so far`
+               : `${all} quizzes on this device`);
   return `<p class="qgrand">${esc(txt)}</p>`;
 }
 
