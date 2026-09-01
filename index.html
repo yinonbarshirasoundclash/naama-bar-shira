@@ -1102,12 +1102,12 @@ const FORMS_EMAIL_CC = "naama.nbs@gmail.com";       // and a copy here
 const T = {
   he:{
     dir:"rtl", brand:"נעמה בר שירה", brandSub:"מלאכיות עליון", lang:"EN",
-    nav:{home:"פתח",author:"הסופרת",worlds:"הסדרות",books:"הספרים",lore:"העולם",gallery:"הגלריה",quiz:"חידונים",field:"בשטח",reviews:"ביקורות",shop:"החנות",events:"אירועים",speaking:"הרצאות",community:"המישלינגים",rights:"Rights"},
+    nav:{home:"פתח",author:"הסופרת",worlds:"הסדרות",books:"הספרים",lore:"העולם",quiz:"חידונים",field:"בשטח",reviews:"ביקורות",shop:"החנות",events:"אירועים",speaking:"הרצאות",community:"המישלינגים",rights:"Rights"},
     cart:{title:"ההזמנה שלך",empty:"עוד לא הוספת ספרים.",emptyHint:"החנות פתוחה - כל הספרים נשלחים חתומים בבקשה.",total:"סה״כ",send:"שליחת ההזמנה בוואטסאפ",bit:"תשלום בביט",note:"ההזמנה נשלחת ישירות לנעמה. נאשר, נסכם משלוח, ונשלח פרטי תשלום בביט.",signed:"אני רוצה עותק חתום בהקדשה",signedHint:"ללא תוספת תשלום",remove:"הסרה",name:"שם מלא",addr:"כתובת למשלוח",dedication:"למי להקדיש?",dedicationPh:"לדוגמה: לרוני, שקוראת בלילות"}
   },
   en:{
     dir:"ltr", brand:"N.B. SHIRA", brandSub:"The Archangel Sisters", lang:"עב",
-    nav:{home:"Threshold",author:"Author",worlds:"The Series",books:"Books",lore:"The World",gallery:"Gallery",quiz:"Quizzes",field:"On Tour",reviews:"Reviews",shop:"Shop",events:"Events",speaking:"Speaking",community:"Readers",rights:"Rights"},
+    nav:{home:"Threshold",author:"Author",worlds:"The Series",books:"Books",lore:"The World",quiz:"Quizzes",field:"On Tour",reviews:"Reviews",shop:"Shop",events:"Events",speaking:"Speaking",community:"Readers",rights:"Rights"},
     cart:{title:"Your order",empty:"No books yet.",emptyHint:"The shop is open - every copy ships signed on request.",total:"Total",send:"Send order via WhatsApp",bit:"Pay with Bit",note:"The order goes straight to Naama. We confirm, arrange shipping, and send Bit payment details.",signed:"I'd like a signed, inscribed copy",signedHint:"No extra charge",remove:"Remove",name:"Full name",addr:"Shipping address",dedication:"Inscribe it to…",dedicationPh:"e.g. For Roni, who reads at night"}
   }
 };
@@ -1503,7 +1503,7 @@ const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 /* ---------- ROUTER ---------- */
 /* Nav order follows the reader: what there is, how to buy it, then the world
    behind it. The author and the rest of the shelf come after. */
-const VIEWS = ["home","books","shop","worlds","lore","gallery","quiz","author","reviews","field","events","speaking","community","rights"];
+const VIEWS = ["home","books","shop","worlds","lore","quiz","author","reviews","field","events","speaking","community","rights"];
 /* Reachable by address and from the footer, deliberately kept out of the nav row */
 const EXTRA_VIEWS = ["privacy","terms"];
 const ALL_VIEWS = VIEWS.concat(EXTRA_VIEWS);
@@ -1519,10 +1519,18 @@ function setHash(v){
   try{ history.replaceState(null, "", v==="home" ? location.pathname : "#"+v); }catch(e){}
 }
 const viewUrl = v => location.origin + location.pathname + (v==="home" ? "" : "#"+v);
+/* The gallery used to be a page of its own. It is now the first rubric inside
+   the world, so #gallery forwards there instead of 404-ing to the front door -
+   readers have shared that address. */
+const LEGACY_VIEWS = {gallery:["lore","chars"]};
 function fromHash(){
   const h = (location.hash||"").replace(/^#/,"");
+  const g = LEGACY_VIEWS[h];
+  if(g){ loreTab = g[1]; return g[0]; }
   return ALL_VIEWS.includes(h) ? h : "home";
 }
+/* Open the world on a named rubric in one step, without painting the page twice. */
+function goLore(k){ loreTab = k; go("lore"); }
 addEventListener("hashchange", ()=>{ const v=fromHash(); if(v!==view){ view=v; if(v==="quiz") qzLoaded=false; render(); } });
 function fitNav(){
   const bar=document.querySelector(".topbar-in"), nav=document.getElementById("nav");
@@ -1735,7 +1743,7 @@ function vHome(){
         : "Michael, Gabriel, Raphael and Uriel - written as women. That is the idea the whole universe opened from."}</p>
     </div>
     ${galRow(GALLERY.angels)}
-    <button class="btn btn-quiet" style="align-self:start" onclick="go('gallery')">${he?"לגלריה המלאה":"See the full gallery"}</button>
+    <button class="btn btn-quiet" style="align-self:start" onclick="goLore('chars')">${he?"לכל הדמויות":"See the whole cast"}</button>
   </section>
 
   <hr class="rule">
@@ -2127,7 +2135,7 @@ function openFig(k){
   const body = text
     ? `<p>${esc(text)}</p>`
       + (lore?`<div style="margin-block-start:.4rem"><button class="btn btn-sm btn-quiet"
-             onclick="closeBook();go('lore');setLore('demons')">${he?"לשושלות השדים":"To the demon dynasties"}</button></div>`:"")
+             onclick="closeBook();goLore('demons')">${he?"לשושלות השדים":"To the demon dynasties"}</button></div>`:"")
     : `<p class="dim">${he?"התיאור של הדמות הזו עוד נכתב, ויעלה לכאן בקרוב.":"This character's entry is still being written, and will appear here soon."}</p>`;
   document.getElementById("bookPanel").innerHTML = `
     <button class="lb-close" onclick="closeBook()" aria-label="${he?"סגירה":"Close"}">✕</button>
@@ -2147,15 +2155,19 @@ function openFig(k){
   document.getElementById("bookLb").dataset.open="true";
   document.body.style.overflow="hidden";
 }
-function vGallery(){
+/* Was its own page. Now the opening rubric of the world: the cast a visitor
+   recognises, before the dynasties and the circles they will not. */
+function loreChars(){
   const he=lang==="he";
-  return `<section class="band wrap stack g-xl">
+  return `<div class="stack g-xl">
     <div class="stack g-s">
-      <span class="eyebrow">${he?"הגלריה":"Gallery"}</span>
-      <h2>${he?"הפנים של העולם":"The faces of the world"}</h2>
-      <p class="lede">${he
-        ? "ארבע אחיות שהן הגלגול הנשי של ארבעת המלאכים הראשיים, ולצידן שאר תושבי היקום. לחצו על תמונה כדי לפתוח אותה."
-        : "Four sisters who are the feminine incarnations of the four archangels, and alongside them the rest of the universe's inhabitants. Tap an image to open it."}</p>
+      <h3 class="h3">${he?"הפנים של העולם":"The faces of the world"}</h3>
+      <p class="dim" style="max-width:62ch">${he
+        ? "ארבע אחיות שהן הגלגול הנשי של ארבעת המלאכים הראשיים, ולצידן שאר תושבי היקום."
+        : "Four sisters who are the feminine incarnations of the four archangels, and alongside them the rest of the universe's inhabitants."}</p>
+      <span class="hint"><span class="hintdot" aria-hidden="true">+</span>${he
+        ? "לחצו על כל דמות כדי לקרוא עליה"
+        : "Tap any character to read about them"}</span>
     </div>
 
     <div class="stack g-m">
@@ -2175,19 +2187,7 @@ function vGallery(){
       </div>
       ${galRow(GALLERY.others)}
     </div>
-
-    <div class="crosslink">
-      <div class="stack g-xs">
-        <span class="eyebrow">${he?"בעולם":"In the world"}</span>
-        <b>${he?"שושלות השדים, מאוירות":"The demon dynasties, illustrated"}</b>
-        <p class="dim">${he
-          ? "תשע עשרה דמויות מעולם מטה, מהשטן ולילית ועד שדי העופרית, כפי שהן מופיעות בנספחי הספרים."
-          : "Nineteen figures from the world below, from Satan and Lilith to the Ophrit demons, as they appear in the appendices of the books."}</p>
-      </div>
-      <button class="btn btn-sm" onclick="go('lore')">${he?"לעולם":"To the world"}</button>
-    </div>
-
-  </section>`;
+  </div>`;
 }
 
 function revCard(r,big){
@@ -2272,15 +2272,18 @@ function openField(id){
    dissolved into the page ground, so it warms the section without ever
    competing with the text on top of it. */
 /* ---------- APPENDICES ---------- */
-let loreTab = "rooms";
+let loreTab = "chars";
 function setLore(k){ loreTab=k; render(); const t=document.getElementById("loreTop"); if(t) t.scrollIntoView({block:"start",behavior:"smooth"}); }
 
 function vLore(){
   const he=lang==="he";
-  /* The four illustrated tabs come first, because they are what a visitor should
-     find without hunting. The two text lists sit behind them - until they are
-     illustrated too, and then this order is worth revisiting. */
-  const tabs=[{k:"rooms",he:"חדרי החאן",en:"Rooms of the Khan"},
+  /* The illustrated rubrics come first, because they are what a visitor should
+     find without hunting, and the cast opens the page because it is the one
+     rubric a first-time reader already has a reason to care about. The two text
+     lists sit behind them - until they are illustrated too, and then this order
+     is worth revisiting. */
+  const tabs=[{k:"chars",he:"דמויות ראשיות",en:"Main characters"},
+              {k:"rooms",he:"חדרי החאן",en:"Rooms of the Khan"},
               {k:"legions",he:"לגיונות המלאכים",en:"Angel legions"},
               {k:"sheol",he:"מדורי השאול",en:"The circles of Sheol"},
               {k:"demons",he:"שושלות השדים",en:"Demon dynasties"},
@@ -2289,14 +2292,15 @@ function vLore(){
   return `${pageHero("ברק עם סימניה מעוצבת מתנה",
       he?"עולם מלאכיות עליון":"The world of the Archangel Sisters",
       he?"מה שנשאר אחרי העמוד האחרון":"What is left after the last page",
-      he?"פנטזיה שנשענת על מיתולוגיה יהודית: שושלות שדים מאוירות מלילית ועד אשמדאי, שבעת מדורי השאול, עשרים לגיונות מלאכים, חדרי החאן בירושלים ורצף של שלושים ושלושה דורות. זה העולם ממשיך לעבוד גם כשסוגרים את הכריכה - הנספחים שבסוף הספרים, פתוחים לקריאה."
-        : "Illustrated demon dynasties, twenty angel legions, the rooms of the Khan in Jerusalem, and a line of thirty-three generations. This is the world still working after the cover closes - the appendices from the back of the books, open to read.",
+      he?"פנטזיה שנשענת על מיתולוגיה יהודית: הדמויות הראשיות, חדרי החאן בירושלים, עשרים לגיונות מלאכים, שבעת מדורי השאול, שושלות שדים מאוירות מלילית ועד אשמדאי ורצף של שלושים ושלושה דורות. זה העולם ממשיך לעבוד גם כשסוגרים את הכריכה - הדמויות והנספחים, פתוחים לקריאה."
+        : "The main cast, the rooms of the Khan in Jerusalem, twenty angel legions, the seven circles of Sheol, illustrated demon dynasties and a line of thirty-three generations. This is the world still working after the cover closes - the characters and the appendices, open to read.",
       "center 46%", .30)}
 
   <section class="band wrap stack g-l" id="loreTop">
     <div class="otabs">
       ${tabs.map(t=>`<button class="otab" data-on="${t.k===loreTab}" onclick="setLore('${t.k}')">${esc(L(t))}</button>`).join("")}
     </div>
+    ${loreTab==="chars"?loreChars():""}
     ${loreTab==="demons"?loreDemons():""}
     ${loreTab==="legions"?loreList(LEGIONS, he?"עשרים הלגיונות":"The twenty legions",
         he?"כל מלאך משתייך ללגיון, וכל לגיון מחזיק חלק אחר של העולם: מי נלחם, מי מרפא, מי מגדל את האוכל, ומי מוחק את העקבות."
@@ -4252,12 +4256,9 @@ const SEO = {
   worlds:{he:["הסדרות של נעמה בר שירה - מאיפה מתחילים לקרוא",
               "ארבע סדרות ביקום אחד: מלאכיות עליון, מלאכיות בשערי השחר, בין השמשות ואיזבלה מלכת ירושלים. מדריך סדר קריאה לקוראים חדשים."],
           en:["The series - where to start reading","Four series in one universe, with a guide to the reading order."]},
-  lore:{he:["עולם מלאכיות עליון - שדים, מלאכים ושבעת מדורי השאול",
-            "הנספחים מתוך הספרים: תשע עשרה שושלות שדים מאוירות, עשרים לגיונות מלאכים, חדרי חאן המלאכים בירושלים ושלושים ושלושה דורות. פנטזיה על בסיס מיתולוגיה יהודית."],
-        en:["The world of The Archangel Sisters","Demon dynasties, angel legions and the circles of Sheol, from the appendices of the books."]},
-  gallery:{he:["הדמויות - הגלריה של מלאכיות עליון",
-               "ארבע האחיות מיקה, גבי, ריף ואור, ולצידן שאר תושבי היקום: מלאכים, שדים ומישלינגים, מאוירים."],
-           en:["The characters - gallery","The four archangel sisters and the rest of the cast, illustrated."]},
+  lore:{he:["עולם מלאכיות עליון - הדמויות, השדים, המלאכים ושבעת מדורי השאול",
+            "הדמויות הראשיות מיקה, גבי, ריף ואור ולצידן שאר תושבי היקום, ועוד תשע עשרה שושלות שדים מאוירות, עשרים לגיונות מלאכים, שבעת מדורי השאול, חדרי חאן המלאכים בירושלים ושלושים ושלושה דורות. פנטזיה על בסיס מיתולוגיה יהודית."],
+        en:["The world of The Archangel Sisters","The main cast, the demon dynasties, the angel legions and the circles of Sheol, illustrated."]},
   quiz:{he:["חידונים - לאיזו מלאכית או שד אתם שייכים",
             "שני חידונים מתוך עולם מלאכיות עליון: חידון המלאכיות וחידון השדים. שתים עשרה שאלות, ותוצאה עם איור."],
         en:["Quizzes - which archangel or demon are you","Two quizzes from the world of the books."]},
@@ -4455,7 +4456,7 @@ function render(){
   document.getElementById("nav").innerHTML = VIEWS.map(v=>
     `<button onclick="go('${v}')" ${v===view?'aria-current="page"':""}>${esc(d.nav[v])}</button>`).join("");
 
-  const map={home:vHome,author:vAuthor,worlds:vWorlds,books:vBooks,lore:vLore,gallery:vGallery,quiz:vQuiz,field:vField,reviews:vReviews,shop:vShop,events:vEvents,speaking:vSpeaking,community:vCommunity,rights:vRights,privacy:vPrivacy,terms:vTerms};
+  const map={home:vHome,author:vAuthor,worlds:vWorlds,books:vBooks,lore:vLore,quiz:vQuiz,field:vField,reviews:vReviews,shop:vShop,events:vEvents,speaking:vSpeaking,community:vCommunity,rights:vRights,privacy:vPrivacy,terms:vTerms};
   const app=document.getElementById("app");
   app.innerHTML=`<div class="view">${(map[view]||vHome)()}</div>` + footEl();
   applySeo(view);
