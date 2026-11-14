@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>עורך הגיליון · דואר עורבים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#15122a; --ink:#211c3a; --text:#3a3546; --parchment:#f6efe2; --parchment-2:#efe4cf;
+    --gold:#b8893b; --gold-soft:#f3dfa8; --brown:#7a4e12; --line:#d8c7a1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Assistant',Arial,sans-serif;background:var(--night);color:var(--text);min-height:100vh}
+  header.top{
+    position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:12px 20px;background:var(--ink);border-bottom:1px solid #ffffff1a;color:var(--gold-soft);
+  }
+  header.top h1{font-family:'Frank Ruhl Libre',David,Georgia,serif;font-size:22px;font-weight:900;margin-left:auto}
+  header.top h1 small{font-family:'Assistant',sans-serif;font-weight:400;font-size:14px;color:#e9dfc9aa;margin-right:8px}
+  .btn{
+    font:inherit;font-weight:700;font-size:15px;cursor:pointer;border-radius:999px;padding:9px 18px;border:0;
+    background:linear-gradient(180deg,#f6e4b4,#d9b46a);color:var(--ink);white-space:nowrap;
+  }
+  .btn.ghost{background:transparent;color:var(--gold-soft);border:1px solid #f3dfa866}
+  .btn:hover{filter:brightness(1.06)}
+  .status{font-size:13px;color:#e9dfc9aa;min-width:120px}
+  main{display:grid;grid-template-columns:minmax(380px,520px) 1fr;gap:0;height:calc(100vh - 62px)}
+  .form{overflow:auto;background:var(--parchment);padding:22px 22px 60px}
+  .preview{overflow:hidden;background:#2a2350;display:flex;flex-direction:column}
+  .preview .bar{color:#e9dfc9cc;font-size:13px;padding:10px 16px;display:flex;gap:10px;align-items:center}
+  .preview .bar button{font:inherit;font-size:13px;background:#ffffff14;color:#e9dfc9;border:1px solid #ffffff22;border-radius:6px;padding:4px 10px;cursor:pointer}
+  .preview .bar button.on{background:var(--gold-soft);color:var(--ink)}
+  .frame-wrap{flex:1;overflow:auto;display:flex;justify-content:center;padding:0 16px 24px}
+  iframe{border:0;background:#fff;width:100%;max-width:700px;height:100%;min-height:600px;border-radius:6px;box-shadow:0 20px 50px -20px #000a;transition:max-width .25s}
+  iframe.mobile{max-width:390px}
+  fieldset{border:1px solid var(--line);border-radius:6px;padding:16px 16px 6px;margin-bottom:18px;background:#fbf7ef}
+  legend{font-family:'Frank Ruhl Libre',David,Georgia,serif;font-weight:700;font-size:19px;color:var(--ink);padding:0 8px}
+  legend span{color:var(--gold)}
+  .hint{font-size:13px;color:#7a6f63;margin:-2px 0 10px}
+  label{display:block;font-size:13.5px;font-weight:700;color:var(--brown);margin-bottom:4px}
+  .f{margin-bottom:12px}
+  input,textarea,select{
+    width:100%;font:inherit;font-size:16px;color:var(--text);background:#fff;border:1px solid #d8c7a1;border-radius:5px;padding:9px 11px;
+  }
+  textarea{min-height:110px;resize:vertical;line-height:1.6}
+  input:focus,textarea:focus,select:focus{outline:2px solid #b8893b55;border-color:var(--gold)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .rows .item{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0;border-top:1px dashed #d8c7a1}
+  .rows .item:first-child{border-top:0;padding-top:0}
+  .rows .item .wide{grid-column:1 / -1}
+  .add{font:inherit;font-size:14px;font-weight:700;color:var(--brown);background:none;border:1px dashed var(--gold);border-radius:6px;padding:6px 12px;cursor:pointer;margin:2px 0 12px}
+  .help{background:var(--ink);color:#efe6d3;border-radius:6px;padding:14px 16px;margin-bottom:18px;font-size:14.5px;line-height:1.7}
+  .help b{color:var(--gold-soft)}
+  .help ol{padding-right:20px;margin-top:6px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);opacity:0;background:var(--gold-soft);color:var(--ink);font-weight:700;padding:10px 18px;border-radius:999px;box-shadow:0 10px 30px #0007;transition:.25s;z-index:20}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (max-width:900px){
+    main{grid-template-columns:1fr;height:auto}
+    .form{overflow:visible}
+    .preview{min-height:80vh}
+    header.top h1{width:100%;margin:0}
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>דואר עורבים <small>עורך הגיליון</small></h1>
+  <span class="status" id="status"></span>
+  <button class="btn ghost" id="btn-clear" type="button">ניקוי לגיליון חדש</button>
+  <button class="btn ghost" id="btn-download" type="button">הורדת קובץ</button>
+  <button class="btn" id="btn-copy" type="button">העתקת הגיליון ל-MailerLite</button>
+</header>
+
+<main>
+  <section class="form" aria-label="שדות הגיליון">
+    <div class="help">
+      <b>איך זה עובד:</b>
+      <ol>
+        <li>ממלאים את השדות. התצוגה משמאל מתעדכנת תוך כדי הקלדה. חלק שנשאר ריק לא יופיע בגיליון.</li>
+        <li>הכול נשמר אוטומטית בדפדפן הזה, כך שאפשר לסגור ולחזור.</li>
+        <li>כשהגיליון מוכן לוחצים <b>"העתקת הגיליון ל-MailerLite"</b>, ושם: Campaigns ← Create ← Custom HTML editor ← Code from scratch ← מדביקים.</li>
+      </ol>
+      <div style="margin-top:6px">טיפ: <b>**מילים בין כוכביות**</b> יופיעו מודגשות, וקישור שמדביקים בטקסט הופך ללחיץ.</div>
+    </div>
+
+    <fieldset>
+      <legend><span>✦</span> פרטי הגיליון</legend>
+      <div class="row2">
+        <div class="f"><label for="issue">מספר גיליון</label><input id="issue" data-k="issue" inputmode="numeric" placeholder="1"></div>
+        <div class="f"><label for="date">תאריך</label><input id="date" data-k="date" placeholder="20 בנובמבר 2026"></div>
+      </div>
+      <div class="f"><label for="subject">שורת נושא (מופיעה בתיבת המייל)</label><input id="subject" data-k="subject" placeholder="גיליון #1 | הספר שלא נתן לנו לישון"></div>
+      <div class="f"><label for="preheader">טקסט מקדים (השורה האפורה שמופיעה אחרי הנושא)</label><input id="preheader" data-k="preheader" placeholder="ועוד: 3 ספרים חדשים ומפה שצוירה על מפית"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>✦</span> מכתב מהמגדל</legend>
+      <p class="hint">3–5 משפטים אישיים: מה קרה אצלנו, מה קראנו, מה מחכה בגיליון.</p>
+      <div class="f"><label for="letter">המכתב</label><textarea id="letter" data-k="letter" placeholder="שלום לכל הקוראות והקוראים, ..."></textarea></div>
+      <div class="f"><label for="signer">חותמת</label>
+        <select id="signer" data-k="signer"><option>נעמה</option><option>יעל</option><option>נעמה ויעל</option></select>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>✦</span> הספר שעל השולחן</legend>
+      <div class="row2">
+        <div class="f"><label for="book_title">שם הספר</label><input id="book_title" data-k="book_title"></div>
+        <div class="f"><label for="book_author">סופר/ת</label><input id="book_author" data-k="book_author"></div>
+      </div>
+      <div class="f"><label for="book_text">למה דווקא הספר הזה (בלי ספוילרים)</label><textarea id="book_text" data-k="book_text"></textarea></div>
+      <div class="f"><label for="book_like">מתאים במיוחד למי שאהב/ה</label><input id="book_like" data-k="book_like" placeholder="ספר מוכר אחד או שניים"></div>
+      <div class="f"><label for="book_img">קישור לתמונת כריכה (לא חובה)</label><input id="book_img" data-k="book_img" dir="ltr" placeholder="https://..."></div>
+      <div class="f"><label for="book_link">קישור לכפתור "לפרטים על הספר" (לא חובה)</label><input id="book_link" data-k="book_link" dir="ltr" placeholder="https://..."></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>✦</span> חדש על המדף</legend>
+      <div class="rows" id="shelf"></div>
+      <button class="add" type="button" data-add="shelf">+ עוד ספר</button>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>✦</span> מאחורי הקלעים</legend>
+      <p class="hint">סצנה שנמחקה, מפה, מאיפה הגיע שם של דמות, קטע מטיוטה.</p>
+      <div class="f"><label for="bts_title">כותרת קטנה (לא חובה)</label><input id="bts_title" data-k="bts_title"></div>
+      <div class="f"><label for="bts_text">הטקסט</label><textarea id="bts_text" data-k="bts_text"></textarea></div>
+      <div class="f"><label for="bts_img">קישור לתמונה (לא חובה)</label><input id="bts_img" data-k="bts_img" dir="ltr" placeholder="https://..."></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>✦</span> לוח המפגשים</legend>
+      <div class="rows" id="events"></div>
+      <button class="add" type="button" data-add="events">+ עוד מפגש</button>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>✦</span> פינת הקוראים</legend>
+      <p class="hint">שאלה, חידה או סקר קטן. אפשר גם תשובות נבחרות מהגיליון הקודם.</p>
+      <div class="f"><label for="readers">הטקסט</label><textarea id="readers" data-k="readers"></textarea></div>
+    </fieldset>
+  </section>
+
+  <section class="preview" aria-label="תצוגה מקדימה">
+    <div class="bar">
+      תצוגה מקדימה
+      <button type="button" id="v-desk" class="on">מחשב</button>
+      <button type="button" id="v-mob">נייד</button>
+    </div>
+    <div class="frame-wrap"><iframe id="frame" title="תצוגה מקדימה של הגיליון"></iframe></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== הגדרות קבועות: לשנות כאן בלבד ===== */
+var NEWSLETTER_NAME = 'דואר עורבים';
+var AUTHORS = 'נעמה בר שירה ויעל שרר';
+var SIGNUP_URL = 'https://nbshira.com/newsletter/';
+var POSTAL_ADDRESS = ''; // כתובת למשלוח דואר (MailerLite מבקש שתופיע בתחתית)
+/* ========================================== */
+
+var STORE_KEY = 'ravens-editor-v1';
+var state = { shelf: [{},{},{}], events: [{},{}] };
+
+var SHELF_FIELDS = [['title','שם הספר'],['by','סופר/ת, הוצאה'],['line','משפט אחד', true]];
+var EVENT_FIELDS = [['date','תאריך'],['name','האירוע'],['where','מקום או קישור', true]];
+
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function inline(s){
+  var t = esc(s);
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  t = t.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" style="color:#7a4e12;text-decoration:underline">$1</a>');
+  return t.replace(/\n/g, '<br>');
+}
+function paras(s, style){
+  if (!s || !s.trim()) return '';
+  return s.trim().split(/\n\s*\n/).map(function(p){ return '<p style="' + style + '">' + inline(p.trim()) + '</p>'; }).join('');
+}
+function safeUrl(u){ u = (u || '').trim(); return /^https?:\/\//.test(u) ? u : ''; }
+function filled(o){ return o && Object.keys(o).some(function(k){ return (o[k] || '').trim(); }); }
+
+/* ---------- בניית המייל ---------- */
+function buildEmail(d){
+  var serif = "'Frank Ruhl Libre',David,Georgia,'Times New Roman',serif";
+  var sans = "Assistant,Arial,Helvetica,sans-serif";
+  var P = 'margin:0 0 14px;font-family:' + sans + ';font-size:17px;line-height:1.7;color:#3a3546;text-align:right;';
+  var H2 = 'margin:0 0 14px;font-family:' + serif + ';font-size:25px;line-height:1.3;color:#211c3a;font-weight:700;text-align:right;';
+  var H3 = 'margin:0 0 8px;font-family:' + serif + ';font-size:19px;line-height:1.35;color:#7a4e12;font-weight:700;text-align:right;';
+  var sections = [];
+
+  function section(title, inner){
+    sections.push(
+      '<tr><td style="padding:30px 40px 18px;" class="px">' +
+        '<h2 style="' + H2 + '"><span style="color:#b8893b">✦</span> ' + esc(title) + '</h2>' + inner +
+      '</td></tr>'
+    );
+  }
+  function button(url, label, align){
+    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="' + (align || 'right') + '" style="margin:6px ' + (align === 'center' ? 'auto' : '0') + ' 4px;"><tr><td style="border-radius:24px;background:#211c3a;">' +
+      '<a href="' + esc(url) + '" style="display:inline-block;padding:12px 26px;font-family:' + sans + ';font-size:16px;font-weight:700;color:#f3dfa8;text-decoration:none;border-radius:24px;">' + esc(label) + '</a>' +
+      '</td></tr></table>';
+  }
+  function list(items){
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">' + items.map(function(it){
+      return '<tr><td valign="top" style="width:22px;padding:2px 0 12px;font-size:15px;color:#b8893b;">✦</td>' +
+             '<td style="padding:0 0 12px;font-family:' + sans + ';font-size:17px;line-height:1.6;color:#3a3546;text-align:right;">' + it + '</td></tr>';
+    }).join('') + '</table>';
+  }
+
+  if (d.letter && d.letter.trim()){
+    section('מכתב מהמגדל', paras(d.letter, P) +
+      '<p style="' + P + 'margin-top:6px;"><em>באהבה ובקסם,</em><br><strong style="color:#7a4e12">' + esc(d.signer || '') + '</strong></p>');
+  }
+  if ((d.book_title || '').trim() || (d.book_text || '').trim()){
+    var b = '';
+    var img = safeUrl(d.book_img);
+    if (img) b += '<div style="text-align:center;margin:0 0 16px;"><img src="' + esc(img) + '" alt="' + esc(d.book_title || 'כריכת הספר') + '" width="200" style="display:inline-block;width:200px;max-width:60%;height:auto;border-radius:3px;box-shadow:0 8px 20px rgba(0,0,0,.25);"></div>';
+    if ((d.book_title || '').trim()) b += '<h3 style="' + H3 + '">' + esc(d.book_title) + ((d.book_author || '').trim() ? ' <span style="color:#b8893b">·</span> ' + esc(d.book_author) : '') + '</h3>';
+    b += paras(d.book_text, P);
+    if ((d.book_like || '').trim()) b += '<p style="' + P + '"><strong style="color:#7a4e12">מתאים במיוחד למי שאהב/ה: </strong>' + inline(d.book_like) + '</p>';
+    var bl = safeUrl(d.book_link);
+    if (bl) b += button(bl, 'לפרטים על הספר');
+    section('הספר שעל השולחן', b);
+  }
+  var shelf = (d.shelf || []).filter(filled);
+  if (shelf.length){
+    section('חדש על המדף', list(shelf.map(function(s){
+      return '<strong style="color:#211c3a">' + esc(s.title || '') + '</strong>' +
+        ((s.by || '').trim() ? ' <span style="color:#7a6f63">– ' + esc(s.by) + '</span>' : '') +
+        ((s.line || '').trim() ? '<br>' + inline(s.line) : '');
+    })));
+  }
+  if ((d.bts_text || '').trim()){
+    var t = '';
+    if ((d.bts_title || '').trim()) t += '<h3 style="' + H3 + '">' + esc(d.bts_title) + '</h3>';
+    var bi = safeUrl(d.bts_img);
+    if (bi) t += '<div style="margin:0 0 14px;"><img src="' + esc(bi) + '" alt="' + esc(d.bts_title || 'מאחורי הקלעים') + '" width="560" style="display:block;width:100%;max-width:560px;height:auto;border-radius:4px;"></div>';
+    t += paras(d.bts_text, P);
+    section('מאחורי הקלעים', t);
+  }
+  var events = (d.events || []).filter(filled);
+  if (events.length){
+    section('לוח המפגשים', list(events.map(function(e){
+      var where = (e.where || '').trim();
+      var whereHtml = safeUrl(where) ? '<a href="' + esc(where) + '" style="color:#7a4e12;text-decoration:underline">לפרטים והרשמה</a>' : esc(where);
+      return '<strong style="color:#7a4e12">' + esc(e.date || '') + '</strong>' +
+        ((e.name || '').trim() ? ' <span style="color:#b8893b">·</span> ' + esc(e.name) : '') +
+        (where ? ' <span style="color:#b8893b">·</span> ' + whereHtml : '');
+    })));
+  }
+  if ((d.readers || '').trim()){
+    section('פינת הקוראים',
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td style="border-right:3px solid #b8893b;background:#efe4cf;padding:16px 18px;border-radius:2px;">' +
+      paras(d.readers, P) +
+      '<p style="' + P + 'margin:0;font-size:15px;color:#7a6f63;"><em>רוצים לענות? פשוט לוחצים "השב" למייל הזה. אנחנו קוראות הכול.</em></p>' +
+      '</td></tr></table>');
+  }
+
+  var divider = '<tr><td style="padding:0 40px;" class="px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid #d8c7a1;font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table></td></tr>';
+  var body = sections.length ? sections.join(divider) :
+    '<tr><td style="padding:40px;text-align:center;font-family:' + sans + ';color:#9a8f80;font-size:16px;">התחילו למלא את השדות, והגיליון יופיע כאן.</td></tr>';
+
+  var issueLine = [d.issue ? 'גיליון #' + esc(d.issue) : '', esc(d.date || '')].filter(Boolean).join('  ·  ');
+
+  return '<!DOCTYPE html>\n<html lang="he" dir="rtl" xmlns="http://www.w3.org/1999/xhtml">\n<head>\n' +
+    '<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<meta name="x-apple-disable-message-reformatting">\n' +
+    '<title>' + esc(d.subject || NEWSLETTER_NAME) + '</title>\n' +
+    '<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Assistant:wght@400;700&display=swap" rel="stylesheet">\n' +
+    '<style>\n  body{margin:0;padding:0;background:#e9dfcb;}\n  a{color:#7a4e12;}\n  @media (max-width:620px){ .px{padding-left:22px !important;padding-right:22px !important;} .mast{font-size:34px !important;} }\n</style>\n' +
+    '</head>\n<body dir="rtl" style="margin:0;padding:0;background:#e9dfcb;">\n' +
+    '<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">' + esc(d.preheader || '') + '&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;</div>\n' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e9dfcb;" dir="rtl"><tr><td align="center" style="padding:24px 10px;">\n' +
+    '<table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:640px;background:#f6efe2;border:1px solid #d8c7a1;border-radius:6px;overflow:hidden;" dir="rtl">\n' +
+    '<tr><td style="background:#211c3a;padding:34px 24px 28px;text-align:center;">' +
+      '<div style="font-size:14px;letter-spacing:8px;color:#b8893b;">✦ ✦ ✦</div>' +
+      '<h1 class="mast" style="margin:10px 0 4px;font-family:' + serif + ';font-size:42px;line-height:1.1;font-weight:900;color:#f3dfa8;">' + esc(NEWSLETTER_NAME) + '</h1>' +
+      '<div style="font-family:' + sans + ';font-size:15px;font-style:italic;color:#e9dfc9;">ניוזלטר הפנטזיה של ' + esc(AUTHORS) + '</div>' +
+      (issueLine ? '<div style="margin-top:12px;font-family:' + sans + ';font-size:14px;font-weight:700;color:#b8893b;">' + issueLine + '</div>' : '') +
+    '</td></tr>\n' + body + '\n' +
+    '<tr><td style="padding:10px 40px 34px;text-align:center;" class="px">' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid #d8c7a1;font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>' +
+      '<p style="margin:24px 0 6px;font-size:16px;color:#b8893b;">✦</p>' +
+      '<p style="margin:0 0 4px;font-family:' + sans + ';font-size:17px;font-weight:700;color:#211c3a;">נתראה בעוד שבועיים.</p>' +
+      '<p style="margin:0 0 16px;font-family:' + sans + ';font-size:16px;color:#3a3546;">מכירים מישהו שחי בין העולמות? שלחו לו את העורב.</p>' +
+      button(SIGNUP_URL, 'קישור להרשמה לניוזלטר', 'center') +
+    '</td></tr>\n' +
+    '<tr><td style="background:#211c3a;padding:20px 30px;text-align:center;font-family:' + sans + ';font-size:13px;line-height:1.7;color:#e9dfc9bb;">' +
+      '<strong style="color:#f3dfa8;">' + esc(NEWSLETTER_NAME) + '</strong> · ' + esc(AUTHORS) + '<br>' +
+      (POSTAL_ADDRESS ? esc(POSTAL_ADDRESS) + '<br>' : '') +
+      'קיבלת את המייל הזה כי נרשמת לניוזלטר שלנו.<br>' +
+      '<a href="{$unsubscribe}" style="color:#f3dfa8;text-decoration:underline;">להסרה מרשימת הדיוור</a>' +
+      ' &nbsp;·&nbsp; <a href="{$url}" style="color:#f3dfa8;text-decoration:underline;">לצפייה בדפדפן</a>' +
+    '</td></tr>\n' +
+    '</table>\n</td></tr></table>\n</body>\n</html>';
+}
+
+/* ---------- טופס ---------- */
+function renderRows(kind){
+  var box = document.getElementById(kind);
+  var fields = kind === 'shelf' ? SHELF_FIELDS : EVENT_FIELDS;
+  box.innerHTML = '';
+  state[kind].forEach(function(row, i){
+    var item = document.createElement('div');
+    item.className = 'item';
+    fields.forEach(function(f){
+      var wrap = document.createElement('div');
+      if (f[2]) wrap.className = 'wide';
+      var inp = document.createElement('input');
+      inp.placeholder = f[1];
+      inp.setAttribute('aria-label', f[1] + ' ' + (i + 1));
+      inp.value = row[f[0]] || '';
+      inp.addEventListener('input', function(){ state[kind][i][f[0]] = inp.value; changed(); });
+      wrap.appendChild(inp);
+      item.appendChild(wrap);
+    });
+    box.appendChild(item);
+  });
+}
+document.querySelectorAll('[data-add]').forEach(function(b){
+  b.addEventListener('click', function(){ var k = b.getAttribute('data-add'); state[k].push({}); renderRows(k); });
+});
+var simple = document.querySelectorAll('[data-k]');
+simple.forEach(function(el){
+  el.addEventListener('input', function(){ state[el.getAttribute('data-k')] = el.value; changed(); });
+});
+
+function load(){
+  try { var s = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); if (s) state = Object.assign(state, s); } catch(e){}
+  if (!state.shelf || !state.shelf.length) state.shelf = [{},{},{}];
+  if (!state.events || !state.events.length) state.events = [{},{}];
+  simple.forEach(function(el){ var k = el.getAttribute('data-k'); if (state[k] != null) el.value = state[k]; });
+  if (!state.signer) state.signer = document.getElementById('signer').value;
+  renderRows('shelf'); renderRows('events');
+}
+var saveT, drawT;
+function changed(){
+  clearTimeout(drawT); drawT = setTimeout(draw, 150);
+  clearTimeout(saveT); saveT = setTimeout(function(){
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); setStatus('נשמר בדפדפן ✓'); }
+    catch(e){ setStatus('לא נשמר: הדפדפן חוסם שמירה'); }
+  }, 500);
+}
+function setStatus(t){ document.getElementById('status').textContent = t; }
+function draw(){ document.getElementById('frame').srcdoc = buildEmail(state); }
+function toast(t){ var el = document.getElementById('toast'); el.textContent = t; el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 2600); }
+
+document.getElementById('btn-copy').addEventListener('click', function(){
+  var html = buildEmail(state);
+  var done = function(){ toast('הגיליון הועתק. עכשיו מדביקים ב-MailerLite'); };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(html).then(done, function(){ fallbackCopy(html) ? done() : toast('ההעתקה נחסמה. נסו "הורדת קובץ"'); });
+  } else { fallbackCopy(html) ? done() : toast('ההעתקה נחסמה. נסו "הורדת קובץ"'); }
+});
+function fallbackCopy(text){
+  var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta); return ok;
+}
+document.getElementById('btn-download').addEventListener('click', function(){
+  var blob = new Blob([buildEmail(state)], { type: 'text/html;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'gilayon-' + (state.issue || 'new') + '.html';
+  document.body.appendChild(a); a.click(); a.remove();
+});
+var clearArmed = false;
+document.getElementById('btn-clear').addEventListener('click', function(){
+  var b = this;
+  if (!clearArmed){ clearArmed = true; b.textContent = 'בטוח? ללחוץ שוב'; setTimeout(function(){ clearArmed = false; b.textContent = 'ניקוי לגיליון חדש'; }, 4000); return; }
+  clearArmed = false; b.textContent = 'ניקוי לגיליון חדש';
+  var next = state.issue && /^\d+$/.test(state.issue) ? String(+state.issue + 1) : '';
+  var signer = state.signer === 'נעמה' ? 'יעל' : (state.signer === 'יעל' ? 'נעמה' : state.signer);
+  state = { issue: next, signer: signer, shelf: [{},{},{}], events: [{},{}] };
+  simple.forEach(function(el){ var k = el.getAttribute('data-k'); el.value = state[k] || (el.tagName === 'SELECT' ? el.value : ''); });
+  document.getElementById('signer').value = signer || 'נעמה';
+  state.signer = document.getElementById('signer').value;
+  renderRows('shelf'); renderRows('events'); changed();
+  toast('טופס נקי לגיליון ' + (next ? '#' + next : 'חדש'));
+});
+document.getElementById('v-desk').addEventListener('click', function(){ document.getElementById('frame').classList.remove('mobile'); this.classList.add('on'); document.getElementById('v-mob').classList.remove('on'); });
+document.getElementById('v-mob').addEventListener('click', function(){ document.getElementById('frame').classList.add('mobile'); this.classList.add('on'); document.getElementById('v-desk').classList.remove('on'); });
+
+load(); draw();
+</script>
+</body>
+</html>
