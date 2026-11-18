@@ -898,6 +898,55 @@ button.badge:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .portrait .ph{color:rgba(241,232,215,.55);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;z-index:1;text-align:center;padding:1rem}
 .evrow{display:flex;gap:1.2rem;align-items:baseline;padding-block:1.1rem;border-block-end:1px solid var(--line);flex-wrap:wrap}
 .evdate{font-family:var(--f-display);font-weight:700;color:var(--gold-soft);min-width:5.5rem;font-variant-numeric:tabular-nums}
+
+/* ============ EVENTS · angels & demons rows ============ */
+.evx-head{position:relative;overflow:hidden;min-height:clamp(170px,22vw,240px);display:flex;align-items:center;justify-content:center;text-align:center;padding:1.5rem 1rem;
+  background-color:#A5122F;
+  background-image:repeating-radial-gradient(circle at 18% 120%,rgba(70,0,18,0) 0 22px,rgba(70,0,18,.55) 22px 38px,rgba(70,0,18,0) 38px 60px),
+                   repeating-radial-gradient(circle at 86% -30%,rgba(70,0,18,0) 0 26px,rgba(70,0,18,.45) 26px 40px,rgba(70,0,18,0) 40px 64px)}
+.evx-head h2{margin:0;font-family:var(--f-display);font-weight:900;font-size:clamp(2.4rem,7vw,5.6rem);line-height:.95;color:#FBEFE2;text-shadow:0 4px 0 rgba(60,0,15,.6)}
+.evx-head p{margin:.4rem 0 0;font-weight:700;letter-spacing:.3em;color:#FBEFE2;font-size:clamp(.85rem,1.6vw,1.2rem)}
+.evx-wing{position:absolute;top:50%;width:clamp(90px,19vw,250px);height:auto;transform:translateY(-45%);opacity:.95}
+.evx-wing.angel{inset-inline-start:clamp(8px,3vw,40px)}
+.evx-wing.demon{inset-inline-end:clamp(8px,3vw,40px)}
+@media (max-width:620px){.evx-wing{opacity:.35}}
+.evx-list{display:flex;flex-direction:column;gap:14px}
+.evx-row{display:grid;grid-template-columns:minmax(230px,380px) 270px minmax(0,1fr);min-height:150px;background:#120A08;
+  background-image:radial-gradient(ellipse at 30% 50%,rgba(120,60,30,.28),rgba(18,10,8,0) 70%)}
+.evx-date{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:.6rem;padding:16px 24px 14px;padding-inline-end:88px;font-family:var(--f-body)}
+.evx-date.heaven{background:#EFE6D2;color:#2A1508}
+.evx-date.hell{background:#B3133A;color:#FFF2E8}
+.evx-date bdi{white-space:nowrap}
+.evx-date .d1{font-size:1.1rem;font-weight:700;letter-spacing:.03em}
+.evx-date .d2{font-size:1.85rem;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums}
+.evx-date .k{font-size:.72rem;font-weight:700;letter-spacing:.22em;opacity:.75}
+.evx-date .pl{font-size:1.45rem;font-weight:700;line-height:1.15}
+.evx-date .flag{display:inline-block;margin-inline-start:.5rem;font-size:.7rem;letter-spacing:.08em;padding:.1rem .45rem;border-radius:3px;vertical-align:middle}
+.evx-date.heaven .flag{background:#2A1508;color:#EFE6D2}
+.evx-date.hell .flag{background:#FFF2E8;color:#8A0C2B}
+.evx-mark{position:absolute;inset-inline-end:14px;top:50%;width:62px;height:62px;margin-top:-31px;opacity:.85}
+.evx-photo{position:relative;overflow:hidden}
+.evx-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.6) saturate(.95) brightness(.88) contrast(1.05);
+  -webkit-mask-image:linear-gradient(to left,#000 62%,transparent 100%);mask-image:linear-gradient(to left,#000 62%,transparent 100%)}
+[dir="ltr"] .evx-photo img{-webkit-mask-image:linear-gradient(to right,#000 62%,transparent 100%);mask-image:linear-gradient(to right,#000 62%,transparent 100%)}
+.evx-title{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.25rem;padding:14px 24px;text-align:center}
+.evx-title b{font-family:var(--f-display);font-weight:900;font-size:clamp(1.6rem,2.8vw,2.5rem);line-height:1.05;color:#F6EAD3}
+.evx-title span{color:#E9D9BF;font-size:.95rem;letter-spacing:.05em}
+.evx-title a{color:var(--gold-soft);font-size:.85rem}
+@media (max-width:900px){
+  .evx-row{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr)}
+  .evx-date{grid-column:1/-1}
+  .evx-photo{min-height:130px}
+  .evx-photo img{-webkit-mask-image:none;mask-image:none}
+}
+.evx-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:620px){.evx-strip{grid-template-columns:1fr}}
+.evx-strip div{position:relative;aspect-ratio:1.8;overflow:hidden;background:#120A08}
+.evx-strip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.6) saturate(.95) brightness(.88) contrast(1.05)}
+.evx-strip div::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 60px 18px rgba(5,3,4,.85)}
+.evx-rule{display:flex;align-items:center;gap:14px}
+.evx-rule span{font-size:.8rem;font-weight:700;letter-spacing:.3em;color:var(--gold)}
+.evx-rule i{flex:1;height:1px;background:var(--line-strong)}
 .foot{border-block-start:1px solid var(--line);padding-block:2.6rem 3.4rem;color:var(--muted);font-size:.9rem}
 .footlegal{
   margin-block-start:2.4rem;padding-block-start:1.4rem;border-block-start:1px solid var(--line);
@@ -3787,7 +3836,8 @@ function vShop(){
    Read through gviz as JSONP - no CORS, no API key, no Apps Script. */
 const EVENTS_SHEET_ID  = "1ZbkmB9JivuxiMRJnqnpWQ-S8C2PN0LRyPhdsgauK1GI";   // "לוח האירועים - nbshira" (owner stageart.pnima, editor naama.nbs)
 const EVENTS_SHEET_TAB = "";   // leave empty = first tab
-const EV_PHOTOS = ["088e614686", "39752553c5", "5ef60c67bb", "dd559a0236", "70b027cc01"];   // Naama's own booth photos for the events page
+const EV_POOL  = ["ev1","ev2","ev3","ev4","ev5","ev6","ev7","ev8"];   // assets/events/*.webp, cropped on Naama; rows take them in turn
+const EV_STRIP = ["ev6","ev7","ev8"];                                  // the "from the booths" strip under the list
 const EV_KIND_EN = {"פאנל":"Panel","דוכן":"Booth","יריד":"Fair","פסטיבל":"Festival","סדנה":"Workshop"};
 let EV_DATA = null, EV_STATE = "idle";   // idle | loading | ok | fail
 
@@ -3884,70 +3934,78 @@ function evDays(e,he){
   return he?`ימים ${a}–${b}`:`${a}–${b}`;
 }
 
+const EV_HALO  = '<ellipse cx="50" cy="34" rx="34" ry="11"/><ellipse cx="50" cy="34" rx="24" ry="6" opacity=".5"/>';
+const EV_HORNS = '<path d="M28 82 C14 62 14 34 32 12 C30 34 36 52 48 66 Z"/><path d="M72 82 C86 62 86 34 68 12 C70 34 64 52 52 66 Z"/>';
+const EV_DAYS  = {he:["יום ראשון","יום שני","יום שלישי","יום רביעי","יום חמישי","יום שישי","שבת"],
+                  en:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]};
+
 function evListHtml(){
   const he=lang==="he";
   if(EV_STATE==="idle"||EV_STATE==="loading")
-    return `<p class="dim" style="padding-block:1.5rem">${he?"טוענים את לוח האירועים…":"Loading the calendar…"}</p>`;
+    return `<p class="dim" style="padding-block:1.5rem;text-align:center">${he?"טוענים את לוח האירועים…":"Loading the calendar…"}</p>`;
   const today=new Date(); today.setHours(0,0,0,0);
   const tomorrow=new Date(today); tomorrow.setDate(today.getDate()+1);
   const list=(EV_DATA||[]).filter(e=>e.end>=today);
-  if(!list.length) return `<p class="dim" style="padding-block:1.5rem">${he
+  if(!list.length) return `<p class="dim" style="padding-block:1.5rem;text-align:center">${he
     ? "כרגע אין אירועים פתוחים בלוח. תאריכים חדשים עולים קודם כול בקבוצת המישלינגים."
     : "Nothing on the calendar right now. New dates go to the Mishlingim group first."}</p>`;
-  let lastMonth="";
-  return list.map(e=>{
-    const mKey=e.start.getFullYear()+"-"+e.start.getMonth();
-    let head="";
-    if(mKey!==lastMonth){
-      lastMonth=mKey;
-      const name=e.start.toLocaleDateString(he?"he-IL":"en-GB",{month:"long",year:"numeric"});
-      head=`<span class="eyebrow" style="margin-block-start:1.6rem;display:block">${esc(name)}</span>`;
-    }
+  const D=EV_DAYS[he?"he":"en"];
+  return list.map((e,i)=>{
+    const heaven=i%2===0;
+    const one=e.start.getTime()===e.end.getTime();
+    const days=one?D[e.start.getDay()]:`${D[e.start.getDay()]}–${D[e.end.getDay()].replace(/^יום /,"")}`;
     const live=e.start<=today&&e.end>=today, soon=!live&&e.start.getTime()===tomorrow.getTime();
-    const badge=live?(he?"היום":"Today"):soon?(he?"מחר":"Tomorrow"):"";
+    const flag=live?(he?"היום":"Today"):soon?(he?"מחר":"Tomorrow"):"";
     const title=he?e.title:(e.titleEn||e.title);
     const place=he?e.place:(e.placeEn||e.place);
     const info =he?e.info :(e.infoEn||e.info);
-    const sub=[place,info].filter(Boolean).join(" · ");
-    const kind=he?e.kind:(EV_KIND_EN[e.kind]||e.kind);
-    return `${head}<div class="evrow">
-      <span class="evdate stack g-xs" style="min-width:7.5rem"><bdi dir="ltr">${esc(evWhen(e,he))}</bdi>
-        <span class="dim" style="font-family:var(--f-body);font-weight:400;font-size:.78rem">${esc(evDays(e,he))}${e.time?` · <bdi dir="ltr">${esc(e.time)}</bdi>`:""}</span>
-      </span>
-      <div class="stack g-xs" style="flex:1;min-width:220px">
-        ${kind?`<span class="eyebrow" style="font-size:.68rem">${esc(kind)}</span>`:""}
-        <b style="font-family:var(--f-display);font-size:1.1rem">${esc(title)}${badge?` <span class="tag" style="color:var(--gold-soft);border-color:var(--gold);font-family:inherit;vertical-align:middle">${badge}</span>`:""}</b>
-        ${sub?`<span class="dim" style="font-size:.9rem">${esc(sub)}</span>`:""}
+    const kind =he?e.kind :(EV_KIND_EN[e.kind]||e.kind);
+    const img  =EV_POOL[i%EV_POOL.length];
+    return `<article class="evx-row">
+      <div class="evx-date ${heaven?"heaven":"hell"}">
+        <svg class="evx-mark" aria-hidden="true" viewBox="0 0 100 100" fill="${heaven?"none":"#3A0611"}" stroke="${heaven?"#B8862E":"none"}" stroke-width="5" stroke-linecap="round">${heaven?EV_HALO:EV_HORNS}</svg>
+        <div>
+          <div class="d1">${esc(days)}${e.time?` · <bdi dir="ltr">${esc(e.time)}</bdi>`:""}</div>
+          <div class="d2"><bdi dir="ltr">${esc(evWhen(e,he))}</bdi>${flag?`<span class="flag">${flag}</span>`:""}</div>
+        </div>
+        <div>
+          ${kind?`<div class="k">${esc(kind)}</div>`:""}
+          ${place?`<div class="pl">${esc(place)}</div>`:""}
+        </div>
       </div>
-      ${e.link?`<a class="chip" href="${esc(e.link)}" target="_blank" rel="noopener" style="align-self:center">${he?"לפרטים":"Details"}</a>`:""}
-    </div>`;
+      <div class="evx-photo"><img src="assets/events/${img}.webp" alt="" loading="lazy" width="560" height="311"></div>
+      <div class="evx-title">
+        <b>${esc(title)}</b>
+        ${info?`<span>${esc(info)}</span>`:""}
+        ${e.link?`<a href="${esc(e.link)}" target="_blank" rel="noopener">${he?"לפרטים":"Details"}</a>`:""}
+      </div>
+    </article>`;
   }).join("");
 }
 
 function vEvents(){
   const he=lang==="he";
   loadEvents();
-  return `${pageHero("דוכן בחצר",
-      he?"אירועים קרובים":"Coming up",
-      he?"איפה פוגשים את נעמה":"Where to meet Naama",
-      he?"דוכנים, כנסים, ירידים, השקות וחתימות. אפשר לתפוס אותה בדוכן, ואפשר פשוט לבוא להגיד שלום."
-        :"Booths, conventions, fairs, launches and signings. Catch her at the booth, or just come and say hello.", "center 20%")}
-  <section class="band wrap stack g-xl">
-    <div class="stack" id="evList">${evListHtml()}</div>
-    <div class="stack g-s">
-      <span class="eyebrow">${he?"ככה זה נראה בדוכן":"At the booth"}</span>
-      <div class="fgrid">
-        ${EV_PHOTOS.map(id=>FIELD.find(f=>f.i===id)).filter(Boolean).map(f=>`
-        <button class="fcell" onclick="fieldCat='all';openField('${f.i}')" aria-label="${esc(f.n)}">
-          <img src="${fieldSrc(f.i)}" alt="${esc(f.n)}" loading="lazy" width="${f.w}" height="${f.h}">
-          <span class="fcap">${esc(f.n)}</span>
-        </button>`).join("")}
+  const angel='<path d="M190 22 C150 10 92 18 42 50 C72 46 100 44 122 46 C92 58 62 72 32 96 C64 86 94 80 118 80 C98 92 76 106 58 128 C98 112 142 96 172 70 C188 56 196 38 190 22 Z" fill="#F3E9D6"/><path d="M178 34 C140 34 100 42 66 52 M168 56 C136 62 104 72 76 86 M156 76 C130 88 104 100 84 114" fill="none" stroke="#C9B48C" stroke-width="2"/>';
+  const demon='<path d="M10 22 C40 32 70 28 96 14 C92 40 104 60 130 66 C126 84 136 100 160 108 C150 116 150 126 156 134 C120 118 80 116 50 126 C56 104 50 84 30 74 C38 60 32 40 10 22 Z" fill="#14050A"/><path d="M96 14 C86 50 70 90 50 126 M130 66 C110 84 84 108 72 120 M10 22 C30 50 40 70 50 126" fill="none" stroke="#5A1222" stroke-width="2"/>';
+  return `<section class="band wrap stack g-l" style="padding-block-start:clamp(1.5rem,4vw,2.5rem)">
+    <header class="evx-head">
+      <svg class="evx-wing angel" aria-hidden="true" viewBox="0 0 200 140" style="${he?"":"transform:translateY(-45%) scaleX(-1)"}">${angel}</svg>
+      <svg class="evx-wing demon" aria-hidden="true" viewBox="0 0 200 140" style="${he?"":"transform:translateY(-45%) scaleX(-1)"}">${demon}</svg>
+      <div style="position:relative">
+        <h2>${he?"לוח האירועים":"Events"}</h2>
+        <p>${he?"איפה פוגשים את נעמה":"Where to meet Naama"}</p>
       </div>
+    </header>
+    <div class="evx-list" id="evList">${evListHtml()}</div>
+    <div class="stack g-s">
+      <div class="evx-rule"><span>${he?"מהדוכנים":"At the booth"}</span><i></i></div>
+      <div class="evx-strip">${EV_STRIP.map(p=>`<div><img src="assets/events/${p}.webp" alt="${he?"נעמה בדוכן":"Naama at the booth"}" loading="lazy" width="560" height="311"></div>`).join("")}</div>
     </div>
-    <div class="split">
+    <div class="split" style="border-top:1px solid var(--line-strong);padding-top:1.2rem">
       <p class="dim">${he
-        ? "רוצים לדעת מראש מתי נעמה מגיעה אליכם? זה עולה קודם כול בקבוצת המישלינגים."
-        : "Want to know before anyone else where Naama will be? It goes to the Mishlingim group first."}</p>
+        ? "דוכנים · פאנלים · ירידים · פסטיבלים · סדנאות. תאריכים חדשים עולים קודם כול בקבוצת המישלינגים."
+        : "Booths · panels · fairs · festivals · workshops. New dates go to the Mishlingim group first."}</p>
       <div style="align-self:start">${linkBtn(LINKS.whatsappGroup, he?"להצטרפות לקבוצה":"Join the group")}</div>
     </div>
   </section>`;
