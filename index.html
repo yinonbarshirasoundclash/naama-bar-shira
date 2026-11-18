@@ -377,6 +377,17 @@ button.badge:hover,button.badge:focus-visible{border-color:var(--gold);color:var
   background:color-mix(in oklab,var(--surface) 100%,transparent)}
 button.badge:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-block-start:2.2rem}
+/* ============ BOOK-PARADE BANNER - leads to /mitzad/, Hebrew only ============ */
+.mzband{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap;text-decoration:none;
+  background:linear-gradient(100deg,#1C2541,#26305A);border:1px solid rgba(226,194,122,.55);border-radius:4px;
+  padding:1rem clamp(1rem,3vw,1.6rem);color:#F4EEE2;transition:border-color .2s,transform .2s}
+.mzband:hover{border-color:#E2C27A}
+.mzband img{width:52px;height:auto;flex:none;border-radius:2px;box-shadow:0 8px 18px -6px rgba(0,0,0,.7)}
+.mzband .mzt{flex:1 1 15rem;display:flex;flex-direction:column;gap:.15rem;line-height:1.4}
+.mzband b{font-family:var(--f-display);font-weight:700;font-size:clamp(1.02rem,1.6vw,1.18rem);color:#FBF6EA}
+.mzband span{font-size:.92rem;color:#C9CFE0}
+.mzband i{font-style:normal;font-weight:700;font-size:.92rem;color:#1C2541;background:#E2C27A;border-radius:3px;padding:.55rem 1rem;white-space:nowrap}
+.mzwrap{padding-block:clamp(1.4rem,3vw,2rem) 0}
 
 /* ============ BUTTONS ============ */
 .btn{
@@ -1684,6 +1695,16 @@ function quoteEl(i){
 }
 
 /* ---------- VIEWS ---------- */
+/* Banner for the Ministry of Education book parade page (/mitzad/). Hebrew only:
+   the page itself is in Hebrew. Remove the two calls below when the parade ends. */
+function mzBanner(line1, line2){
+  if(lang!=="he") return "";
+  return `<div class="wrap mzwrap"><a class="mzband" href="/mitzad/">
+    <img src="${IMG.cov_maayan}" alt="" width="52" height="75">
+    <span class="mzt"><b>${line1}</b><span>${line2}</span></span>
+    <i>לעמוד המצעד ←</i></a></div>`;
+}
+
 function vHome(){
   const he=lang==="he";
   return `
@@ -1711,6 +1732,7 @@ function vHome(){
       </div>
     </div>
   </div>
+  ${mzBanner('נבחר למצעד הספרים של משרד החינוך, תשפ"ז, כיתות י\'-י"ב','מלאכיות עליון: מעיין הנשמות · למורות ולספרניות · לתלמידים · להורים')}
 
   <section class="band wrap">
     <div class="split">
@@ -3972,6 +3994,7 @@ function vSpeaking(){
       he?"נעמה בר שירה מגיעה לחטיבות, לתיכונים ולספריות ברחבי הארץ. הפעילות מאושרת בגפ״ן (תוכנית 4776), ו״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך."
         :"Naama Bar Shira visits middle schools, high schools and libraries across Israel. The programme is approved for institutional funding, and Spring of Souls is on the Ministry of Education's reading list.",
       "center 38%", .55)}
+  ${mzBanner("לכבוד המצעד: מפגש סופרת של שעה, ללא עלות לבית הספר","ערכה מוכנה לכיתה, לשימוש חופשי")}
 
   <section class="band wrap stack g-xl">
 
