@@ -3792,6 +3792,8 @@ function loadEvents(){
 function evDate(c){
   if(!c||c.v==null||c.v==="") return null;
   const v=c.v;
+  if(typeof v==="number" && v>20000 && v<80000){ const d=new Date(1899,11,30); d.setDate(d.getDate()+Math.floor(v)); return d; } // sheet serial date
+  if(typeof v==="string" && /^\d{5}$/.test(v.trim())){ const d=new Date(1899,11,30); d.setDate(d.getDate()+(+v)); return d; }
   if(typeof v==="string"){
     let m=v.match(/^Date\((\d+),(\d+),(\d+)/);
     if(m) return new Date(+m[1],+m[2],+m[3]);
