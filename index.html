@@ -3753,30 +3753,162 @@ function vShop(){
   </section>`;
 }
 
+/* ---------- EVENTS: live from Naama's Google Sheet ----------
+   Naama keeps one Google Sheet ("לוח האירועים - nbshira") and the page reads it
+   on every visit, so a new booth shows up without touching this file.
+   The sheet must be shared "anyone with the link - viewer".
+   Columns are found by their header, so their order doesn't matter:
+     תאריך התחלה | תאריך סיום | שעות | סוג | שם האירוע | מקום | פרטים | קישור |
+     שם באנגלית | מקום באנגלית | פרטים באנגלית | להציג | מזהה
+   Naama edits it through her "עורך לוח האירועים" artifact on claude.ai, or in the sheet itself.
+   Past events drop off by themselves (the day after they end).
+   Read through gviz as JSONP - no CORS, no API key, no Apps Script. */
+const EVENTS_SHEET_ID  = "1ZbkmB9JivuxiMRJnqnpWQ-S8C2PN0LRyPhdsgauK1GI";   // "לוח האירועים - nbshira" (owner stageart.pnima, editor naama.nbs)
+const EVENTS_SHEET_TAB = "";   // leave empty = first tab
+const EV_KIND_EN = {"פאנל":"Panel","דוכן":"Booth","יריד":"Fair","פסטיבל":"Festival","סדנה":"Workshop"};
+let EV_DATA = null, EV_STATE = "idle";   // idle | loading | ok | fail
+
+function loadEvents(){
+  if(EV_STATE==="loading"||EV_STATE==="ok") return;
+  if(!EVENTS_SHEET_ID){ EV_STATE="fail"; return; }
+  EV_STATE="loading";
+  const cb="__nbsEv"+Date.now(), s=document.createElement("script");
+  let finished=false;
+  const done=rows=>{
+    if(finished) return; finished=true;
+    clearTimeout(timer); window[cb]=()=>{}; s.remove();
+    if(rows){ EV_DATA=rows; EV_STATE="ok"; } else EV_STATE="fail";
+    const box=document.getElementById("evList");
+    if(box) box.innerHTML=evListHtml();
+  };
+  const timer=setTimeout(()=>done(null),9000);
+  window[cb]=resp=>{ try{ done(parseEvSheet(resp)); }catch(e){ done(null); } };
+  s.onerror=()=>done(null);
+  s.src=`https://docs.google.com/spreadsheets/d/${encodeURIComponent(EVENTS_SHEET_ID)}/gviz/tq?headers=1&tqx=out:json;responseHandler:${cb}`
+       +(EVENTS_SHEET_TAB?`&sheet=${encodeURIComponent(EVENTS_SHEET_TAB)}`:"")+`&_=${Date.now()}`;
+  document.head.appendChild(s);
+}
+
+function evDate(c){
+  if(!c||c.v==null||c.v==="") return null;
+  const v=c.v;
+  if(typeof v==="string"){
+    let m=v.match(/^Date\((\d+),(\d+),(\d+)/);
+    if(m) return new Date(+m[1],+m[2],+m[3]);
+    m=v.trim().match(/^(\d{1,2})[./-](\d{1,2})(?:[./-](\d{2,4}))?$/);          // 10.6.2026 / 10/6
+    if(m){ let y=m[3]?+m[3]:new Date().getFullYear(); if(y<100) y+=2000; return new Date(y,+m[2]-1,+m[1]); }
+    m=v.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);                           // 2026-06-10
+    if(m) return new Date(+m[1],+m[2]-1,+m[3]);
+  }
+  return null;
+}
+const evTxt = c => (c && (c.f!=null ? c.f : c.v)!=null) ? String(c.f!=null ? c.f : c.v).trim() : "";
+
+function parseEvSheet(resp){
+  if(!resp||resp.status==="error"||!resp.table) return null;
+  let heads=resp.table.cols.map(c=>(c.label||"").trim());
+  let rows=resp.table.rows||[];
+  if(!heads.some(Boolean) && rows.length){ heads=rows[0].c.map(evTxt); rows=rows.slice(1); }
+  const isEn=h=>/אנגלית|english/i.test(h);
+  const col=(re,en)=>heads.findIndex(h=>re.test(h) && isEn(h)===!!en);
+  const ix={
+    start:col(/התחלה|^תאריך$|^מתאריך|start|^date$/i), end:col(/סיום|^עד|end/i),
+    time:col(/שע(ה|ות)|time|hours/i), kind:col(/^סוג|type|kind/i),
+    title:col(/אירוע|^שם|title|name/i), place:col(/מקום|כתובת|place|venue|location/i),
+    info:col(/פרטים|הערות|תיאור|details|info/i), link:col(/קישור|link|url/i),
+    titleEn:col(/אירוע|^שם|title|name/i,true), placeEn:col(/מקום|place|venue/i,true),
+    infoEn:col(/פרטים|details|info/i,true), show:col(/להציג|פרסום|show|publish/i)
+  };
+  if(ix.start<0||ix.title<0) return null;
+  const get=(r,k)=>ix[k]<0?null:(r.c||[])[ix[k]];
+  return rows.map(r=>{
+    const start=evDate(get(r,"start")); if(!start) return null;
+    const title=evTxt(get(r,"title"));  if(!title) return null;
+    const sh=get(r,"show");
+    if(sh && (sh.v===false || /^(לא|no|n|false|0|x)$/i.test(evTxt(sh)))) return null;
+    let end=evDate(get(r,"end")); if(!end||end<start) end=start;
+    let link=evTxt(get(r,"link"));
+    if(link && !/^https?:\/\//i.test(link)) link=/^[\w-]+(\.[\w-]+)+/.test(link)?"https://"+link:"";
+    return {start,end,title,link,time:evTxt(get(r,"time")), kind:evTxt(get(r,"kind")),
+      place:evTxt(get(r,"place")), info:evTxt(get(r,"info")),
+      titleEn:evTxt(get(r,"titleEn")), placeEn:evTxt(get(r,"placeEn")), infoEn:evTxt(get(r,"infoEn"))};
+  }).filter(Boolean).sort((a,b)=>a.start-b.start||a.end-b.end);
+}
+
+function evWhen(e,he){
+  const now=new Date(), yr=d=>d.getFullYear()!==now.getFullYear();
+  const same=e.start.getTime()===e.end.getTime();
+  if(he){
+    const dm=(d,y)=>`${d.getDate()}.${d.getMonth()+1}${y?"."+String(d.getFullYear()).slice(2):""}`;
+    if(same) return dm(e.start,yr(e.start));
+    if(e.start.getMonth()===e.end.getMonth()&&e.start.getFullYear()===e.end.getFullYear())
+      return `${e.start.getDate()}–${dm(e.end,yr(e.end))}`;
+    return `${dm(e.start,yr(e.start)&&e.start.getFullYear()!==e.end.getFullYear())}–${dm(e.end,yr(e.end))}`;
+  }
+  const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const dm=(d,y)=>`${d.getDate()} ${M[d.getMonth()]}${y?" "+d.getFullYear():""}`;
+  if(same) return dm(e.start,yr(e.start));
+  if(e.start.getMonth()===e.end.getMonth()&&e.start.getFullYear()===e.end.getFullYear())
+    return `${e.start.getDate()}–${dm(e.end,yr(e.end))}`;
+  return `${dm(e.start,false)}–${dm(e.end,yr(e.end))}`;
+}
+function evDays(e,he){
+  const D=he?["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","שבת"]:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const a=D[e.start.getDay()], b=D[e.end.getDay()];
+  if(e.start.getTime()===e.end.getTime()) return he&&a!=="שבת"?`יום ${a}`:a;
+  return he?`ימים ${a}–${b}`:`${a}–${b}`;
+}
+
+function evListHtml(){
+  const he=lang==="he";
+  if(EV_STATE==="idle"||EV_STATE==="loading")
+    return `<p class="dim" style="padding-block:1.5rem">${he?"טוענים את לוח האירועים…":"Loading the calendar…"}</p>`;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const tomorrow=new Date(today); tomorrow.setDate(today.getDate()+1);
+  const list=(EV_DATA||[]).filter(e=>e.end>=today);
+  if(!list.length) return `<p class="dim" style="padding-block:1.5rem">${he
+    ? "כרגע אין אירועים פתוחים בלוח. תאריכים חדשים עולים קודם כול בקבוצת המישלינגים."
+    : "Nothing on the calendar right now. New dates go to the Mishlingim group first."}</p>`;
+  let lastMonth="";
+  return list.map(e=>{
+    const mKey=e.start.getFullYear()+"-"+e.start.getMonth();
+    let head="";
+    if(mKey!==lastMonth){
+      lastMonth=mKey;
+      const name=e.start.toLocaleDateString(he?"he-IL":"en-GB",{month:"long",year:"numeric"});
+      head=`<span class="eyebrow" style="margin-block-start:1.6rem;display:block">${esc(name)}</span>`;
+    }
+    const live=e.start<=today&&e.end>=today, soon=!live&&e.start.getTime()===tomorrow.getTime();
+    const badge=live?(he?"היום":"Today"):soon?(he?"מחר":"Tomorrow"):"";
+    const title=he?e.title:(e.titleEn||e.title);
+    const place=he?e.place:(e.placeEn||e.place);
+    const info =he?e.info :(e.infoEn||e.info);
+    const sub=[place,info].filter(Boolean).join(" · ");
+    const kind=he?e.kind:(EV_KIND_EN[e.kind]||e.kind);
+    return `${head}<div class="evrow">
+      <span class="evdate stack g-xs" style="min-width:7.5rem"><bdi dir="ltr">${esc(evWhen(e,he))}</bdi>
+        <span class="dim" style="font-family:var(--f-body);font-weight:400;font-size:.78rem">${esc(evDays(e,he))}${e.time?` · <bdi dir="ltr">${esc(e.time)}</bdi>`:""}</span>
+      </span>
+      <div class="stack g-xs" style="flex:1;min-width:220px">
+        ${kind?`<span class="eyebrow" style="font-size:.68rem">${esc(kind)}</span>`:""}
+        <b style="font-family:var(--f-display);font-size:1.1rem">${esc(title)}${badge?` <span class="tag" style="color:var(--gold-soft);border-color:var(--gold);font-family:inherit;vertical-align:middle">${badge}</span>`:""}</b>
+        ${sub?`<span class="dim" style="font-size:.9rem">${esc(sub)}</span>`:""}
+      </div>
+      ${e.link?`<a class="chip" href="${esc(e.link)}" target="_blank" rel="noopener" style="align-self:center">${he?"לפרטים":"Details"}</a>`:""}
+    </div>`;
+  }).join("");
+}
+
 function vEvents(){
   const he=lang==="he";
-  const rows = he ? [
-    {d:"3–4.9",  t:"יריד ספרים",     p:"דיזנגוף סנטר, תל אביב · דוכן וחתימות"},
-    {d:"29.9–1.10", t:"פסטיבל אייקון", p:"תל אביב · דוכן, חתימות ומפגשי קוראים"}
-  ] : [
-    {d:"3–4 Sep",   t:"Book fair",     p:"Dizengoff Center, Tel Aviv · booth and signings"},
-    {d:"29 Sep–1 Oct", t:"ICon Festival", p:"Tel Aviv · booth, signings and reader meet-ups"}
-  ];
+  loadEvents();
   return `${pageHero("שבוע הספר 4",
       he?"אירועים קרובים":"Coming up",
       he?"איפה פוגשים את נעמה":"Where to meet Naama",
-      he?"כנסים, ירידים, השקות וחתימות. אפשר לתפוס אותה בדוכן, ואפשר פשוט לבוא להגיד שלום."
-        :"Conventions, fairs, launches and signings. Catch her at the booth, or just come and say hello.", "center 20%")}
+      he?"דוכנים, כנסים, ירידים, השקות וחתימות. אפשר לתפוס אותה בדוכן, ואפשר פשוט לבוא להגיד שלום."
+        :"Booths, conventions, fairs, launches and signings. Catch her at the booth, or just come and say hello.", "center 20%")}
   <section class="band wrap stack g-xl">
-    <div class="stack">
-      ${rows.map(r=>`<div class="evrow">
-        <span class="evdate">${esc(r.d)}</span>
-        <div class="stack g-xs" style="flex:1;min-width:220px">
-          <b style="font-family:var(--f-display);font-size:1.1rem">${esc(r.t)}</b>
-          <span class="dim" style="font-size:.9rem">${esc(r.p)}</span>
-        </div>
-      </div>`).join("")}
-    </div>
+    <div class="stack" id="evList">${evListHtml()}</div>
     <div class="split">
       <p class="dim">${he
         ? "רוצים לדעת מראש מתי נעמה מגיעה אליכם? זה עולה קודם כול בקבוצת המישלינגים."
