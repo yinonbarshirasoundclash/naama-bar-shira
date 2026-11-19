@@ -1030,6 +1030,8 @@ body[data-motion="off"] *{animation:none !important}
 .fsend{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .fnote{font-size:.85rem;color:var(--muted);max-width:52ch;line-height:1.5}
 .ferr{font-size:.86rem;color:#e79a9a}
+.fconsent{display:flex;gap:.7rem;align-items:flex-start;font-size:.92rem;line-height:1.6;color:var(--dim);cursor:pointer}
+.fconsent input{flex:none;inline-size:1.2rem;block-size:1.2rem;margin-block-start:.2rem;accent-color:var(--gold)}
 .fthanks{
   border:1px solid var(--gold);background:var(--glow);
   padding:clamp(1.2rem,3vw,2rem);display:flex;flex-direction:column;gap:.55rem;
@@ -1071,6 +1073,38 @@ body[data-motion="off"] *{animation:none !important}
 @media (min-width:760px){.lqinvite{grid-template-columns:minmax(180px,260px) 1fr;gap:1.6rem}}
 .lqinviteimg{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem}
 .lqinviteimg img{width:100%;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--line-strong);background:var(--surface-2)}
+
+/* quiz invitations inside the world tabs, and the way on to the books */
+.qinvrow{display:grid;gap:1rem}
+@media (min-width:900px){.qinvrow.two{grid-template-columns:1fr 1fr}}
+.qinv{
+  border:1px solid var(--gold);background:var(--glow);padding:1rem 1.1rem;
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:.9rem 1.1rem;align-items:center;
+}
+.qinv-faces{display:flex}
+.qinv-faces > span{
+  inline-size:46px;aspect-ratio:3/4;overflow:hidden;flex:none;
+  border:1px solid var(--line-strong);background:var(--surface-2);
+  margin-inline-start:-14px;box-shadow:0 6px 14px -6px rgba(0,0,0,.85);
+}
+.qinv-faces > span:first-child{margin-inline-start:0}
+.qinv-faces img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
+.qinv-faces.is-plate > span{background:#E9DFC9}
+.qinv-faces.is-plate img{object-fit:contain;mix-blend-mode:multiply}
+.qinv b{font-family:var(--f-display);font-size:1.18rem;line-height:1.3;color:var(--gold-soft)}
+[dir="ltr"] .qinv b{font-family:var(--f-display-lat);font-weight:600}
+.qinv-l{margin:0;font-size:.92rem;color:var(--dim)}
+.qinv-act{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between}
+.qinv-g{display:inline-flex;gap:.3rem}
+.qinv-g .otab{font-size:.84rem;padding:.3rem .75rem}
+.qinvrow.two .qinv{grid-template-columns:auto minmax(0,1fr)}
+@media (min-width:760px){
+  .qinv{grid-template-columns:auto minmax(0,1fr) auto}
+  .qinv-act{grid-column:auto;flex-direction:column;align-items:stretch}
+  .qinvrow.two .qinv-act{grid-column:1/-1;flex-direction:row;align-items:center}
+}
+.qbooks-covers{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
+.qbooks-covers img{width:100%;aspect-ratio:2/3;object-fit:cover;border:1px solid var(--line-strong);box-shadow:0 12px 24px -12px rgba(0,0,0,.9)}
 /* the descent: one continuous line down the side, seven stops along it */
 .descent{list-style:none;margin:0;padding:0;position:relative}
 .descent::before{
@@ -1097,6 +1131,149 @@ body[data-motion="off"] *{animation:none !important}
 }
 .lqinvite b{font-family:var(--f-display);font-size:1.25rem;color:var(--gold-soft)}
 [dir="ltr"] .lqinvite b{font-family:var(--f-display-lat);font-weight:600}
+
+/* ===================================================================
+   DESIGN ROUND - NOVEMBER 2026
+   One block, so the whole round can be read (or undone) in one place.
+   =================================================================== */
+
+/* 1. Hebrew is never letter-spaced: tracking pulls Hebrew words apart.
+      Small labels also grow to a size a phone can actually read. */
+html[lang="he"] h1,
+html[lang="he"] .eyebrow,html[lang="he"] [dir="rtl"] .eyebrow,html[lang="he"] .brand span,
+html[lang="he"] .brand b,html[lang="he"] .chip,html[lang="he"] .badge,html[lang="he"] .btn,
+html[lang="he"] .plate .cap span,html[lang="he"] .plate .cap b,html[lang="he"] .rev figcaption span,
+html[lang="he"] .rev figcaption b,html[lang="he"] .tag,html[lang="he"] .cover-flag,
+html[lang="he"] .mature,html[lang="he"] .oser,html[lang="he"] .pull cite,html[lang="he"] .ledger th,
+html[lang="he"] .field label,html[lang="he"] .stat span,html[lang="he"] .dmeta,html[lang="he"] .a11y .lbl,
+html[lang="he"] .a11y .sw i,html[lang="he"] .qrkick,html[lang="he"] .eradiv i,html[lang="he"] .evx-rule span,
+html[lang="he"] .evx-head p,html[lang="he"] .evx-date .k,html[lang="he"] .evx-title span,
+html[lang="he"] .portrait .ph,html[lang="he"] .cover .cs,html[lang="he"] .circles .cruler{letter-spacing:0}
+.eyebrow{font-size:.9rem}
+html[lang="he"] .eyebrow{font-weight:700}
+.brand span{font-size:.74rem}
+.plate .cap span{font-size:.82rem}
+.btn{font-size:.98rem}
+.btn-sm{font-size:.92rem}
+.chip{font-size:.86rem}
+.badge{font-size:.84rem}
+.tag{font-size:.8rem}
+.cover-flag{font-size:.72rem}
+.mature{font-size:.78rem}
+.rev figcaption span,.oser,.dmeta,.stat span,.field label,.a11y .lbl{font-size:.82rem}
+.pull cite{font-size:.84rem}
+.acc li{font-size:.84rem}
+@media (max-width:620px){ .badge{font-size:.78rem} }
+
+/* 2. The accessibility button moves to the corner where Hebrew lines END
+      (left in Hebrew, right in English), smaller and half-transparent,
+      so it stops sitting on the first words of every line. */
+.a11y-open{
+  inset-inline-start:auto;inset-inline-end:.85rem;inset-block-end:.85rem;
+  inline-size:2.75rem;block-size:2.75rem;font-size:1.12rem;
+  background:color-mix(in oklab,var(--surface) 70%,transparent);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  border-color:var(--line-strong);opacity:.82;
+}
+.a11y-open:hover,.a11y-open:focus-visible{opacity:1}
+.a11y{inset-inline-start:auto;inset-inline-end:.85rem;inset-block-end:4.3rem}
+
+/* 3. The hero: a light passes once over the title, and on wide screens the
+      trilogy floats in the empty half, under a halo. */
+@media (prefers-reduced-motion:no-preference){
+  body:not([data-motion="off"]):not([data-contrast="high"]) .hero h1{
+    background:linear-gradient(100deg,var(--text) 0%,var(--text) 42%,#FFF3CF 50%,var(--text) 58%,var(--text) 100%);
+    background-size:260% 100%;background-position:100% 0;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:titleSheen 2.6s .55s cubic-bezier(.3,.6,.3,1) both;
+  }
+}
+@keyframes titleSheen{to{background-position:0 0}}
+.hero-art{display:none}
+@media (min-width:980px){
+  .hero-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,360px);gap:clamp(2rem,5vw,5rem);align-items:center}
+  .hero-art{
+    display:block;position:relative;aspect-ratio:5/6;padding:0;border:0;background:none;cursor:pointer;
+    transition:transform .3s ease-out;
+  }
+  .hero-art::before{
+    content:"";position:absolute;inset:-14%;border-radius:50%;z-index:0;pointer-events:none;
+    background:radial-gradient(circle,rgba(228,200,137,.26),rgba(217,102,62,.08) 45%,transparent 68%);
+    animation:haloBreathe 5s ease-in-out infinite;
+  }
+  .hero-art img{
+    position:absolute;inset-block-start:10%;left:21%;width:58%;height:auto;border-radius:3px;z-index:1;
+    box-shadow:0 30px 60px -22px rgba(0,0,0,.95),0 0 0 1px rgba(201,163,86,.25);
+    transition:transform .5s cubic-bezier(.2,.7,.3,1);
+  }
+  .hero-art img:nth-child(1){transform:translateX(-34%) rotate(-8deg) scale(.88);filter:brightness(.72)}
+  .hero-art img:nth-child(2){transform:translateX(34%) rotate(8deg) scale(.88);filter:brightness(.72)}
+  .hero-art img:nth-child(3){z-index:2;animation:coverFloat 6s ease-in-out infinite}
+  .hero-art:hover img:nth-child(1){transform:translateX(-44%) rotate(-11deg) scale(.88)}
+  .hero-art:hover img:nth-child(2){transform:translateX(44%) rotate(11deg) scale(.88)}
+}
+@keyframes coverFloat{50%{transform:translateY(-10px)}}
+@keyframes haloBreathe{50%{opacity:.6;transform:scale(1.05)}}
+body[data-motion="off"] .hero-art::before,body[data-motion="off"] .hero-art img{animation:none}
+
+/* 4. Covers lean toward the pointer, and a light slides over the gloss. */
+.cover.has-img{transition:transform .35s ease-out}
+.cover.has-img.tilting{transition:transform .08s linear;box-shadow:0 26px 44px -22px rgba(0,0,0,.95)}
+.cover.has-img::after{
+  display:block;content:"";position:absolute;inset:0;border:0;z-index:3;pointer-events:none;
+  background:radial-gradient(circle at var(--gx,50%) var(--gy,30%),rgba(255,240,205,.42),transparent 55%);
+  mix-blend-mode:soft-light;opacity:0;transition:opacity .3s;
+}
+.cover.has-img.tilting::after{opacity:1}
+
+/* 5. Below-the-fold cards rise in as they scroll into view. */
+.rv{opacity:0;transform:translateY(18px)}
+.rv.rv-in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1);transition-delay:var(--rv-d,0ms)}
+
+/* 6. Touch or point at a sister and a halo lights above her. */
+.plate{transition:box-shadow .5s,transform .5s}
+.plate::before{
+  content:"";position:absolute;z-index:2;inset-block-start:6%;left:50%;width:46%;aspect-ratio:3/1;
+  border-radius:50%;border:2px solid rgba(255,236,180,.92);pointer-events:none;
+  box-shadow:0 0 16px rgba(255,226,150,.85),inset 0 0 8px rgba(255,226,150,.55);
+  transform:translateX(-50%) scale(.6);opacity:0;transition:opacity .45s,transform .7s cubic-bezier(.2,.7,.3,1);
+}
+.plate:hover,.plate:focus-visible,.plate:active{
+  box-shadow:0 0 0 1px var(--gold),0 0 36px rgba(228,200,137,.36),0 0 80px rgba(201,163,86,.18);transform:translateY(-3px);
+}
+.plate:hover::before,.plate:focus-visible::before,.plate:active::before{opacity:1;transform:translateX(-50%) scale(1)}
+.plate .cap{padding-block-start:2.6rem;background:linear-gradient(to top,rgba(4,6,12,.95),rgba(4,6,12,.75) 50%,transparent)}
+
+/* 7. Ink drawings on parchment: the white of the paper melts into the frame. */
+.pshot.ink{background:radial-gradient(circle at 50% 38%,#F2E9D4,#DCCBA6);box-shadow:inset 0 0 28px rgba(120,90,40,.3)}
+.pshot.ink img{mix-blend-mode:multiply}
+
+/* 8. Seven in the row, the rest under "more". */
+.navmore{position:relative;display:flex}
+.navmore-btn[data-cur="true"]{color:var(--gold-soft)}
+.navmore-list{
+  display:none;position:absolute;inset-block-start:calc(100% + .45rem);inset-inline-end:0;z-index:60;
+  min-inline-size:11.5rem;flex-direction:column;padding:.35rem;
+  background:var(--surface);border:1px solid var(--line-strong);box-shadow:var(--shadow);
+}
+.navmore[data-open="true"] .navmore-list{display:flex}
+.navmore-list button{text-align:start;padding:.6rem .8rem}
+.navmore-list button[aria-current="page"]::after{display:none}
+body:not([data-nav="compact"]) .nav > button,body:not([data-nav="compact"]) .navmore-btn{font-size:.95rem;padding-inline:.7rem}
+body[data-nav="compact"] .navmore-btn{display:none}
+body[data-nav="compact"] .navmore,body[data-nav="compact"] .navmore-list{display:contents}
+
+/* 9. On a phone the books sit two to a row, and the field gallery opens twelve at a time. */
+@media (max-width:560px){
+  .bookgrid{grid-template-columns:1fr 1fr;gap:1.8rem .85rem}
+  .bookgrid .book h3{font-size:.98rem}
+  .bookgrid .bookbtns{flex-direction:column}
+  .bookgrid .bookbtns .btn{inline-size:100%;justify-content:center;padding-inline:.5rem}
+  .bookgrid .book > p.dim{font-size:.84rem !important}
+}
+
+@media (prefers-reduced-motion:reduce){ .rv{opacity:1;transform:none} }
+body[data-motion="off"] .rv{opacity:1;transform:none}
 </style>
 </head>
 <body>
@@ -1269,7 +1446,7 @@ const BOOKS = [
   {id:"maayan", img:"cov_maayan", world:"elyon", n:1, price:115, sale:85, year:2022, flag:{he:"מצעד הספרים",en:"Ministry list"},
    acc:[{he:"נבחר למצעד הספרים של משרד החינוך",en:"Selected for the Ministry of Education's national reading list"},
         {he:"פרס קיפוד 2025 - הכריכה היפה ביותר",en:"Kipod Award 2025 - most beautiful cover"}],
-   he:{t:"מעיין הנשמות", s:"מלאכיות עליון", d:"הספר שפתח הכל, והדלת ליקום כולו."},
+   he:{t:"מעיין הנשמות", s:"מלאכיות עליון", d:"הספר שפתח הכול, והדלת ליקום כולו."},
    en:{t:"Spring of Souls", s:"The Archangel Sisters", d:"The debut that opened everything, and the door into the whole universe."}},
 
   {id:"shaar", img:"cov_shaar", world:"elyon", n:2, price:110, sale:85, year:2023, flag:{he:"פרס גפן",en:"Geffen"},
@@ -1616,6 +1793,71 @@ function fitNav(){
 }
 let fitRAF=0;
 addEventListener("resize",()=>{ cancelAnimationFrame(fitRAF); fitRAF=requestAnimationFrame(fitNav); });
+
+/* ---------- MOTION (design round, Nov 2026) ----------
+   Both of these stand down when the visitor turned motion off in the
+   accessibility panel, or asked their device for reduced motion. */
+function motionOK(){
+  return a11y.motion!=="off" && !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+
+/* Cards that are below the fold rise in as they scroll into view, a beat
+   apart. Anything already on screen is left alone, so nothing flickers. */
+const REVEAL_SEL = ".book,.plate,.dplate,.rev,.card,.fcell,.ploc,.cred,.world,.qcard,.evx-row";
+let revealIO=null;
+function revealInit(){
+  if(!motionOK() || !("IntersectionObserver" in window)) return;
+  if(!revealIO){
+    revealIO=new IntersectionObserver(entries=>{
+      let k=0;
+      entries.forEach(en=>{
+        if(!en.isIntersecting) return;
+        const el=en.target; revealIO.unobserve(el);
+        el.style.setProperty("--rv-d",(k++*80)+"ms");
+        el.classList.add("rv-in");
+        /* hand the element back its own transitions once it has landed */
+        setTimeout(()=>{ el.classList.remove("rv","rv-in"); el.style.removeProperty("--rv-d"); }, 900+k*80);
+      });
+    },{rootMargin:"0px 0px -8% 0px",threshold:.08});
+  }
+  const vh=innerHeight;
+  document.querySelectorAll("#app "+REVEAL_SEL.split(",").join(",#app ")).forEach(el=>{
+    if(el.dataset.rv) return; el.dataset.rv="1";
+    if(el.getBoundingClientRect().top < vh*.92) return;
+    el.classList.add("rv"); revealIO.observe(el);
+  });
+}
+
+/* Covers lean toward the pointer, and a soft light slides over the gloss.
+   On a phone it is a short lean under the finger. */
+let tiltEl=null;
+function untilt(){ if(!tiltEl) return; tiltEl.style.transform=""; tiltEl.classList.remove("tilting"); tiltEl=null; }
+function tiltTo(el,e){
+  const r=el.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+  el.style.transform=`perspective(900px) rotateY(${((x-.5)*-16).toFixed(2)}deg) rotateX(${((y-.5)*12).toFixed(2)}deg) translateZ(0)`;
+  el.style.setProperty("--gx",(x*100).toFixed(1)+"%"); el.style.setProperty("--gy",(y*100).toFixed(1)+"%");
+  el.classList.add("tilting"); tiltEl=el;
+}
+function tiltTarget(e){ return e.target && e.target.closest ? e.target.closest(".cover.has-img:not(.mini),.hero-art") : null; }
+document.addEventListener("pointermove",e=>{
+  if(!motionOK()) return;
+  const el=tiltTarget(e);
+  if(tiltEl && tiltEl!==el) untilt();
+  if(el) tiltTo(el,e);
+},{passive:true});
+document.addEventListener("pointerdown",e=>{ if(!motionOK()) return; const el=tiltTarget(e); if(el) tiltTo(el,e); },{passive:true});
+["pointerup","pointercancel","scroll"].forEach(ev=>document.addEventListener(ev,()=>{ if(tiltEl) setTimeout(untilt,ev==="pointerup"?180:0); },{passive:true}));
+document.addEventListener("pointerleave",untilt);
+
+const NAV_MAIN = ["home","books","shop","lore","quiz","speaking","author"];
+function toggleMore(e){
+  e.stopPropagation();
+  const m=e.currentTarget.parentNode, o=m.dataset.open!=="true";
+  m.dataset.open=o?"true":"false"; e.currentTarget.setAttribute("aria-expanded",o?"true":"false");
+}
+function closeMore(){ document.querySelectorAll(".navmore[data-open='true']").forEach(m=>{ m.dataset.open="false"; const b=m.querySelector(".navmore-btn"); if(b) b.setAttribute("aria-expanded","false"); }); }
+document.addEventListener("click",closeMore);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeMore(); });
 function toggleNav(){ const n=document.getElementById("nav"); n.dataset.open = n.dataset.open==="true" ? "false" : "true"; }
 function toggleLang(){ lang = lang==="he" ? "en" : "he"; render(); }
 
@@ -1760,6 +2002,7 @@ function vHome(){
   <div class="hero">
     <canvas id="sky"></canvas>
     <div class="wrap hero-in">
+      <div class="hero-text">
       <h1>${he?"מלאכיות עליון.<br>ממש כאן.":"The Archangel Sisters.<br>Right here."}</h1>
       <p class="hero-kick">${he
         ? "מלאכים, שדים, מישלינגים ומלחמה בין העולם של מעלה ומטה."
@@ -1779,6 +2022,14 @@ function vHome(){
         <button class="btn btn-solid" onclick="go('worlds')">${he?"מאיפה מתחילים":"Where to start"}</button>
         <button class="btn btn-quiet" onclick="go('shop')">${he?"לחנות - רכישת ספרים":"To the shop - buy books"}</button>
       </div>
+      </div>
+      <!-- Desktop only: the trilogy fanned out beside the title, in the half of
+           the hero that used to stand empty. Hidden on phones. -->
+      <button class="hero-art" onclick="go('books')" aria-label="${he?"לכל הספרים":"All the books"}">
+        <img src="${IMG.cov_shimemet}" alt="" width="430" height="621">
+        <img src="${IMG.cov_shaar}" alt="" width="430" height="621">
+        <img src="${IMG.cov_maayan}" alt="" width="430" height="621">
+      </button>
     </div>
   </div>
   ${mzBanner('נבחר למצעד הספרים של משרד החינוך, תשפ"ז, כיתות י\'-י"ב','מלאכיות עליון: מעיין הנשמות · למורות ולספרניות · לתלמידים · להורים')}
@@ -1789,7 +2040,7 @@ function vHome(){
         <span class="eyebrow">${he?"מאיפה מתחילים":"Where to start"}</span>
         <h2>${he?"אין סדר נכון אחד.":"There is no single right order."}</h2>
         <p class="lede">${he
-          ? "שלוש סדרות, יקום אחד. אפשר להתחיל מההתחלה עם מעיין הנשמות, או לקפוץ ישר לחיפה של בין השמשות - היא עומדת בפני עצמה."
+          ? "שלוש סדרות, יקום אחד. אפשר להתחיל מההתחלה עם מעיין הנשמות, או לקפוץ ישר לחיפה של בין השמשות. היא עומדת בפני עצמה."
           : "Three series, one universe. Start at the beginning with Spring of Souls, or jump straight into the Haifa of Between Twilights - it stands on its own."}</p>
         <div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-block-start:.6rem">
           <button class="btn btn-sm" onclick="go('worlds')">${he?"מדריך הסדרות":"The series guide"}</button>
@@ -1826,7 +2077,7 @@ function vHome(){
       <span class="eyebrow">${he?"הדמויות":"The characters"}</span>
       <h2>${he?"ארבע אחיות. ארבעה מלאכים.":"Four sisters. Four archangels."}</h2>
       <p class="lede">${he
-        ? "מיכאל, גבריאל, רפאל ואוריאל - כתובים כנשים. זה הרעיון שפתח את היקום כולו."
+        ? "מיכאל, גבריאל, רפאל ואוריאל נכתבו כנשים. זה הרעיון שפתח את היקום כולו."
         : "Michael, Gabriel, Raphael and Uriel - written as women. That is the idea the whole universe opened from."}</p>
     </div>
     ${galRow(GALLERY.angels)}
@@ -1849,7 +2100,7 @@ function vHome(){
         return `<div class="dplate" role="button" tabindex="0" onclick="go('lore')"
                  onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();go('lore')}"
                  aria-label="${esc(L(d).n)}">
-          <span class="pshot"><img src="${loreSrc(k)}" alt="${esc(L(d).n)}" loading="lazy" width="520" height="667"></span>
+          <span class="pshot ink"><img src="${loreSrc(k)}" alt="${esc(L(d).n)}" loading="lazy" width="520" height="667"></span>
           <span class="pname">${esc(L(d).n)}</span>
         </div>`;}).join("")}
     </div>
@@ -1929,7 +2180,7 @@ function mapEl(){
       <div class="mapnote" id="mapNote">
         <span class="eyebrow">${he?"בחרו זירה":"Choose a setting"}</span>
         <p class="dim">${he
-          ? "תשע זירות מתוך הספרים - מצור בצפון ועד ים המלח. אחת מהן אפילו לא באזור."
+          ? "תשע זירות מתוך הספרים, מצור בצפון ועד ים המלח. אחת מהן אפילו לא באזור."
           : "Nine settings from the books, from Tyre in the north to the Dead Sea. One of them isn't even in the region."}</p>
       </div>
     </div>
@@ -2023,16 +2274,16 @@ function vAuthor(){
         <span class="eyebrow">${he?"הסופרת":"The author"}</span>
         <h2>${he?"נעמה בר שירה":"N.B. Shira"}</h2>
         <p class="lede">${he
-          ? "סופרת נוער ופנטזיה ישראלית, מחזאית ואשת חינוך. זוכת פרס גפן 2024, פרס קיפוד 2025 וספר השנה 2026, ונקראת בעשרות אלפי עותקים בארץ ובעולם. בעיתונות היא מופיעה לעיתים גם כנעמה בר-שירה."
+          ? "סופרת נוער ופנטזיה ישראלית, מחזאית ואשת חינוך. זוכת פרס גפן 2024, פרס קיפוד 2025 וספר השנה 2026, וספריה נמכרו ביותר מ־50,000 עותקים בארץ ובעולם. בעיתונות היא מופיעה לעיתים גם כנעמה בר-שירה."
           : "An Israeli fantasy and young-adult author, playwright and educator. Winner of the Geffen Award 2024, the Kipod Award 2025 and Book of the Year 2026, read in tens of thousands of copies in Israel and abroad."}</p>
         <p>${he
-          ? "נעמה גדלה בבית של ספרים ואומנים. אימה שחקנית ובמאית פרסמה ספר שירה, אביה כתב ספרי פסיכולוגיה, אחיה מוזיקאי ומלחין ואחותה עורכת דין וסופרת בעצמה. נעמה עבדה וכתבה שנים לתיאטרון. ״מעיין הנשמות״ נכתב מעט לפני הקורונה ויצא ב־2022. כשעולם התרבות נעצר, היא כתבה את שני ספרי ההמשך במהלך שנה וקצת, והם יצאו בשנים העוקבות. היום היא חיה בהוד השרון עם בן זוגה היוצר והמוזיקאי ינון בר שירה ושתי הבנות שלהן, שחר וקשת."
+          ? "נעמה גדלה בבית של ספרים ואומנים. אימה שחקנית ובמאית פרסמה ספר שירה, אביה כתב ספרי פסיכולוגיה, אחיה מוזיקאי ומלחין ואחותה עורכת דין וסופרת בעצמה. נעמה עבדה וכתבה שנים לתיאטרון. ״מעיין הנשמות״ נכתב מעט לפני הקורונה ויצא ב־2022. כשעולם התרבות נעצר, היא כתבה את שני ספרי ההמשך במהלך שנה וקצת, והם יצאו בשנים העוקבות. היום היא חיה בהוד השרון עם בן זוגה היוצר והמוזיקאי ינון בר שירה ושתי הבנות שלהם, שחר וקשת."
           : "Naama grew up in a house of books and artists. Her mother, an actor and director, published a poetry collection; her father wrote on psychology; her brother is a musician and composer and her sister is a lawyer and an author. Naama wrote for the theatre for years. Spring of Souls was written shortly before the pandemic and published in 2022. When the cultural world stopped, she wrote the two sequels over the following year, and they appeared in the years after. She lives in Hod HaSharon with her partner, the musician and creator Yinon Bar Shira, and their two daughters, Shachar and Keshet."}</p>
         <p>${he
-          ? "הרעיון שפתח הכל היה פשוט: לקחת את ארבעת המלאכים הראשיים, מיכאל, גבריאל, רפאל ואוריאל, ולכתוב אותם כנשים. מה שיצא מזה הוא פנטזיה אורבנית שמתרחשת בישראל של היום, נשענת על מיתולוגיה יהודית, ומתרחשת בכתובות שאפשר להגיע אליהן ברכבת. טרילוגיית מלאכיות עליון נמכרה מאז בעשרות אלפי עותקים, ו״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך."
+          ? "הרעיון שפתח הכול היה פשוט: לקחת את ארבעת המלאכים הראשיים, מיכאל, גבריאל, רפאל ואוריאל, ולכתוב אותם כנשים. יצאה מזה פנטזיה אורבנית בישראל של היום, שנשענת על מיתולוגיה יהודית ומתרחשת בכתובות שאפשר להגיע אליהן ברכבת. טרילוגיית מלאכיות עליון נמכרה מאז בעשרות אלפי עותקים, ו״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך."
           : "The idea that opened everything was simple: take the four archangels - Michael, Gabriel, Raphael and Uriel, and write them as women. What came out is fantasy set in present-day Israel, at addresses you can reach by train. The Archangel Sisters trilogy has since sold tens of thousands of copies."}</p>
         <p class="dim">${he
-          ? "לצד הספרים היא מחזאית, בימאית ומפיקה. בין המחזות שכתבה: ״אין לי שם כי אין לי ילד״, ״טפטוף״, ״עלמה?״. בין ההצגות שביימה: ״מה הבעיה שלך?״, ״מספרים על אדוארד״, ״טריפ״, ״עשן מעל המים״ - שעלו על הבמות של הבימה, החאן, סוזן דלאל, תיאטרון הסמטה ופסטיבל ישראל."
+          ? "לצד הספרים היא מחזאית, בימאית ומפיקה. בין המחזות שכתבה: ״אין לי שם כי אין לי ילד״, ״טפטוף״, ״עלמה?״. בין ההצגות שביימה: ״מה הבעיה שלך?״, ״מספרים על אדוארד״, ״טריפ״, ״עשן מעל המים״. הן עלו על הבמות של הבימה, החאן, סוזן דלאל, תיאטרון הסמטה ופסטיבל ישראל."
           : "Alongside the books she is a playwright, director and producer. Her plays and productions have been staged at Habima, the Khan, Suzanne Dellal, Theatre Simta and the Israel Festival."}</p>
         ${quoteEl(1)}
         <div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-block-start:.8rem">
@@ -2049,8 +2300,8 @@ function vWorlds(){
   return `${pageHero("יריד בין השורות",
       he?"הסדרות":"The series",
       he?"יקום אחד, ארבע דלתות":"One universe, four doors",
-      he?"פנטזיה אורבנית ישראלית ורומנטזי בעברית, ביקום אחד שנפרש על ארבע סדרות. הספרים לא מסודרים כאן לפי סדר הופעה אלא לפי העולם שהם פותחים. בחרו את הדלת שמדברת אליכם."
-        :"Israeli urban fantasy and Hebrew romantasy, in one universe spread across four series. The books are ordered here not by publication date but by the world they open. Choose the door that speaks to you.", "center 42%", .62)}
+      he?"פנטזיה אורבנית ישראלית ורומנטזי בעברית, ביקום אחד שנפרש על ארבע סדרות. הספרים לא מסודרים כאן לפי סדר הופעה אלא לפי העולם שהם פותחים. בחרו דלת."
+        :"Israeli urban fantasy and Hebrew romantasy, in one universe spread across four series. The books are ordered here not by publication date but by the world they open. Choose a door.", "center 42%", .62)}
   <section class="band wrap stack g-xl">
     ${orderEl()}
     <div class="grid gworlds">
@@ -2094,7 +2345,7 @@ const ORDERS = {
     steps:[
       {id:"maayan"},
       {id:"suki", side:true,
-       he:"מתחיל כמה חודשים לפני מעיין הנשמות ונגמר באמצע העלילה שלו - מהזווית של סוקי.",
+       he:"מתחיל כמה חודשים לפני מעיין הנשמות ונגמר באמצע העלילה שלו, מהזווית של סוקי.",
        en:"Begins a few months before Spring of Souls and ends in the middle of it - from Suki's side."},
       {id:"shaar"},
       {id:"zohar", side:true,
@@ -2111,7 +2362,7 @@ const ORDERS = {
       {id:"tzava"}
     ]},
   chrono:{
-    he:{name:"הסדר הכרונולוגי", note:"לפי סדר ההתרחשות בעולם - משמונה מאות שנה אחורה ועד יום הדין."},
+    he:{name:"הסדר הכרונולוגי", note:"לפי סדר ההתרחשות בעולם: משמונה מאות שנה אחורה ועד יום הדין."},
     en:{name:"In world order", note:"By when things actually happen - from eight centuries back to judgement day."},
     steps:[
       {id:"izabela", when:{he:"סוף המאה ה־12",en:"late 12th century"}},
@@ -2168,7 +2419,7 @@ function vBooks(){
   return `${pageHero("ערימות ספרים",
       he?"נעמה בר שירה":"N.B. Shira",
       he?"כל הספרים":"All the books",
-      he?"תשעה ספרים בארבע סדרות. טרילוגיית מלאכיות עליון - מעיין הנשמות, שער הצללים ושממת העדן; הסיקוול מלאכיות בשערי השחר - צבא המלכה והבן האובד; שלושת ספרי הרומנטזי בין השמשות - זהר, ברק וסוקי; ואיזבלה מלכת ירושלים. כל אחד מהם עומד בפני עצמו."
+      he?"תשעה ספרים בארבע סדרות. טרילוגיית מלאכיות עליון: מעיין הנשמות, שער הצללים ושממת העדן. הסיקוול מלאכיות בשערי השחר: צבא המלכה והבן האובד. שלושת ספרי הרומנטזי בין השמשות: זהר, ברק וסוקי. ואיזבלה מלכת ירושלים. כל אחד מהם עומד בפני עצמו."
         :"Nine books across four series. The Archangel Sisters trilogy - Spring of Souls, The Gate of Shadows and The Desolation of Eden; the sequel series Angels at the Gates of Dawn - The Queen's Army and The Lost Son; the three romantasy standalones of Between Twilights - Zohar, Barak and Suki; and Isabella, Queen of Jerusalem.",
       "center 45%")}
   <section class="band wrap stack g-xl">
@@ -2177,7 +2428,7 @@ function vBooks(){
       return `<div class="stack g-m">
         <div class="stack g-xs"><span class="eyebrow">${esc(L(w).kicker)}</span><h3 style="font-size:1.5rem">${esc(L(w).name)}</h3></div>
         <hr class="rule">
-        <div class="grid g3">${bs.map(bookCard).join("")}</div>
+        <div class="grid g3 bookgrid">${bs.map(bookCard).join("")}</div>
       </div>`;
     }).join("")}
 
@@ -2263,14 +2514,15 @@ function loreChars(){
         <h3 style="font-size:1.5rem">${he?"המלאכיות":"The Archangels"}</h3>
       </div>
       ${galRow(GALLERY.angels)}
+      ${quizInv("angels")}
     </div>
 
     <div class="stack g-m">
       <div class="stack g-xs">
         <h3 style="font-size:1.5rem">${he?"דמויות נוספות":"More of the cast"}</h3>
         <p class="dim" style="max-width:62ch">${he
-          ? "מלאכים, חצאי שדים ובני לוויה. היקום של נעמה לא מחולק לשני צדדים - הקווים עוברים בין הדמויות, לא ביניהן לבין האחיות."
-          : "Angels, half-demons and companions. This universe isn't split into two camps - the lines run between the characters, not between them and the sisters."}</p>
+          ? "מלאכים, חצאי שדים ובני לוויה. ביקום של נעמה אין צד טוב וצד רע. הקו עובר בתוך הדמויות עצמן."
+          : "Angels, half-demons and companions. There is no good side and bad side in this universe. The line runs through the characters themselves."}</p>
       </div>
       ${galRow(GALLERY.others)}
     </div>
@@ -2302,20 +2554,40 @@ function revCardEn(r){
   </figure>`;
 }
 let fieldCat = "all";
-function setField(k){ fieldCat=k; render(); }
+const FIELD_STEP = 12;
+let fieldShow = FIELD_STEP;
+function setField(k){ fieldCat=k; fieldShow=FIELD_STEP; render(); }
+function fieldList(){ return fieldCat==="all" ? FIELD : FIELD.filter(f=>f.c===fieldCat); }
+function fieldCell(f){
+  return `<button class="fcell" onclick="openField('${f.i}')" aria-label="${esc(f.n)}">
+          <img src="${fieldSrc(f.i)}" alt="${esc(f.n)}" loading="lazy" width="${f.w}" height="${f.h}">
+          <span class="fcap">${esc(f.n)}</span>
+        </button>`;
+}
+function fieldMoreLabel(left){ return lang==="he" ? `עוד תמונות (${left})` : `More photos (${left})`; }
+/* Adds the next twelve in place - no re-render, so the page does not jump. */
+function moreField(){
+  const list=fieldList(), grid=document.querySelector(".fgrid"), btn=document.getElementById("fieldMore");
+  if(!grid) return;
+  grid.insertAdjacentHTML("beforeend", list.slice(fieldShow, fieldShow+FIELD_STEP).map(fieldCell).join(""));
+  fieldShow+=FIELD_STEP;
+  const left=list.length-fieldShow;
+  if(btn){ if(left>0) btn.textContent=fieldMoreLabel(left); else btn.remove(); }
+  revealInit();
+}
 
 function vField(){
   const he=lang==="he";
   const shown = fieldCat==="all" ? FIELD : FIELD.filter(f=>f.c===fieldCat);
   const counts = {}; FIELD.forEach(f=>counts[f.c]=(counts[f.c]||0)+1);
-  const tabs = [{k:"all",he:"הכל",en:"All"}].concat(FIELD_CATS.filter(c=>counts[c.k]));
+  const tabs = [{k:"all",he:"הכול",en:"All"}].concat(FIELD_CATS.filter(c=>counts[c.k]));
 
   return `<section class="band wrap stack g-l">
     <div class="stack g-s">
       <span class="eyebrow">${he?"בשטח":"On the road"}</span>
       <h2>${he?"נעמה מגיעה":"Naama shows up"}</h2>
       <p class="lede">${he
-        ? "ירידים, כנסים, השקות וחתימות - מדוכן בקניון במודיעין ועד יריד הספרים של פרנקפורט. חלק גדול מהעבודה קורה מול אנשים, לא מול מסך."
+        ? "ירידים, כנסים, השקות וחתימות. מדוכן בקניון במודיעין ועד יריד הספרים של פרנקפורט. חלק גדול מהעבודה קורה מול אנשים, לא מול מסך."
         : "Fairs, conventions, launches and signings - from a mall booth in Modi'in to the Frankfurt Book Fair. A great deal of this work happens in front of people, not a screen."}</p>
     </div>
 
@@ -2324,12 +2596,9 @@ function vField(){
     </div>
 
     <div class="fgrid">
-      ${shown.map((f,i)=>`
-        <button class="fcell" onclick="openField('${f.i}')" aria-label="${esc(f.n)}">
-          <img src="${fieldSrc(f.i)}" alt="${esc(f.n)}" loading="lazy" width="${f.w}" height="${f.h}">
-          <span class="fcap">${esc(f.n)}</span>
-        </button>`).join("")}
+      ${shown.slice(0,fieldShow).map(fieldCell).join("")}
     </div>
+    ${shown.length>fieldShow ? `<button class="btn btn-quiet" id="fieldMore" style="align-self:center" onclick="moreField()">${fieldMoreLabel(shown.length-fieldShow)}</button>` : ""}
   </section>`;
 }
 
@@ -2388,15 +2657,15 @@ function vLore(){
       ${tabs.map(t=>`<button class="otab" data-on="${t.k===loreTab}" onclick="setLore('${t.k}')">${esc(L(t))}</button>`).join("")}
     </div>
     ${loreTab==="chars"?loreChars():""}
-    ${loreTab==="demons"?loreDemons():""}
-    ${loreTab==="legions"?loreList(LEGIONS, he?"עשרים הלגיונות":"The twenty legions",
+    ${loreTab==="demons"?quizInv("demons")+loreDemons():""}
+    ${loreTab==="legions"?quizInv("legions")+loreList(LEGIONS, he?"עשרים הלגיונות":"The twenty legions",
         he?"כל מלאך משתייך ללגיון, וכל לגיון מחזיק חלק אחר של העולם: מי נלחם, מי מרפא, מי מגדל את האוכל, ומי מוחק את העקבות."
           :"Every angel belongs to a legion, and each legion holds a different part of the world: who fights, who heals, who grows the food, who erases the traces.", "legions")+lqInvite():""}
     ${loreTab==="rooms"?loreList(KHAN_ROOMS, he?"חאן המלאכים בירושלים":"The Khan of the Angels, Jerusalem",
         he?"החאן בנוי סביב מעיין הנשמות, וחדריו קרויים בשמות הספירות. הוא מופיע בכל הספרים."
           :"The Khan is built around the Spring of Souls, and its rooms carry the names of the sefirot. It appears in every one of the books.", "khan"):""}
-    ${loreTab==="sheol"?loreSheol():""}
-    ${loreTab==="angels"?loreAngels():""}
+    ${loreTab==="sheol"?quizInv("demons")+loreSheol():""}
+    ${loreTab==="angels"?`<div class="qinvrow two">${quizInv("angels")}${quizInv("legions")}</div>`+loreAngels():""}
     ${loreTab==="line"?loreLine():""}
   </section>`;
 }
@@ -2420,7 +2689,7 @@ function loreDemons(){
           <div class="dplate" role="button" tabindex="0" onclick="openLore('${d.k}')"
                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLore('${d.k}')}"
                aria-label="${esc(L(d).n)} - ${he?"לסיפור המלא":"read the full story"}">
-            <span class="pshot">
+            <span class="pshot ink">
               <img src="${loreSrc(d.k)}" alt="${esc(L(d).n)}" loading="lazy" width="700" height="933">
               <span class="pmore" aria-hidden="true">+</span>
             </span>
@@ -2747,7 +3016,13 @@ async function formSubmit(form, data, subject, lines, fields){
 }
 
 /* --- the readers' list, under a quiz result --- */
-const LEAD_FIELDS = ["ld-name","ld-mail","ld-tel"];
+const LEAD_FIELDS = ["ld-name","ld-mail","ld-tel","ld-ok"];
+/* The wording the reader actually ticked is sent along with the sign-up, so
+   there is a record of what they agreed to and when. */
+function LEAD_CONSENT_HE(){
+  return Gx("{מאשרת|מאשר} לקבל מנעמה בר שירה ניוזלטר, עדכונים ופרסומות על ספרים, מבצעים ואירועים, במייל ובהודעות. אפשר להסיר את עצמי בכל רגע.");
+}
+const LEAD_CONSENT_EN = "I agree to receive N.B. Shira's newsletter, updates and promotional messages about books, offers and events, by email and message. I can unsubscribe at any time.";
 function sendLead(){
   const he=lang==="he";
   if(fv("ld-hp")) return;                      /* a bot filled the hidden field */
@@ -2760,6 +3035,12 @@ function sendLead(){
     FORM_ERR.lead = he ? "כתובת המייל לא נראית תקינה." : "That email address doesn't look right.";
     render(); return;
   }
+  if(!fv("ld-ok")){
+    FORM_ERR.lead = he ? "כדי להצטרף לרשימה צריך לסמן את האישור." : "Tick the box to join the list.";
+    render(); return;
+  }
+  const consentText = he ? LEAD_CONSENT_HE() : LEAD_CONSENT_EN;
+  const consentAt = new Date().toISOString();
   /* the placement keeps its own state, so read the result from whichever ran */
   const isLeg = qz.quiz==="legions";
   const out = isLeg ? lq.out : qz.out;
@@ -2771,12 +3052,14 @@ function sendLead(){
                  : qz.quiz==="demons" ? (he?"חידון השדים":"Demon quiz")
                  : isLeg ? (he?"מבחן השיבוץ ללגיונות":"Legion placement") : "";
   formSubmit("lead",
-    {name, email:mail, phone:tel, quiz:qz.quiz||"", result:out?out.win:"", resultName:res},
+    {name, email:mail, phone:tel, quiz:qz.quiz||"", result:out?out.win:"", resultName:res,
+     consent:"yes", consentText, consentAt},
     he?"הרשמה לעדכונים מהאתר":"New sign-up from the site",
     [ (he?"שם: ":"Name: ")+(name||"-"),
       (he?"מייל: ":"Email: ")+(mail||"-"),
       (he?"טלפון: ":"Phone: ")+(tel||"-"),
-      quizName?((he?"מהחידון: ":"From: ")+quizName+(res?" · "+res:"")):"" ],
+      quizName?((he?"מהחידון: ":"From: ")+quizName+(res?" · "+res:"")):"",
+      (he?"אישור דיוור: כן, ":"Marketing consent: yes, ")+consentAt ],
     LEAD_FIELDS);
 }
 
@@ -2890,6 +3173,10 @@ function leadForm(){
     <div class="frow">
       ${fInput("ld-tel", he?"טלפון":"Phone","tel", he?"אפשר גם רק אחד מהשניים":"One of the two is enough")}
     </div>
+    <label class="fconsent">
+      <input type="checkbox" id="ld-ok" ${fv("ld-ok")?"checked":""} onchange="fset('ld-ok',this.checked?'1':'')">
+      <span>${esc(he ? LEAD_CONSENT_HE() : LEAD_CONSENT_EN)}</span>
+    </label>
     ${fHoney("ld-hp")}
     ${fFoot("lead", he?"שליחה":"Send",
       he?"הפרטים נשמרים אצל נעמה ולא מועברים לאף אחד."
@@ -3335,8 +3622,9 @@ function qzDone(){
       </div>
     </div>
 
-    ${qzNext()}
     ${leadForm()}
+    ${qzBooks()}
+    ${qzNext()}
     ${qzCounter(qz.quiz)}
   </section>`;
 }
@@ -3473,6 +3761,69 @@ function qzCopy(el){
 
 /* Anyone who has just read all twenty is exactly the person who wants to know
    which one is theirs, so the invitation sits at the foot of that list. */
+/* ---------- quiz invitations inside the world pages ----------
+   A reader who has just met the sisters, the legions or the demons is the
+   reader most likely to want the quiz, so each of those tabs carries its own
+   way in. The Hebrew quizzes come in a feminine and a masculine version, so
+   the invitation lets you pick before you start; the pick only redraws the
+   invitations, not the whole page. */
+function quizInv(kind){
+  const he=lang==="he", f=qz.gender!=="m";
+  let faces, title, line, start, plate=false;
+  if(kind==="legions"){
+    faces=["hayalim","marpeim","mevasrim","safranim"].map(k=>lqSrc(k));
+    title=lqTitle();
+    line=he?"שתים עשרה שאלות בשני שלבים, ושיבוץ אחד מתוך עשרים לגיונות.":"Twelve questions in two stages, and one placement out of twenty legions.";
+    start="go('quiz');lqIntro()";
+  } else {
+    const Q=QUIZZES[kind];
+    faces=Q.results.slice(0,4).map(r=>qzResultImg(r));
+    title=he?(f?Q.he.t:Q.he.tm):Q.en.t;
+    line=he
+      ? (kind==="angels"
+          ? "ארבע אחיות, ארבע שושלות. שתים עשרה שאלות ותדעו לאיזו מהן אתם שייכים."
+          : (f?"חמש שושלות מעולם מטה. שתים עשרה שאלות, ואל תתאמצי לענות יפה.":"חמש שושלות מעולם מטה. שתים עשרה שאלות, ואל תתאמץ לענות יפה."))
+      : Q.en.l;
+    start=`go('quiz');startQuiz('${kind}')`;
+    plate=kind==="demons";
+  }
+  return `<div class="qinv" data-kind="${kind}">
+    <div class="qinv-faces ${plate?"is-plate":""}" aria-hidden="true">${faces.map(src=>`<span><img src="${src}" alt="" loading="lazy"></span>`).join("")}</div>
+    <div class="stack g-xs">
+      <span class="eyebrow">${he?"חידון":"Quiz"}</span>
+      <b>${esc(title)}?</b>
+      <p class="qinv-l">${esc(line)}</p>
+    </div>
+    <div class="qinv-act">
+      ${he?`<span class="qinv-g" role="group" aria-label="הנוסח">
+        <button class="otab" data-on="${f}" onclick="qinvGender('f')">בלשון נקבה</button>
+        <button class="otab" data-on="${!f}" onclick="qinvGender('m')">בלשון זכר</button>
+      </span>`:""}
+      <button class="btn btn-solid btn-sm" onclick="${start}">${he?"לחידון":"Take the quiz"}</button>
+    </div>
+  </div>`;
+}
+function qinvGender(g){
+  qz.gender=g;
+  document.querySelectorAll(".qinv").forEach(el=>{ el.outerHTML=quizInv(el.dataset.kind); });
+}
+
+/* The last thing a result says: everything you just met lives in the books. */
+function qzBooks(){
+  const he=lang==="he";
+  return `<div class="qnext qbooks">
+    <div class="qbooks-covers" aria-hidden="true">${["cov_maayan","cov_shaar","cov_shimemet"].map(k=>`<img src="${IMG[k]}" alt="" loading="lazy">`).join("")}</div>
+    <div class="stack g-xs">
+      <span class="eyebrow">${he?"רוצים לקרוא עוד?":"Want to read more?"}</span>
+      <b>${he?"כל מה שפגשתם בחידון קורה בספרים":"Everything in this quiz happens in the books"}</b>
+      <p class="dim">${he
+        ? "המלאכיות, השדים והלגיונות חיים בארבע הסדרות של נעמה. אפשר להתחיל מ״מעיין הנשמות״, הספר שפתח הכול, או לבחור סדרה בעמוד הספרים."
+        : "The sisters, the demons and the legions all live in Naama's four series. Start with Spring of Souls, the book that opened it all, or pick a series on the books page."}</p>
+      <button class="btn btn-solid" style="align-self:start;margin-block-start:.4rem" onclick="go('books')">${he?"לכל הספרים":"To all the books"}</button>
+    </div>
+  </div>`;
+}
+
 function lqInvite(){
   const he=lang==="he";
   return `<div class="lqinvite">
@@ -3629,6 +3980,7 @@ function lqDoneView(){
     </div>
 
     ${leadForm()}
+    ${qzBooks()}
     ${qzCounter("legions")}
   </section>`;
 }
@@ -3728,7 +4080,7 @@ function vReviews(){
   return `${pageHero("חתימות כנס בוקטוק",
       he?"ביקורות":"Reviews",
       he?"מה קוראים אומרים":"What readers say",
-      he?"מתוך ביקורות שנכתבו על הספרים - קוראים ותיקים, סוקרים, וכמה שהגיעו בלי שום כוונה להתאהב."
+      he?"מתוך ביקורות שנכתבו על הספרים: קוראים ותיקים, סוקרים, וכמה שהגיעו בלי שום כוונה להתאהב."
         :"From reviews written about the books - long-time readers, reviewers, and a few who arrived with no intention of falling for them.", "center 30%")}
   <section class="band wrap stack g-xl">
     <div class="callout">
@@ -3754,7 +4106,7 @@ function vReviews(){
 
     <div class="stack g-s" id="revWrite">
       <span class="eyebrow">${he?"התור שלכם":"Your turn"}</span>
-      <h3 style="font-size:1.5rem">${he?"להוסיף את הקול שלכם":"Add your voice"}</h3>
+      <h3 style="font-size:1.5rem">${he?"מוזמנים לכתוב את כל שעולה על לבכם":"Write whatever is on your mind"}</h3>
       <p class="lede">${he
         ? "שני דברים אפשר לשלוח מכאן: ביקורת על ספר, שעולה לעמוד הזה, ומכתב אישי לנעמה שלא מתפרסם בשום מקום."
         : "Two things can be sent from here: a review of a book, which goes on this page, and a private letter to Naama that is published nowhere."}</p>
@@ -3779,12 +4131,12 @@ function vShop(){
   return `${pageHero("סימניות עבודת יד",
       he?"החנות":"The shop",
       he?"ספר חתום, ישירות מהסופרת":"A signed copy, direct from the author",
-      he?"אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת ביד, ואנחנו שולחים לכל הארץ. אפשר להוסיף הקדשה אישית בלי תוספת תשלום - וזו הסיבה שהרבה מההזמנות כאן הן מתנה למישהו."
+      he?"אין כאן חנות של רשת. ההזמנה מגיעה אלינו, נעמה חותמת ביד, ואנחנו שולחים לכל הארץ. אפשר להוסיף הקדשה אישית בלי תוספת תשלום, וזו הסיבה שהרבה מההזמנות כאן הן מתנה למישהו."
         :"This is not a chain store. The order reaches us, Naama signs each copy by hand, and we ship anywhere in Israel. A personal inscription costs nothing extra - which is why so many of these orders are a gift for someone.", "center 55%", .5)}
   <section class="band wrap stack g-xl">
 
     <div class="grid g2">
-      ${[[he?"עותקים חתומים":"Signed copies", he?"כל ספר נחתם ביד לפני המשלוח. הקדשה אישית לפי בקשה - כתבו לנו למי.":"Every book is hand-signed before shipping. Personal inscriptions on request."],
+      ${[[he?"עותקים חתומים":"Signed copies", he?"כל ספר נחתם ביד לפני המשלוח. הקדשה אישית לפי בקשה. כתבו לנו למי.":"Every book is hand-signed before shipping. Personal inscriptions on request."],
          [he?"משלוח":"Shipping", he?"אנחנו אורזים ושולחים בעצמנו. נתאם אתכם אחרי ההזמנה.":"We pack and ship ourselves, and coordinate with you after the order."],
          [he?"תשלום":"Payment", he?`ביט למספר ${BIT_PHONE}, או העברה בנקאית. מאשרים את ההזמנה ואז שולחים את הפרטים.`:`Bit to ${BIT_PHONE}, or bank transfer. We confirm the order, then send the details.`]]
         .map(([h,p])=>`<div class="card"><h3 style="color:var(--gold-soft)">${esc(h)}</h3><p class="dim" style="font-size:.92rem">${esc(p)}</p></div>`).join("")}
@@ -4019,7 +4371,7 @@ function vSpeaking(){
   const he=lang==="he";
   const creds = he
    ? [["מצעד הספרים","״מעיין הנשמות״ נבחר למצעד הספרים של משרד החינוך"],
-      ["מאושר גפ״ן","תוכנית מספר 4776 - אפשר לתקצב דרך הסל המוסדי"],
+      ["מאושר גפ״ן","תוכנית מספר 4776. אפשר לתקצב דרך הסל המוסדי"],
       ["פרס גפן 2024","הפרס המרכזי בישראל למדע בדיוני ופנטזיה, על ״שער הצללים״"],
       ["רקע חינוכי","תואר בספרות, היסטוריה ותנ״ך, ותעודת הוראה"]]
    : [["National reading list","Spring of Souls, selected by the Ministry of Education"],
@@ -4029,17 +4381,17 @@ function vSpeaking(){
 
   const gets = he
    ? [["ערכת פעילות פדגוגית למורה","מערכי שיעור לפני המפגש ואחריו, שאלות למעגלי שיח על חוסן אישי ועל התמודדות עם קשיי למידה, ותרגילי כתיבה יצירתית להמשך העבודה בכיתה."],
-      ["ספרים לספרייה","ארבעה ספרים לספריית בית הספר בכל מפגש - או, לחלופין, אפשרות רכישה בהנחה לכל תלמיד."],
+      ["ספרים לספרייה","ארבעה ספרים לספריית בית הספר בכל מפגש, או לחלופין אפשרות רכישה בהנחה לכל תלמיד."],
       ["התאמה מראש","כל מפגש נבנה מול רכזת הספרות או הספרנית לפני התאריך, ומותאם לשכבה, לגודל הקהל ולמטרה של היום."]]
    : [["A teacher's activity kit","Lesson plans for before and after, discussion questions on personal resilience, and creative writing exercises."],
       ["Books for the library","Four books for the school library with every session, or discounted copies for every student."],
       ["Built with you in advance","Every session is shaped with the literature coordinator or librarian before the date."]];
 
   const other = he
-   ? [["ספריות ומועדוני קריאה","הרצאה על פנטזיה ישראלית, מיתולוגיה יהודית, והפיכת מקומות מוכרים - ירושלים, הכרמל, ים המלח - לעולם קסום."],
+   ? [["ספריות ומועדוני קריאה","הרצאה על פנטזיה ישראלית, מיתולוגיה יהודית, והפיכת ירושלים, הכרמל וים המלח לעולם של מלאכים ושדים."],
       ["סדנאות כתיבה יצירתית","סדנה מעשית בבניית עולם, דמויות ועלילה. מפגש בודד או סדרה של מפגשים."],
       ["כנסים ופאנלים","הופעות בכנסי מדע בדיוני ופנטזיה, פאנלים וחתימות."]]
-   : [["Libraries and book clubs","A talk on Israeli fantasy, Jewish mythology, and turning familiar places into a magical world."],
+   : [["Libraries and book clubs","A talk on Israeli fantasy, Jewish mythology, and turning Jerusalem, the Carmel and the Dead Sea into a world of angels and demons."],
       ["Creative writing workshops","A hands-on workshop in world-building, character and plot."],
       ["Conventions and panels","Appearances at SF&F conventions, panels and signings."]];
 
@@ -4065,10 +4417,10 @@ function vSpeaking(){
         <span class="eyebrow">${he?"מה קורה במפגש":"What happens in the room"}</span>
         <h2>${he?"הרצאה אחת, שני חצאים":"One session, two halves"}</h2>
         <p class="lede">${he
-          ? "החצי הראשון הוא הסיפור האישי: הדרך מילדה דיסלקטית ועד תשעה ספרים ומעל חמישים אלף עותקים - כולל שגיאות הכתיב שנשארו בדרך. החצי השני הוא הפנטזיה הישראלית עצמה: איך לוקחים את חאן המלאכים בירושלים, את הכרמל ואת ים המלח והופכים אותם לעולם שלם, ולמה דווקא מיתולוגיה יהודית."
+          ? "החצי הראשון הוא הסיפור האישי: הדרך מילדה דיסלקטית ועד תשעה ספרים ומעל 50,000 עותקים, כולל שגיאות הכתיב שנשארו בדרך. החצי השני הוא הפנטזיה הישראלית עצמה: איך לוקחים את חאן המלאכים בירושלים, את הכרמל ואת ים המלח והופכים אותם לעולם שלם, ולמה דווקא מיתולוגיה יהודית."
           : "The first half is the personal story: the road from a dyslexic girl to nine books and more than fifty thousand copies - spelling mistakes included, to this day. The second is Israeli fantasy itself: how the Khan in Jerusalem, the Carmel and the Dead Sea become a whole world, and why Jewish mythology."}</p>
         <p>${he
-          ? "המפגש עובד בשני פורמטים: שכבה שלמה באודיטוריום, או מפגש אינטימי של כיתה אחת בספרייה. שניהם באורך שיעור כפול, ושניהם מסתיימים בשאלות מהתלמידים - שזה בדרך כלל החלק הכי טוב."
+          ? "המפגש עובד בשני פורמטים: שכבה שלמה באודיטוריום, או מפגש אינטימי של כיתה אחת בספרייה. שניהם באורך שיעור כפול, ושניהם מסתיימים בשאלות מהתלמידים, שזה בדרך כלל החלק הכי טוב."
           : "It works in two formats: a whole year group in the auditorium, or a single class in the library. Both run for a double period, and both end with questions from the students - usually the best part."}</p>
         <div class="stack g-xs" style="margin-block-start:.4rem">
           <span class="eyebrow">${he?"מתי מזמינים":"When to book"}</span>
@@ -4095,7 +4447,7 @@ function vSpeaking(){
     <div class="stack g-m">
       <div class="stack g-xs">
         <span class="eyebrow">${he?"מה בית הספר מקבל":"What the school gets"}</span>
-        <h2>${he?"לא רק שעה בבוקר":"More than an hour in the morning"}</h2>
+        <h2>${he?"ערכה למורה, ספרים לספרייה":"A kit for the teacher, books for the library"}</h2>
       </div>
       <div class="grid g3">
         ${gets.map(([h,t])=>`<div class="card"><h3 style="color:var(--gold-soft)">${esc(h)}</h3><p class="dim" style="font-size:.94rem">${esc(t)}</p></div>`).join("")}
@@ -4121,7 +4473,7 @@ function vSpeaking(){
     <div class="stack g-m">
       <div class="stack g-xs">
         <span class="eyebrow">${he?"מסגרות נוספות":"Other settings"}</span>
-        <h2>${he?"לא רק בתי ספר":"Not only schools"}</h2>
+        <h2>${he?"גם ספריות, סדנאות וכנסים":"Libraries, workshops and conventions too"}</h2>
       </div>
       <div class="grid g3">
         ${other.map(([h,t])=>`<div class="card"><h3 style="color:var(--gold-soft)">${esc(h)}</h3><p class="dim" style="font-size:.94rem">${esc(t)}</p></div>`).join("")}
@@ -4139,8 +4491,8 @@ function vCommunity(){
   return `${pageHero("יריד פנטזיה",
       he?"קהילת הקוראים":"The readers",
       he?"המישלינגים":"The Mishlingim",
-      he?"קבוצת הקוראים של נעמה. שם מדברים על הספרים לפני שהם יוצאים, שם נחשפים דברים ראשונים, ושם נעמה עונה בעצמה."
-        :"Naama's reader community. Where the books are talked about before they're out, where things are seen first, and where Naama answers in person.", "center 28%")}
+      he?"קבוצת הקוראים של נעמה. מדברים שם על הספרים עוד לפני שהם יוצאים, ונעמה עונה בעצמה (ולפעמים מגלה שם דברים לפני כולם)."
+        :"Naama's reader community. The books get talked about there before they're out, and Naama answers in person (and sometimes lets things slip there first).", "center 28%")}
   <section class="band wrap stack g-xl">
     <div class="grid g2">
       <div class="world">
@@ -4327,7 +4679,14 @@ function startSky(){
   const cv=document.getElementById("sky"); if(!cv) return;
   if(a11y.motion==="off") return;
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const ctx=cv.getContext("2d"); let w,h,parts=[];
+  const ctx=cv.getContext("2d"); let w,h,parts=[],embers=[];
+  /* Embers: warmer, brighter sparks that rise out of the city and burn out
+     halfway up the sky - the world below showing through. */
+  function ember(init){
+    return {x:Math.random()*w, y:init ? h*(.4+Math.random()*.55) : h*(.8+Math.random()*.16),
+      r:Math.random()*1.3+.7, vy:Math.random()*.42+.22, p:Math.random()*Math.PI*2,
+      life:init?Math.random()*200:0, max:Math.random()*240+240, hot:Math.random()<.5};
+  }
   function size(){
     const r=cv.getBoundingClientRect(); const dpr=Math.min(devicePixelRatio||1,2);
     w=cv.width=r.width*dpr; h=cv.height=r.height*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -4336,10 +4695,13 @@ function startSky(){
       x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.5+.25,
       s:Math.random()*.14+.03, a:Math.random()*.5+.12, p:Math.random()*Math.PI*2
     }));
+    embers=Array.from({length:Math.round(Math.min(48,w/16))},()=>ember(true));
   }
   size(); addEventListener("resize",()=>{ size(); skyCache=null; },{passive:true});
   const css=getComputedStyle(document.documentElement);
   function frame(ts){
+    /* scrolled past the hero: keep the loop alive but draw nothing */
+    if(cv.getBoundingClientRect().bottom<0){ skyRAF=requestAnimationFrame(frame); return; }
     const gold=css.getPropertyValue("--gold-soft").trim()||"#E4C889";
     ctx.clearRect(0,0,w,h);
     const g=ctx.createLinearGradient(0,0,0,h);
@@ -4356,6 +4718,18 @@ function startSky(){
       ctx.fillStyle=gold; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7); ctx.fill();
     });
     ctx.globalAlpha=1;
+    embers.forEach(e=>{
+      e.life++; e.y-=e.vy; e.x+=Math.sin(e.life/38+e.p)*.28;
+      const a=Math.min(1,e.life/40)*Math.max(0,1-e.life/e.max)*Math.min(1,Math.max(0,(e.y-h*.18)/(h*.25)));
+      if(a>0){
+        const g2=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,e.r*5);
+        g2.addColorStop(0,e.hot?`rgba(255,150,90,${.85*a})`:`rgba(240,210,140,${.8*a})`);
+        g2.addColorStop(.35,e.hot?`rgba(217,102,62,${.35*a})`:`rgba(201,163,86,${.3*a})`);
+        g2.addColorStop(1,"rgba(217,102,62,0)");
+        ctx.fillStyle=g2; ctx.beginPath(); ctx.arc(e.x,e.y,e.r*5,0,7); ctx.fill();
+      }
+      if(e.life>e.max||e.y<-10) Object.assign(e,ember(false));
+    });
     ctx.drawImage(buildSkyline(w,h,css), 0, 0, w, h);
     skyRAF=requestAnimationFrame(frame);
   }
@@ -4753,8 +5127,15 @@ function render(){
   document.getElementById("brandSub").textContent=d.brandSub;
   document.getElementById("langBtn").textContent=d.lang;
 
-  document.getElementById("nav").innerHTML = VIEWS.map(v=>
-    `<button onclick="go('${v}')" ${v===view?'aria-current="page"':""}>${esc(d.nav[v])}</button>`).join("");
+  /* Seven in the row, the rest under "more". On a phone (compact) the
+     "more" button disappears and its items join the plain list. */
+  const navBtn=v=>`<button onclick="go('${v}')" ${v===view?'aria-current="page"':""}>${esc(d.nav[v])}</button>`;
+  const navMore=VIEWS.filter(v=>!NAV_MAIN.includes(v));
+  document.getElementById("nav").innerHTML = VIEWS.filter(v=>NAV_MAIN.includes(v)).map(navBtn).join("")
+    + (navMore.length ? `<div class="navmore" data-open="false">
+        <button class="navmore-btn" aria-expanded="false" ${navMore.includes(view)?'data-cur="true"':""} onclick="toggleMore(event)">${lang==="he"?"עוד":"More"} <span aria-hidden="true">▾</span></button>
+        <div class="navmore-list">${navMore.map(navBtn).join("")}</div>
+      </div>` : "");
 
   const map={home:vHome,author:vAuthor,worlds:vWorlds,books:vBooks,lore:vLore,quiz:vQuiz,field:vField,reviews:vReviews,shop:vShop,events:vEvents,speaking:vSpeaking,community:vCommunity,rights:vRights,privacy:vPrivacy,terms:vTerms};
   const app=document.getElementById("app");
@@ -4762,6 +5143,7 @@ function render(){
   applySeo(view);
   if(view==="home" && a11y.motion!=="off") startSky(); else if(skyRAF) cancelAnimationFrame(skyRAF);
   renderCart(); syncCount(); fitNav();
+  revealInit();
   if(view==="quiz") buildShareCard();
 }
 function footEl(){
