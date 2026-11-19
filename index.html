@@ -163,7 +163,10 @@ body[data-nav="compact"] .nav button[aria-current="page"]::after{display:none}
 .qfaces.is-plate img{object-fit:contain;background:#E9DFC9}
 .qfaces.is-leg img{object-fit:cover;object-position:center;background:var(--surface-2)}
 /* the placement is the long one, so it gets the full width under the other two */
-@media (min-width:820px){.qcard.is-lq{grid-column:1 / -1}}
+@media (min-width:820px){.qcard.is-lq{grid-column:1 / -1}
+.qcard.is-arena{grid-column:1 / -1}
+.arena-art{background:radial-gradient(ellipse at 50% 70%,rgba(201,163,86,.22),transparent 70%),#141826;border:1px solid var(--line-strong);padding:.6rem .4rem .2rem;text-align:center}
+.arena-art img{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}}
 .lqline,.lqgate{
   border:1px solid var(--line-strong);background:color-mix(in oklab,var(--surface) 55%,transparent);
   padding:1.4rem;display:flex;flex-direction:column;gap:.8rem;align-items:flex-start;
@@ -1778,13 +1781,21 @@ const viewUrl = v => location.origin + location.pathname + (v==="home" ? "" : "#
 const LEGACY_VIEWS = {gallery:["lore","chars"]};
 function fromHash(){
   const h = (location.hash||"").replace(/^#/,"");
+  /* deep links from the fantasy arena game: #quiz/angels-f, #quiz/demons-m, #quiz/legions-f */
+  const dq = /^quiz\/(angels|demons|legions)(?:-(f|m))?$/.exec(h);
+  if(dq){
+    if(dq[2]) qz.gender = dq[2];
+    if(dq[1]==="legions"){ lq={phase:"intro", line:null, i:0, ansA:[], ansB:[], fam:null, out:null}; qz.quiz="legions"; qz.out=null; qz.stage="legion"; }
+    else { qz.quiz=dq[1]; qz.i=0; qz.ans=[]; qz.out=null; qz.stage="run"; }
+    return "quiz";
+  }
   const g = LEGACY_VIEWS[h];
   if(g){ loreTab = g[1]; return g[0]; }
   return ALL_VIEWS.includes(h) ? h : "home";
 }
 /* Open the world on a named rubric in one step, without painting the page twice. */
 function goLore(k){ loreTab = k; go("lore"); }
-addEventListener("hashchange", ()=>{ const v=fromHash(); if(v!==view){ view=v; if(v==="quiz") qzLoaded=false; render(); } });
+addEventListener("hashchange", ()=>{ const deep=/^#quiz\//.test(location.hash); const v=fromHash(); if(v!==view||deep){ view=v; if(v==="quiz") qzLoaded=false; render(); window.scrollTo({top:0,behavior:"instant"}); } });
 function fitNav(){
   const bar=document.querySelector(".topbar-in"), nav=document.getElementById("nav");
   document.body.removeAttribute("data-nav");     /* measure the row at full size */
@@ -3548,6 +3559,18 @@ function vQuiz(){
         </div>
         <button class="btn btn-solid btn-sm" onclick="lqIntro()">${he?"למבחן השיבוץ":"To the placement"}</button>
       </div>
+
+      ${he?`<div class="qcard is-arena">
+        <div class="arena-art"><img src="assets/zira/sides.webp" alt="מלאכים, שדים, דרקונים, מכשפים ואנשי זאב" loading="lazy"></div>
+        <div class="stack g-xs">
+          <span class="eyebrow">משחק חדש</span>
+          <h3 class="h3">זירת הפנטזיה</h3>
+          <p class="dim">${qz.gender==="f"
+            ? "קרב טריוויה על ספרי פנטזיה, מהארי פוטר ועד הכנף הרביעית. בוחרים צד – מלאכים, שדים, דרקונים, מכשפים או אנשי זאב – ויוצאים לקרב מול המחשב או מול חברה."
+            : "קרב טריוויה על ספרי פנטזיה, מהארי פוטר ועד הכנף הרביעית. בוחרים צד – מלאכים, שדים, דרקונים, מכשפים או אנשי זאב – ויוצאים לקרב מול המחשב או מול חבר."}</p>
+        </div>
+        <a class="btn btn-solid btn-sm" href="zira/">לזירה</a>
+      </div>`:""}
     </div>
 
     ${qzCounter()}
