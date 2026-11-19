@@ -5049,9 +5049,9 @@ function legalPage(eyebrow,title,intro,blocks,foot){
 
 function vPrivacy(){
   const he=lang==="he";
-  const updated = he ? "עודכן לאחרונה: אוגוסט 2026" : "Last updated: August 2026";
+  const updated = he ? "עודכן לאחרונה: נובמבר 2026" : "Last updated: November 2026";
   if(he) return legalPage("מדיניות פרטיות","מה נאסף כאן, ומה לא",
-    "האתר הזה קטן ופשוט, ואוסף רק את מה שאתם בוחרים למסור. אין בו פרסומות, אין מעקב אחרי גולשים, ואין העברת פרטים לצד שלישי.",
+    "האתר הזה קטן ופשוט, ואוסף רק את מה שאתם בוחרים למסור. באתר עצמו אין מעקב אחרי גולשים. במשחק \"זירת הפנטזיה\" (nbshira.com/zira) פועל פיקסל של מטה, ורק אחרי שאישרתם זאת - הפרטים בהמשך.",
     [
       ["מה אתם מוסרים ביוזמתכם",[
         "טופס ההרשמה לעדכונים: שם (לא חובה), כתובת מייל ומספר טלפון - לפחות אחד מהשניים. משמשים כדי לעדכן אתכם על ספרים חדשים, מבצעים וחידונים.",
@@ -5062,7 +5062,13 @@ function vPrivacy(){
         "הזמנת ספרים אינה עוברת דרך האתר: כשלוחצים על שליחת ההזמנה, נפתחת אצלכם אפליקציית וואטסאפ עם ההודעה מוכנה, ואתם שולחים אותה. הפרטים שמילאתם בעגלה אינם נשמרים בשרת כלשהו - הם רק נכנסים לטקסט ההודעה שאתם שולחים."]],
       ["מה נשמר בדפדפן שלכם",[
         "הגדרות הנגישות שבחרתם (גודל טקסט, ניגודיות, עצירת תנועה), וספירה מקומית של תוצאות החידונים שעשיתם במכשיר הזה. הנתונים האלה נשארים אצלכם ואינם נשלחים לשום מקום. ניקוי נתוני הגלישה בדפדפן מוחק אותם.",
-        "האתר אינו משתמש בעוגיות מעקב, אינו מריץ כלי אנליטיקה, ואינו יודע מי אתם אלא אם מסרתם פרטים בטופס."]],
+        "האתר עצמו אינו משתמש בעוגיות מעקב, אינו מריץ כלי אנליטיקה, ואינו יודע מי אתם אלא אם מסרתם פרטים בטופס. החריג היחיד הוא המשחק \"זירת הפנטזיה\", שמתואר בסעיף הבא."]],
+      ["זירת הפנטזיה",[
+        "כדי להיכנס למשחק מאשרים את התנאים האלה. כתובת מייל היא רשות. אם השארתם אותה, היא נשמרת במסד נתונים של Google Firebase שבבעלות נעמה, יחד עם השם שבחרתם, הצד ולשון הפנייה.",
+        "ההרשמה לניוזלטר \"התנשמת\" של נעמה בר שירה ויעל שרר נעשית רק אם סימנתם את התיבה. במקרה כזה המייל נשלח לשירות הדיוור MailerLite, ונשמר נוסח ההסכמה שאישרתם. אפשר להסיר את עצמכם בכל מייל.",
+        "השם והניקוד של משחק נשמרים בהיכל התהילה ומוצגים לכל השחקנים. במשחק מול חבר, מהלכי המשחק עוברים דרך Firebase ונמחקים כשהחדר נסגר.",
+        "פיקסל של מטה (Meta Pixel): אחרי שאישרתם את התנאים, המשחק טוען את הפיקסל של מטה (פייסבוק ואינסטגרם). הוא משתמש בעוגיות ושולח למטה מידע על הביקור ועל פעולות במשחק - כניסה, תחילת משחק, סיום משחק והשארת מייל - כדי למדוד את הפרסום ולהציג מודעות לאנשים שמתעניינים בפנטזיה. מטה מעבדת את המידע לפי מדיניות הפרטיות שלה. אפשר לחסום זאת בהגדרות המודעות בחשבון שלכם במטה או בחסימת עוגיות בדפדפן.",
+        "אישור התנאים ופרטי השחקן נשמרים גם בדפדפן שלכם, כדי שלא נשאל שוב. ניקוי נתוני הגלישה מוחק אותם."]],
       ["חידונים",[
         "כשמסיימים חידון נשלח לספירה הכללית רק סוג החידון, התוצאה שיצאה, לשון הפנייה שנבחרה והשפה. אין בכך שום פרט מזהה."]],
       ["שירותים חיצוניים",[
@@ -5073,7 +5079,7 @@ function vPrivacy(){
         "בכל שאלה בנושא פרטיות: stageart.pnima@gmail.com, או וואטסאפ למספר " + PHONE_DISP + "."]]
     ], updated);
   return legalPage("Privacy","What is collected here, and what is not",
-    "This is a small, simple site. It collects only what you choose to give it. No advertising, no visitor tracking, and nothing passed to third parties.",
+    "This is a small, simple site. It collects only what you choose to give it. The site itself does not track visitors. The Hebrew game \"Zirat HaFantasia\" (nbshira.com/zira) runs a Meta pixel, and only after you agree - details below.",
     [
       ["What you give us",[
         "The updates form: name (optional), email and phone - at least one of the two. Used to tell you about new books, offers and quizzes.",
@@ -5085,6 +5091,11 @@ function vPrivacy(){
       ["What stays in your browser",[
         "Your accessibility settings, and a local count of the quizzes you took on this device. Neither is sent anywhere. Clearing your browsing data removes them.",
         "The site sets no tracking cookies, runs no analytics, and does not know who you are unless you filled in a form."]],
+      ["Zirat HaFantasia (the fantasy trivia game)",[
+        "To enter the game you accept these terms. An email address is optional. If you leave one, it is stored in a Google Firebase database owned by Naama, together with the player name, side and form of address you chose.",
+        "You are subscribed to \"HaTanshemet\", the newsletter of Naama Bar Shira and Yael Sharar, only if you tick that box. The address is then sent to the MailerLite mailing service, along with the consent wording you accepted. You can unsubscribe from any email.",
+        "Your name and score are kept in the hall of fame and shown to all players. In two-player games, moves pass through Firebase and are deleted when the room closes.",
+        "Meta Pixel: once you accept the terms, the game loads Meta's pixel (Facebook and Instagram). It uses cookies and sends Meta information about the visit and about actions in the game - entering, starting a game, finishing a game and leaving an email - to measure advertising and show ads to people interested in fantasy. Meta processes this under its own privacy policy. You can block it in your Meta ad settings or by blocking cookies in your browser."]],
       ["Quizzes",[
         "Finishing a quiz sends only the quiz name, the result, the chosen grammatical form and the language to a shared counter. Nothing identifying."]],
       ["Third parties",[
@@ -5098,7 +5109,7 @@ function vPrivacy(){
 
 function vTerms(){
   const he=lang==="he";
-  const updated = he ? "עודכן לאחרונה: אוגוסט 2026" : "Last updated: August 2026";
+  const updated = he ? "עודכן לאחרונה: נובמבר 2026" : "Last updated: November 2026";
   if(he) return legalPage("תנאי שימוש","הכללים הקצרים",
     "האתר הוא הבית הרשמי של ספרי נעמה בר שירה. הכניסה אליו והשימוש בו כפופים לתנאים שלהלן.",
     [
@@ -5116,6 +5127,10 @@ function vTerms(){
       ["אחריות",[
         "האתר מוגש כפי שהוא. אנחנו משתדלים שהמידע יהיה מדויק ומעודכן, אך ייתכנו טעויות, ואין באמור באתר משום התחייבות.",
         "האתר מכיל קישורים לאתרים ולשירותים חיצוניים. איננו אחראים לתוכן שלהם או למדיניות הפרטיות שלהם."]],
+      ["זירת הפנטזיה",[
+        "הכניסה למשחק \"זירת הפנטזיה\" מותנית באישור תנאים אלה ומדיניות הפרטיות, כולל השימוש בפיקסל של מטה כמתואר שם.",
+        "שמות בהיכל התהילה גלויים לכל השחקנים. אין לבחור שם פוגעני או שם של אדם אחר, ואנחנו רשאים להסיר שם כזה ואת התוצאה שלו.",
+        "השאלות נכתבו ונבדקו בקפידה, אך ייתכנו טעויות. אפשר לדווח עליהן דרך \"הציעו שאלה\" במשחק או בהודעה. הצעות שאלות שנשלחות עשויות להיכנס למשחק."]],
       ["כללי",[
         "על תנאים אלה יחולו דיני מדינת ישראל, וסמכות השיפוט הבלעדית נתונה לבתי המשפט המוסמכים בישראל."]]
     ], updated);

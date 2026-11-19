@@ -580,7 +580,9 @@ body.kb .inpbtns .cb{padding:4px 10px;font-size:13px}
 .xs-home{display:inline-block;margin-top:8px;color:#ffd36b;font-weight:700;font-size:13px;text-decoration:none}
 .mail-ic{font-size:44px;line-height:1}
 #mailOv .ovc{width:min(480px,96vw);text-align:center}
-.mailin{margin-top:10px;text-align:left}
+.mailin{margin-top:4px;text-align:left}
+.mlbl{display:block;text-align:start;font-weight:800;font-size:14px;margin-top:12px}.mlbl small{font-weight:600;color:var(--muted)}
+.nlok a{color:#ffd36b}.nlok.req{border-top:1px solid var(--line);padding-top:10px}.reqm{color:#ffd36b;font-size:12px}
 .nlok{display:flex;gap:10px;align-items:flex-start;text-align:start;margin-top:12px;font-size:14px;line-height:1.45;color:#dfe4f3;cursor:pointer}
 .nlok input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:#f2b705}
 .mailerr{color:#ff8787;font-weight:800;font-size:14px;min-height:18px;margin-top:6px}
@@ -1827,7 +1829,7 @@ function togPick(key,i,n){const a=(ST[key]||[]).slice(),k=a.indexOf(i);if(k>=0)a
 function newGame(pvp){AI=AIL[ST.lvl];SIM=buildSim();const op=pvp?NET.peer:null;G={tok:1,phase:"board",turn:Math.random()<.5?0:1,used:{},cur:null,aiFav:Math.floor(Math.random()*7),pvp:!!pvp,tier:ST.tier,gid:Date.now(),short:!!ST.short,teams:[{name:ST.name||"אני",color:ST.color,side:ST.side,form:ST.form,score:0,dbl:false,lvl:0},pvp?{name:op.name||"חבר",color:pvColor(op.color),side:SIDES[op.side]?op.side:aiSideFor(null,ST.side),form:op.form||"m",score:0,dbl:false,lvl:0}:{name:AI.short,color:aiColor(),side:aiSideFor(AI.side,ST.side),form:AI.form||"m",score:0,dbl:false,lvl:0}]};
  if(G.short){const {cats:keep,miss:km}=shortSel();for(let ci=0;ci<7;ci++)if(!keep.includes(ci))for(let l=0;l<3;l++)G.used[`c${ci}-${l}`]={x:1};MISS.forEach((_,i)=>{if(!km.includes(i))G.used["m"+i]={x:1}});G.aiFav=keep[rnd(keep.length)]}
  if(pvp){NET.lastState="";R("sim").set(JSON.stringify({qs:SIM.qs,whoami:SIM.whoami,fake:SIM.fake}))}
- courtSig="";$("#app").classList.add("ingame");render();SFX.horn();setTimeout(()=>SFX.cheer(2,.6),300);toast(G.turn===0?"🪙 הטלת מטבע: "+Y("אתה מתחיל!","את מתחילה!","אתם מתחילים!","אתן מתחילות!"):`🪙 הטלת מטבע: ${G.teams[1].name} ${V(1,"מתחיל")}`,G.teams[G.turn].color,2600);if(G.turn===1&&!G.pvp)aiTurn()}
+ courtSig="";$("#app").classList.add("ingame");px("GameStart",{tier:ST.tier,opponent:ST.lvl,short:G.short?1:0,pvp:G.pvp?1:0},true);render();SFX.horn();setTimeout(()=>SFX.cheer(2,.6),300);toast(G.turn===0?"🪙 הטלת מטבע: "+Y("אתה מתחיל!","את מתחילה!","אתם מתחילים!","אתן מתחילות!"):`🪙 הטלת מטבע: ${G.teams[1].name} ${V(1,"מתחיל")}`,G.teams[G.turn].color,2600);if(G.turn===1&&!G.pvp)aiTurn()}
 function next(){if(NET.role==="guest"){R("cmds").push(JSON.stringify({t:"next"}));return}if(!G||G.phase!=="shot")return;G.tok++;closeInput();G.cur=null;sceneOff();const done=Object.keys(G.used).length>=21+MISS.length;if(done)return endGame();G.turn=1-G.turn;G.phase="board";render();
  if(G.unlock){const u=G.unlock;G.unlock=null;toast(`🔓 ${u.team===0?Y("פתחת","פתחת","פתחתם","פתחתן"):G.teams[1].name+" "+V(1,"פתח")} את שאלות ה-${LEVELS[u.l].p}`,G.teams[u.team].color,2600)}
  if(G.turn===1&&!G.pvp)aiTurn()}
@@ -2034,7 +2036,7 @@ function siteQuizzes(){const g=formOf(0)==="m"||formOf(0)==="they"?"m":"f",f=g==
 /* ---------- end ---------- */
 function endGame(){if(G.pvp){G.phase="end";G.tok++;netPush();return showEndPvp()}G.phase="end";G.tok++;const T=G.teams,me=T[0].score,ai=T[1].score;const win=me>ai,tie=me===ai;
  const rk=ST.tier+":"+ST.lvl,r=REC[rk]||(REC[rk]={g:0,w:0,best:0,streak:0,bestStreak:0});r.g++;if(win){r.w++;r.streak++;r.bestStreak=Math.max(r.bestStreak,r.streak)}else r.streak=0;const newBest=me>r.best;if(newBest)r.best=me;store.set("records",REC);
- const myRec={name:T[0].name,tier:ST.tier,lvl:ST.lvl,short:G.short?1:0,score:Math.round(me),ai:Math.round(ai),win:win?1:0};const lbP=lbSubmit(myRec);
+ px("GameEnd",{tier:ST.tier,opponent:ST.lvl,win:win?1:0},true);const myRec={name:T[0].name,tier:ST.tier,lvl:ST.lvl,short:G.short?1:0,score:Math.round(me),ai:Math.round(ai),win:win?1:0};const lbP=lbSubmit(myRec);
  const gor=ST.lvl===3;const line=win?(gor?Y("הבסת","הבסת","הבסתם","הבסתן")+" את דרקון הספרים!!! 🐉 זה לא אמור לקרות.":"ניצחון! 🏆"):tie?"תיקו! 🤝":(gor?"דרקון הספרים שומר על האוצר שלו. כמו תמיד.":gx(1,"הפעם הוא היה טוב יותר","הפעם היא הייתה טובה יותר","הפעם הם היו טובים יותר","הפעם הן היו טובות יותר")+". "+Y("נסה שוב!","נסי שוב!","נסו שוב!"));
  $("#endBody").innerHTML=`<div class="trophy">${win?"🏆":tie?"🤝":"😤"}</div><div class="end-k">סוף המשחק · ${esc(TIERS.find(t=>t.id===ST.tier).n)} · מול ${esc(AI.short)}</div><div class="end-t" style="color:${win?T[0].color:"#fff"}">${esc(line)}</div><div class="end-s"><span style="color:${T[0].color}">${esc(T[0].name)} ${fmt(me)}</span> · <span style="color:${T[1].color}">${esc(T[1].name)} ${fmt(ai)}</span></div>${newBest&&me>0?`<div class="newrec">⭐ שיא אישי חדש ברמה הזו!</div>`:""}<div class="rec-line">מאזן מול ${esc(AI.short)}: ${r.w}–${r.g-r.w} · שיא: ${fmt(r.best)} נק' · רצף ניצחונות: ${r.streak}</div><div id="lbBox"></div>${siteQuizzes()}<div class="ovb"><button class="cb go" id="eAgain">🔁 משחק חדש</button><button class="cb" id="eHome">🏠 תפריט</button></div>`;
  $("#endOv").classList.add("on");if(win){SFX.win();let n=0;const iv=setInterval(()=>{burst([T[0].color,"#ffc83d","#fff"],80,innerWidth*(.2+Math.random()*.6),innerHeight*.3);if(++n>6)clearInterval(iv)},400)}else SFX.groan();
@@ -2177,28 +2179,42 @@ async function lbAll(){const ov=$("#allOv"),b=$("#allBody");ov.classList.add("on
   b.innerHTML=`<div class="end-k">🏆 כל השיאים</div>${h}<div class="ovb"><button class="cb go" id="allClose">סגור</button></div>`}
  catch(e){b.innerHTML=`<div class="end-k">🏆 כל השיאים</div><div class="muted">טבלת השיאים לא זמינה כרגע</div><div class="ovb"><button class="cb go" id="allClose">סגור</button></div>`}
  $("#allClose").onclick=()=>ov.classList.remove("on")}
-/* ================= entry: an email to get in, newsletter optional =================
-   The email is required to play. The newsletter box is optional and unticked;
-   only a ticked box subscribes the address to "התנשמת" on MailerLite. */
+/* ================= entry: terms required, email and newsletter optional =================
+   The terms box is required (it covers the Meta pixel). The email is optional but
+   recommended. Only a ticked newsletter box subscribes the address to "התנשמת". */
 const ML_ACTION="https://assets.mailerlite.com/jsonp/2693956/forms/204107202290517803/subscribe";
+/* Meta pixel: set the ID here. It loads only after the player accepts the terms. */
+const META_PIXEL_ID="";
 const NL_TEXT=()=>Y("אשמח לקבל את \"התנשמת\", הניוזלטר של נעמה בר שירה ויעל שרר: הנחות מיוחדות, ספרים חדשים וביקורות. אפשר להסיר את עצמי בכל רגע.","אשמח לקבל את \"התנשמת\", הניוזלטר של נעמה בר שירה ויעל שרר: הנחות מיוחדות, ספרים חדשים וביקורות. אפשר להסיר את עצמי בכל רגע.","נשמח לקבל את \"התנשמת\", הניוזלטר של נעמה בר שירה ויעל שרר: הנחות מיוחדות, ספרים חדשים וביקורות. אפשר להסיר את עצמנו בכל רגע.");
+const TERMS_TEXT=()=>Y("קראתי ואני מסכים","קראתי ואני מסכימה","קראנו ואנחנו מסכימים","קראנו ואנחנו מסכימות")+" לתנאי השימוש ולמדיניות הפרטיות, כולל שימוש בעוגיות ובפיקסל של מטה (פייסבוק ואינסטגרם) למדידה ולפרסום.";
 const okMail=m=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m);
-function needEmail(cb){const P=store.get("player",null);if(P&&okMail(P.email||""))return cb();
- const ov=$("#mailOv");$("#mailBody").innerHTML=`<div class="mail-ic">😇🗝️😈</div><div class="ovt">${Y("רגע לפני שנכנסים לזירה","רגע לפני שנכנסים לזירה","רגע לפני שנכנסים לזירה")}</div>
- <p class="muted">${Y("כדי להיכנס צריך כתובת מייל. בלי אישור שלך לא יישלח אליה כלום.","כדי להיכנס צריך כתובת מייל. בלי אישור שלך לא יישלח אליה כלום.","כדי להיכנס צריך כתובת מייל. בלי אישור שלכם לא יישלח אליה כלום.","כדי להיכנס צריך כתובת מייל. בלי אישור שלכן לא יישלח אליה כלום.")}</p>
+let pixelOn=false;
+function loadPixel(){if(pixelOn||!META_PIXEL_ID||typeof document==="undefined")return;pixelOn=true;
+ !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+ fbq("init",META_PIXEL_ID);fbq("track","PageView")}
+function px(ev,data,custom){if(!pixelOn||typeof fbq!=="function")return;try{custom?fbq("trackCustom",ev,data||{}):fbq("track",ev,data||{})}catch(e){}}
+{const P0=store.get("player",null);if(P0&&P0.terms)loadPixel()}
+function needEmail(cb){const P=store.get("player",null);if(P&&P.terms){loadPixel();return cb()}
+ const ov=$("#mailOv");$("#mailBody").innerHTML=`<div class="mail-ic">😇🗝️😈</div><div class="ovt">רגע לפני שנכנסים לזירה</div>
+ <label class="mlbl" for="gMail">מייל <small>(${Y("לא חובה, אבל מומלץ – ככה לא תפספס הנחות וספרים חדשים","לא חובה, אבל מומלץ – ככה לא תפספסי הנחות וספרים חדשים","לא חובה, אבל מומלץ – ככה לא תפספסו הנחות וספרים חדשים","לא חובה, אבל מומלץ – ככה לא תפספסו הנחות וספרים חדשים")})</small></label>
  <input id="gMail" class="tname mailin" type="email" inputmode="email" autocomplete="email" dir="ltr" placeholder="you@example.com" value="${esc((P&&P.email)||"")}">
  <label class="nlok"><input type="checkbox" id="gNl"><span>${esc(NL_TEXT())}</span></label>
+ <label class="nlok req"><input type="checkbox" id="gTerms"><span>${esc(TERMS_TEXT()).replace("תנאי השימוש",'<a href="https://nbshira.com/#terms" target="_blank" rel="noopener">תנאי השימוש</a>').replace("מדיניות הפרטיות",'<a href="https://nbshira.com/#privacy" target="_blank" rel="noopener">מדיניות הפרטיות</a>')} <b class="reqm">(חובה)</b></span></label>
  <div class="mailerr" id="gErr"></div>
- <div class="ovb"><button class="cb go" id="gGo">🪄 ${Y("לזירה","לזירה","לזירה")}</button></div>
- <div class="mail-fine">המייל נשמר אצל נעמה בר שירה לצורך המשחק בלבד. <a href="https://nbshira.com/#privacy" target="_blank" rel="noopener">מדיניות פרטיות</a></div>`;
- ov.classList.add("on");const inp=$("#gMail");setTimeout(()=>{try{inp.focus()}catch(e){}},80);
- const go=()=>{const m=inp.value.trim(),nl=$("#gNl").checked;if(!okMail(m)){$("#gErr").textContent="✍️ צריך כתובת מייל תקינה";inp.focus();return}
-  const rec={email:m.slice(0,120),nl:nl?1:0,name:(ST.name||"").slice(0,20),side:ST.side,form:ST.form,date:Date.now()};store.set("player",rec);ov.classList.remove("on");
-  if(nl){rec.consentText=NL_TEXT();try{const d=new FormData();d.append("fields[email]",rec.email);if(ST.name)d.append("fields[name]",ST.name);d.append("ml-submit","1");d.append("anticsrf","true");fetch(ML_ACTION,{method:"POST",body:d,mode:"no-cors"}).catch(()=>{})}catch(e){}}
-  if(FB_CFG||NETLOCAL)netDB().then(db=>db.ref("players").push(rec)).catch(()=>{});
-  if(typeof fbq==="function"){try{fbq("track","Lead",{content_name:"zira",newsletter:nl?1:0})}catch(e){}}
+ <div class="ovb"><button class="cb go" id="gGo">🪄 לזירה</button></div>`;
+ ov.classList.add("on");
+ const go=()=>{const m=$("#gMail").value.trim(),nl=$("#gNl").checked,tm=$("#gTerms").checked;
+  if(!tm){$("#gErr").textContent="✋ כדי להיכנס צריך לאשר את התנאים";return}
+  if(m&&!okMail(m)){$("#gErr").textContent="✍️ כתובת המייל לא תקינה – אפשר לתקן או להשאיר ריק";$("#gMail").focus();return}
+  if(nl&&!m){$("#gErr").textContent="✍️ כדי לקבל את התנשמת צריך להשאיר מייל";$("#gMail").focus();return}
+  const rec={email:m.slice(0,120),nl:nl?1:0,terms:1,termsText:TERMS_TEXT(),termsAt:Date.now(),name:(ST.name||"").slice(0,20),side:ST.side,form:ST.form,date:Date.now()};
+  if(nl)rec.consentText=NL_TEXT();
+  store.set("player",rec);ov.classList.remove("on");loadPixel();
+  if(nl){try{const d=new FormData();d.append("fields[email]",rec.email);if(ST.name)d.append("fields[name]",ST.name);d.append("ml-submit","1");d.append("anticsrf","true");fetch(ML_ACTION,{method:"POST",body:d,mode:"no-cors"}).catch(()=>{})}catch(e){}}
+  if(m&&(FB_CFG||NETLOCAL))netDB().then(db=>db.ref("players").push(rec)).catch(()=>{});
+  if(m)px("Lead",{content_name:"zira",newsletter:nl?1:0});
   cb()};
- $("#gGo").onclick=go;inp.onkeydown=e=>{if(e.key==="Enter")go()}}
+ $("#gGo").onclick=go;$("#gMail").onkeydown=e=>{if(e.key==="Enter")go()}}
 /* ================= setup ================= */
 function goSetup(){if(NET.role)netLeave();if(G)G.tok++;G=null;closeInput();sceneOff();$("#app").classList.remove("ingame");show("setup");renderSetup()}
 function renderSetup(){const v=$("#v-setup");
