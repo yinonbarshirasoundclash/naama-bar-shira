@@ -1105,6 +1105,33 @@ body[data-motion="off"] *{animation:none !important}
 }
 .qbooks-covers{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
 .qbooks-covers img{width:100%;aspect-ratio:2/3;object-fit:cover;border:1px solid var(--line-strong);box-shadow:0 12px 24px -12px rgba(0,0,0,.9)}
+
+/* Not angels, so no halo: smoke rises around the demons instead. */
+.plate .cap{z-index:3}
+.plate.smoke::before{
+  inset:0;left:0;width:100%;height:100%;aspect-ratio:auto;
+  border:0;border-radius:0;box-shadow:none;z-index:2;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.019' numOctaves='4' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.80 0 0 0 0 0.77 0 0 0 0 0.85 0 0 0 2.1 -0.78'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E") 0 0/320px 320px repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.019' numOctaves='4' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.80 0 0 0 0 0.77 0 0 0 0 0.85 0 0 0 2.1 -0.78'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E") 160px 80px/420px 420px repeat,
+    linear-gradient(to top,rgba(16,10,24,.62),rgba(16,10,24,.18) 45%,transparent 70%);
+  -webkit-mask-image:linear-gradient(to top,#000 0%,#000 38%,transparent 88%);
+  mask-image:linear-gradient(to top,#000 0%,#000 38%,transparent 88%);
+  transform:translateY(22%);opacity:0;
+  transition:opacity .7s ease,transform 1.4s cubic-bezier(.2,.7,.3,1);
+}
+.plate.smoke:hover::before,.plate.smoke:focus-visible::before,.plate.smoke:active::before{
+  opacity:1;transform:none;animation:smokeRise 16s linear infinite;
+}
+.plate.smoke:hover,.plate.smoke:focus-visible,.plate.smoke:active{
+  box-shadow:0 0 0 1px rgba(160,130,180,.55),0 0 38px rgba(70,45,95,.6),0 0 90px rgba(20,10,30,.6);
+}
+@keyframes smokeRise{
+  from{background-position:0 0,160px 80px,0 0}
+  to{background-position:40px -320px,100px -340px,0 0}
+}
+body[data-motion="off"] .plate.smoke::before{animation:none}
+@media (prefers-reduced-motion:reduce){.plate.smoke::before{animation:none}}
 /* the descent: one continuous line down the side, seven stops along it */
 .descent{list-style:none;margin:0;padding:0;position:relative}
 .descent::before{
@@ -1402,8 +1429,8 @@ const GALLERY = {
     {k:"ang_brown", he:"מיקה", en:"Mika"}
   ],
   others:[
-    {k:"fig_green",  he:"לוקי",    en:"Loki",    rhe:"שד",            ren:"Demon"},
-    {k:"fig_purple", he:"סוקי",    en:"Suki",    rhe:"חצי שדה",       ren:"Half-demon"},
+    {k:"fig_green",  he:"לוקי",    en:"Loki",    rhe:"שד",            ren:"Demon",      fx:"smoke"},
+    {k:"fig_purple", he:"סוקי",    en:"Suki",    rhe:"חצי שדה",       ren:"Half-demon", fx:"smoke"},
     {k:"fig_teal",   he:"אופיר",   en:"Ofir",    rhe:"מלאך",          ren:"Angel"},
     {k:"fig_blonde", he:"שחר",     en:"Shachar", rhe:"חצי מלאך, חצי שד",  ren:"Half angel, half demon"}
   ]
@@ -2453,7 +2480,7 @@ function galRow(items){
     const f=FIGURES[x.k];
     const role = f ? L(f).r : (x.rhe ? (he?x.rhe:x.ren) : "");
     return `
-    <button class="plate" onclick="openFig('${x.k}')" aria-label="${esc(L(x))}${role?" - "+esc(role):""}">
+    <button class="plate${x.fx==="smoke"?" smoke":""}" onclick="openFig('${x.k}')" aria-label="${esc(L(x))}${role?" - "+esc(role):""}">
       <img src="${IMG[x.k]}" alt="${esc(L(x))}" loading="lazy">
       <span class="cap"><span class="pmore" aria-hidden="true">+</span><b>${esc(L(x))}</b>${role?`<span>${esc(role)}</span>`:""}</span>
     </button>`;}).join("")}</div>`;
@@ -2525,6 +2552,7 @@ function loreChars(){
           : "Angels, half-demons and companions. There is no good side and bad side in this universe. The line runs through the characters themselves."}</p>
       </div>
       ${galRow(GALLERY.others)}
+      ${quizInv("demons")}
     </div>
   </div>`;
 }
